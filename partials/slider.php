@@ -20,8 +20,8 @@
       // 🔹 Estructura de slides - configurable
       $slides = [
         [
-          'img' => '/inka/images/slide-01.jpg',
-          'title' => 'Perfumes y Cosméticos Importados',
+          'img' => '/inka/images/slider-accesories.png',
+          'title' => 'Accesorios y Cosméticos Importados',
           'desc' => 'Descubre las últimas tendencias de belleza y fragancias premium.',
           'btn'  => 'Explorar Catálogo',
           'link' => 'shop.php'
