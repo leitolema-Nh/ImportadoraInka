@@ -1,0 +1,113 @@
+/* ============================
+   Header personalizado
+   ============================ */
+
+/* Estado scrolleado para header */
+.header-v4.navbar-scrolled {
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+/* Links del menú activo */
+.main-menu .nav-link.active,
+.main-menu-m .nav-link.active {
+  color: #007bff; /* color de tu marca */
+  font-weight: 600;
+}
+
+/* Hover links */
+.main-menu .nav-link:hover,
+.main-menu-m .nav-link:hover {
+  color: #007bff;
+}
+
+/* ===== LOGO IMPORTADORA INKA (imagen unificada) ===== */
+.logo img,
+.logo-mobile img {
+  height: 25px;   /* tamaño en desktop */
+  width: auto;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 991px) {
+  .logo-mobile img {
+    height: 25px;   /* un poco más pequeño en mobile */
+    max-height: 25px;
+  }
+}
+
+
+/* 🔲 Popup base */
+.share-popup {
+  display: none;
+  position: absolute;
+  right: 10px;
+  top: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 999;
+}
+.share-popup.active {
+  display: block;
+}
+
+/* 🎨 Botones sociales */
+.share-buttons .btn-share {
+  border: none;
+  background: #f1f1f1;
+  color: #333;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.share-buttons .btn-share:hover {
+  background: #333;
+  color: #fff;
+}
+
+.share-buttons .whatsapp { color: #25D366; }
+.share-buttons .facebook { color: #1877F2; }
+.share-buttons .twitter { color: #1DA1F2; }
+
+
+/* ======== Ajustes solo móviles ======== */
+@media (max-width: 768px) {
+  .wrap-header-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 15px;
+  }
+
+  .header-mobile-right {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* separación entre lupa y menú */
+  }
+
+  .search-mobile i {
+    font-size: 22px;
+    color: #222;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .search-mobile i:hover {
+    color: #cfa44b; /* dorado Inka */
+  }
+
+  /* Ocultar ícono de búsqueda global en header desktop si existe */
+  .icon-header-item.js-show-search {
+    display: none !important;
+  }
+}

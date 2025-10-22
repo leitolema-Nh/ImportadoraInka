@@ -1,0 +1,105 @@
+🗂️ ESTRUCTURA FINAL RECOMENDADA (100% ESCALABLE)
+
+Aquí te muestro cómo debería quedar organizada tu aplicación web:
+
+📁 proyecto/
+│
+├─ 📁 api/                    # ✅ Tu backend PHP (ya existe)
+│   ├─ products.php
+│   ├─ categories.php
+│   ├─ subcategories.php
+│   └─ search.php
+│
+├─ 📁 css/                    # ✅ Estilos
+│   ├─ main.css
+│   ├─ products.css
+│   ├─ search.css
+│   ├─ header.css
+│   └─ footer.css
+│
+├─ 📁 js/                     # ✅ Scripts
+│   ├─ config.js
+│   ├─ products.js
+│   ├─ categories.js
+│   ├─ subcategories.js
+│   ├─ productsByCategories.js
+│   ├─ search.js
+│   ├─ header.js
+│   └─ footer.js
+│
+├─ 📁 vendor/                 # ✅ Librerías (Bootstrap, jQuery, etc.)
+│
+├─ 📁 images/                 # ✅ Imágenes y logos
+│
+├─ 📁 partials/               # ✅ Partes compartidas
+│   ├─ header.php
+│   └─ footer.php
+│
+├─ 📁 layout/                 # ✅ Plantilla base
+│   └─ layout.php
+│
+├─ 📁 pages/                  # ✅ Todas tus páginas
+│   ├─ index.php             (Inicio)
+│   ├─ productos.php        (Catálogo)
+│   ├─ about.php            (Nosotros)
+│   └─ contacto.php         (Contacto)
+│
+└─ 📄 .htaccess / config.php  (Opcional - configuración global)
+
+
+
+📌 Qué hace cada carpeta
+Carpeta	Función
+api/	Backend: archivos PHP que consultan la base de datos y devuelven JSON. (ya existe)
+css/	Todos tus estilos organizados. Ahora agregaremos header.css y footer.css.
+js/	Todo el JavaScript (productos, categorías, filtros, etc.). Ahora agregaremos header.js y footer.js.
+partials/	Componentes reutilizables (header.php y footer.php) que se cargan en todas las páginas.
+layout/	El archivo layout.php que une el header, footer y contenido dinámico.
+pages/	Tus páginas principales (index.php, productos.php, etc.). Estas usan layout.php.
+vendor/	Librerías externas (Bootstrap, jQuery, etc.). (ya tienes esta carpeta)
+images/	Imágenes estáticas, íconos y logos. (ya tienes esta carpeta)
+
+
+🗂️ ESTRUCTURA FINAL PARA shop.php
+
+📁 pages/
+│   └─ shop.php          ← Página principal del catálogo
+📁 partials/
+│   ├─ header.php        ← Navbar global
+│   ├─ footer.php        ← Footer global
+│   └─ product-modal.php ← Modal de detalles del producto
+📁 js/
+│   └─ products.js       ← Aquí se controla todo (listado, favoritos, modal)
+📁 api/
+│   ├─ products.php
+│   ├─ categories.php
+│   ├─ subcategories.php
+│   └─ productsByCategories.php
+
+🧠 LÓGICA FINAL DEL shop.php
+
+✅ Al cargar la página: se llaman automáticamente a
+
+api/products.php → muestra todos los productos.
+
+api/categories.php → genera los botones de categorías.
+
+✅ Botón "Mostrar todos": recarga todos los productos desde api/products.php.
+
+✅ Al hacer clic en categoría: llama a api/productsByCategories.php.
+
+✅ Al marcar subcategorías: vuelve a filtrar con api/productsByCategories.php.
+
+✅ Al hacer clic en tarjeta:
+
+Abre el modal.
+
+Muestra toda la info: imagen, código, descripción, precios.
+
+📁 Archivos que vamos a crear/actualizar ahora
+
+pages/shop.php → Página principal del catálogo
+
+partials/product-modal.php → Modal reutilizable
+
+js/products.js → Donde se controla la apertura del modal y carga de datos
