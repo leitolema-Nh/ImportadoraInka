@@ -20,16 +20,18 @@
       <div class="col-sm-6 col-lg-3 p-b-50">
         <h4 class="stext-301 cl0 p-b-30">Contacto</h4>
         <p class="stext-107 cl7 size-201">
-          Dirección, Ciudad, País <br>Tel: +1 234 567 890 <br>Email: info@tuempresa.com
+          Hnos Pinzon #82 casi esq manuela diez, Santo Domingo, Rep. Domincana <br>Tel: +1 809 681 8560 <br>Email: administracion@importadorainka.com
         </p>
       </div>
 
       <div class="col-sm-6 col-lg-3 p-b-50">
         <h4 class="stext-301 cl0 p-b-30">Síguenos</h4>
         <div>
-          <a class="fs-18 cl7 hov-cl1 trans-04 m-r-16"><i class="fa fa-facebook"></i></a>
-          <a class="fs-18 cl7 hov-cl1 trans-04 m-r-16"><i class="fa fa-instagram"></i></a>
-          <a class="fs-18 cl7 hov-cl1 trans-04 m-r-16"><i class="fa fa-youtube-play"></i></a>
+          <a href="https://www.facebook.com/importadorainka" target="_blank" rel="noopener noreferrer" class="fs-18 cl7 hov-cl1 trans-04 m-r-16"><i class="fa fa-facebook"></i></a>
+          <a href="https://www.instagram.com/importadorainka/" target="_blank" rel="noopener noreferrer" class="fs-18 cl7 hov-cl1 trans-04 m-r-16"><i class="fa fa-instagram"></i></a>
+          <a href="https://api.whatsapp.com/send/?phone=18096818560&text=Hola%2C%20me%20interesa%20conocer%20sus%20productos%20y%20promociones.%20He%20revisado%20la%20web%20https%3A%2F%2Fimportadorainka.com%20-%20por%20favor%20pueden%20enviarme%20detalles%20y%20disponibilidad%3F%20Gracias." target="_blank" rel="noopener noreferrer" class="fs-18 cl7 hov-cl1 trans-04 m-r-16" title="Abrir chat en WhatsApp" aria-label="WhatsApp">
+            <i class="fa fa-whatsapp" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
@@ -37,7 +39,7 @@
         <h4 class="stext-301 cl0 p-b-30">Importadora Inka</h4>
         <p class="stext-107 cl7">
           &copy; <?= date('Y'); ?> Importadora Inka. Todos los derechos reservados.<br>
-          Desarrollado por <strong>TuEmpresa</strong>
+          Desarrollado por <strong>Meetclic-RD</strong>
         </p>
       </div>
     </div>
