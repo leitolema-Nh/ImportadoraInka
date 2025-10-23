@@ -35,21 +35,21 @@ if (strpos($_SERVER['REQUEST_URI'], '/pages/') !== false) {
           'title' => 'Accesorios de tendencia Importados',
           'desc' => 'Descubre las últimas tendencias en accesorios de belleza.',
           'btn'  => 'Explorar Catálogo',
-          'link' => 'shop.php'
+          'link' => 'shop.php?cat=6'
         ],
         [
           'img' => 'slider-accesoriesnav.png',
           'title' => 'Promociones por Docena',
           'desc' => 'Aprovecha precios especiales en tus productos Navideños al por mayor.',
           'btn'  => 'Ver Ofertas',
-          'link' => 'shop.php'
+          'link' => 'shop.php?cat=10'
         ],
         [
           'img' => 'slider-accesoriescos.png',
           'title' => 'Nuevas Productos 2025',
           'desc' => 'Innovación y elegancia en cada detalle. Dale un toque único a tu estilo.',
           'btn'  => 'Ver Novedades',
-          'link' => 'shop.php'
+          'link' => 'shop.php?cat=3'
         ]
       ];
 
