@@ -1,66 +1,93 @@
 <?php
-header("Content-Type: application/javascript; charset=UTF-8");
+/**
+ * ============================================================
+ * CONFIG.JS.PHP - Configuración JavaScript dinámica
+ * Genera variables globales CONFIG para el frontend
+ * ============================================================
+ */
 
+header('Content-Type: application/javascript; charset=UTF-8');
+header('Cache-Control: no-cache, must-revalidate');
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+
+// Cargar configuración PHP
 $config = include __DIR__ . '/../config/config.php';
-$env = $config['env'] ?? 'dev';
+$env = $config['env'] ?? 'prod';
 
+// Detectar protocolo
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
-// CORRECCIÓN CLAVE: Detectar si el request viene de /pages/
-$referer = $_SERVER['HTTP_REFERER'] ?? '';
-$scriptPath = $_SERVER['SCRIPT_NAME'] ?? '/';
+// ============================================================
+// DETECCIÓN INTELIGENTE DE BASE URL
+// ============================================================
 
-// Si el referer contiene /pages/ o el script está siendo llamado desde /pages/
-if (strpos($referer, '/pages/') !== false) {
-    // Extraer la base desde el referer
-    $parts = explode('/pages/', $referer);
-    $baseURL = $parts[0] . '/';
-} else {
-    // Lógica original para otros casos
-    $scriptPath = str_replace('\\', '/', $scriptPath);
+// Por defecto, asumir raíz
+$baseURL = $protocol . $host . '/';
+
+// SOLO en localhost, detectar carpeta del proyecto
+if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+    $scriptPath = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '/');
     $parts = explode('/', trim($scriptPath, '/'));
     
-    // Buscar si estamos en una carpeta del proyecto
-    $projectFolder = '';
-    if (strpos($host, 'localhost') !== false) {
-        // En localhost, tomar el primer segmento que no sea 'js'
-        foreach ($parts as $part) {
-            if ($part && $part !== 'js') {
-                $projectFolder = $part;
-                break;
-            }
-        }
-    }
+    // Si el primer segmento no es 'js', 'api', 'pages', etc., es la carpeta del proyecto
+    $systemFolders = ['js', 'api', 'pages', 'config', 'vendor', 'images', 'files'];
     
-    $baseFolder = $projectFolder ? '/' . $projectFolder . '/' : '/';
-    $baseURL = $protocol . $host . $baseFolder;
+    if (!empty($parts[0]) && !in_array($parts[0], $systemFolders)) {
+        $baseURL = $protocol . $host . '/' . $parts[0] . '/';
+    }
 }
 
-// Asegurar que la URL base termine con /
+// Asegurar que termine con /
 $baseURL = rtrim($baseURL, '/') . '/';
+
+// ============================================================
+// DEFINIR RUTAS
+// ============================================================
 
 $filesPath  = ($env === 'prod') ? $baseURL . 'catalogo/files/' : $baseURL . 'files/';
 $imagesPath = $baseURL . 'images/';
 $apiURL     = $baseURL . 'api/';
 
+// ============================================================
+// GENERAR JAVASCRIPT
+// ============================================================
+
+// Configuración principal
 echo 'window.CONFIG = ' . json_encode([
-  'environment' => $env,
-  'baseURL'     => $baseURL,
-  'apiURL'      => $apiURL,
-  'imagesPath'  => $imagesPath,
-  'filesPath'   => $filesPath
+    'environment' => $env,
+    'baseURL'     => $baseURL,
+    'apiURL'      => $apiURL,
+    'imagesPath'  => $imagesPath,
+    'filesPath'   => $filesPath
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . ';';
 
-// Agregar un helper JavaScript para rutas
 echo "\n\n";
-echo "// Helper para construir rutas absolutas\n";
-echo "window.getAbsolutePath = function(path) {\n";
-echo "  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('//')) {\n";
-echo "    return path;\n";
-echo "  }\n";
-echo "  if (path.startsWith('/')) {\n";
-echo "    return CONFIG.baseURL + path.substring(1);\n";
-echo "  }\n";
-echo "  return CONFIG.baseURL + path;\n";
-echo "};\n";
+
+// Helper para construir rutas absolutas
+echo <<<'JAVASCRIPT'
+// Helper para construir rutas absolutas
+window.getAbsolutePath = function(path) {
+  if (!path) return CONFIG.baseURL;
+  
+  // Si ya es URL absoluta, retornar tal cual
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('//')) {
+    return path;
+  }
+  
+  // Si comienza con /, construir desde baseURL
+  if (path.startsWith('/')) {
+    return CONFIG.baseURL + path.substring(1);
+  }
+  
+  // Caso por defecto
+  return CONFIG.baseURL + path;
+};
+
+// Log de configuración (solo en desarrollo)
+if (CONFIG.environment === 'dev') {
+  console.log('🔧 CONFIG cargado:', CONFIG);
+}
+JAVASCRIPT;
+
+echo "\n";
