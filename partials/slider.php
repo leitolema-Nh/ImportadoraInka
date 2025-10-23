@@ -30,13 +30,7 @@ if (strpos($_SERVER['REQUEST_URI'], '/pages/') !== false) {
       <?php
       // 🔹 Estructura de slides - configurable
       $slides = [
-        [
-          'img' => 'slider-accesories.png',
-          'title' => 'Accesorios de tendencia Importados',
-          'desc' => 'Descubre las últimas tendencias en accesorios de belleza.',
-          'btn'  => 'Explorar Catálogo',
-          'link' => 'shop.php?cat=6'
-        ],
+
         [
           'img' => 'slider-accesoriesnav.png',
           'title' => 'Promociones por Docena',
@@ -44,6 +38,15 @@ if (strpos($_SERVER['REQUEST_URI'], '/pages/') !== false) {
           'btn'  => 'Ver Ofertas',
           'link' => 'shop.php?cat=10'
         ],
+
+        [
+          'img' => 'slider-accesories.png',
+          'title' => 'Accesorios de tendencia Importados',
+          'desc' => 'Descubre las últimas tendencias en accesorios de belleza.',
+          'btn'  => 'Explorar Catálogo',
+          'link' => 'shop.php?cat=6'
+        ],
+
         [
           'img' => 'slider-accesoriescos.png',
           'title' => 'Nuevas Productos 2025',
