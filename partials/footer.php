@@ -20,7 +20,7 @@
       <div class="col-sm-6 col-lg-3 p-b-50">
         <h4 class="stext-301 cl0 p-b-30">Contacto</h4>
         <p class="stext-107 cl7 size-201">
-          Hnos Pinzon #82 casi esq manuela diez, Santo Domingo, Rep. Domincana <br>Tel: +1 809 681 8560 <br>Email: administracion@importadorainka.com
+          Hnos. Pinzón #82 <br> (Casi esquina con Manuela Díez), <br>Santo Domingo, República Dominicana<br>Tel: +1 809 681 8560<br>Email: administracion@importadorainka.com
         </p>
       </div>
 
