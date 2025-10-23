@@ -84,7 +84,7 @@ window.getAbsolutePath = function(path) {
   return CONFIG.baseURL + path;
 };
 
-// Log de configuración (solo en desarrollo)
+// Log de configuración (solo en desarrollo) last change
 if (CONFIG.environment === 'dev') {
   console.log('🔧 CONFIG cargado:', CONFIG);
 }

@@ -266,7 +266,7 @@ window.helpers = {
 };
 
 /* =========================================================
-   🎠 SCROLL DE CATEGORÍAS Y SUBCATEGORÍAS
+   🎠 SCROLL DE CATEGORÍAS Y SUBCATEGORÍAS last change
    ========================================================= */
 function scrollSubcategories(direction) {
   var c = document.getElementById('subcategories-container');
