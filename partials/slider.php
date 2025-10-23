@@ -21,22 +21,22 @@
       $slides = [
         [
           'img' => '/inka/images/slider-accesories.png',
-          'title' => 'Accesorios y Cosméticos Importados',
-          'desc' => 'Descubre las últimas tendencias de belleza y fragancias premium.',
+          'title' => 'Accesorios de tendencia Importados',
+          'desc' => 'Descubre las últimas tendencias en accesorios de belleza.',
           'btn'  => 'Explorar Catálogo',
           'link' => 'shop.php'
         ],
         [
-          'img' => '/inka/images/slide-02.jpg',
+          'img' => '/inka/images/slider-accesoriesnav.png',
           'title' => 'Promociones por Docena',
-          'desc' => 'Aprovecha precios especiales en tus productos favoritos al por mayor.',
+          'desc' => 'Aprovecha precios especiales en tus productos Navideños al por mayor.',
           'btn'  => 'Ver Ofertas',
           'link' => 'shop.php'
         ],
         [
-          'img' => '/inka/images/slide-03.jpg',
-          'title' => 'Nuevas Fragancias 2025',
-          'desc' => 'Innovación y elegancia en cada aroma. Dale un toque único a tu estilo.',
+          'img' => '/inka/images/slider-accesoriescos.png',
+          'title' => 'Nuevas Productos 2025',
+          'desc' => 'Innovación y elegancia en cada detalle. Dale un toque único a tu estilo.',
           'btn'  => 'Ver Novedades',
           'link' => 'shop.php'
         ]

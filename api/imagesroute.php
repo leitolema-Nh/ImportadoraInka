@@ -1,4 +1,4 @@
-}<?php
+<?php
 /**
  * 📁 api/imagesroute.php — Normalizador de rutas de imágenes
  * Unifica todos los casos (string/JSON/absoluto) y devuelve URL absolutas.

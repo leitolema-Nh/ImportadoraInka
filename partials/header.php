@@ -83,7 +83,7 @@ if (strpos($_SERVER['REQUEST_URI'], '/pages/') !== false) {
           <a href="<?= $base ?>pages/cuenta.php" class="flex-c-m trans-04 p-lr-25">
             Mi Cuenta
           </a>
-
+<!--
           <a href="#" class="flex-c-m trans-04 p-lr-25" onclick="toggleLanguage()">
             ES
           </a>
@@ -91,6 +91,7 @@ if (strpos($_SERVER['REQUEST_URI'], '/pages/') !== false) {
           <a href="#" class="flex-c-m trans-04 p-lr-25" onclick="toggleCurrency()">
             RD$
           </a>
+-->
         </div>
 
       </div>
@@ -158,7 +159,7 @@ if (strpos($_SERVER['REQUEST_URI'], '/pages/') !== false) {
   <ul class="topbar-mobile">
     <li>
       <div class="left-top-bar">
-        Envíos gratis en pedidos mayores a RD$3,000
+        Envíos en pedidos mayores a RD$1,000
       </div>
     </li>
 
@@ -171,14 +172,15 @@ if (strpos($_SERVER['REQUEST_URI'], '/pages/') !== false) {
         <a href="<?= $base ?>pages/cuenta.php" class="flex-c-m p-lr-10 trans-04">
           Mi Cuenta
         </a>
+<!--
+          <a href="#" class="flex-c-m trans-04 p-lr-25" onclick="toggleLanguage()">
+            ES
+          </a>
 
-        <a href="#" class="flex-c-m p-lr-10 trans-04">
-          ES
-        </a>
-
-        <a href="#" class="flex-c-m p-lr-10 trans-04">
-          RD$
-        </a>
+          <a href="#" class="flex-c-m trans-04 p-lr-25" onclick="toggleCurrency()">
+            RD$
+          </a>
+-->
       </div>
     </li>
   </ul>
