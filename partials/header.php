@@ -80,7 +80,7 @@ if (strpos($_SERVER['REQUEST_URI'], '/pages/') !== false) {
             Ayuda & Preguntas
           </a>
 
-          <a href="<?= $base ?>pages/cuenta.php" class="flex-c-m trans-04 p-lr-25">
+          <a href="<?= $base ?>catalogo/index.php" class="flex-c-m trans-04 p-lr-25">
             Mi Cuenta
           </a>
 <!--
@@ -169,7 +169,7 @@ if (strpos($_SERVER['REQUEST_URI'], '/pages/') !== false) {
           Ayuda & Preguntas
         </a>
 
-        <a href="<?= $base ?>pages/cuenta.php" class="flex-c-m p-lr-10 trans-04">
+        <a href="<?= $base ?>catalogo/index.php" class="flex-c-m p-lr-10 trans-04">
           Mi Cuenta
         </a>
 <!--
