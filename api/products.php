@@ -15,6 +15,7 @@ try {
     die(json_encode(['status'=>'error','mensaje'=>'Init: '.$e->getMessage()]));
 }
 
+// ✅ ASEGURAR QUE SEAN ENTEROS
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $limit = isset($_GET['limit']) ? max(1, (int)$_GET['limit']) : 20;
 $offset = ($page - 1) * $limit;
@@ -79,16 +80,32 @@ try {
         }
     }
     
+    // ✅ QUERY SIN BÚSQUEDA (CASO NORMAL)
     $countRes = $conn->query("SELECT COUNT(*) AS total FROM products WHERE prodConfirm=1 AND precioConfirm=1 AND status=0");
     if (!$countRes) throw new Exception($conn->error);
     $total = (int)($countRes->fetch_assoc()['total'] ?? 0);
     $countRes->free();
     
     $sql = "SELECT p.id, p.codigo, p.imagen, p.tipoProducto, p.descripcion, p.cantidad, p.tipoUnidad, p.Pv1 AS precio_general, p.Pv2 AS precio_mayor, p.Pv3 AS precio_docena, cp.Name_category AS categoria, p.containerid FROM products p LEFT JOIN subcategory_products sp ON p.tipoProducto = sp.name_subcategory LEFT JOIN category_products cp ON sp.category_id = cp.id WHERE p.prodConfirm=1 AND p.precioConfirm=1 AND p.status=0 ORDER BY p.containerid DESC, p.id ASC LIMIT ? OFFSET ?";
+    
     $stmt = $conn->prepare($sql);
-    if (!$stmt) throw new Exception($conn->error);
-    $stmt->bind_param("ii", $limit, $offset);
-    $stmt->execute();
+    if (!$stmt) {
+        throw new Exception("Error preparing statement: " . $conn->error);
+    }
+    
+    // ✅ ASEGURAR QUE LAS VARIABLES SEAN ENTEROS ANTES DEL BIND
+    $limitInt = (int)$limit;
+    $offsetInt = (int)$offset;
+    
+    // ✅ BIND CORREGIDO - usar variables separadas
+    if (!$stmt->bind_param("ii", $limitInt, $offsetInt)) {
+        throw new Exception("Error binding parameters: " . $stmt->error);
+    }
+    
+    if (!$stmt->execute()) {
+        throw new Exception("Error executing statement: " . $stmt->error);
+    }
+    
     $res = $stmt->get_result();
     
     $productos = [];
@@ -101,6 +118,8 @@ try {
         $productos[] = $row;
     }
     
+    $stmt->close();
+    
     die(json_encode([
         'status'=>'ok',
         'total'=>$total,
@@ -112,5 +131,13 @@ try {
     
 } catch (Throwable $e) {
     http_response_code(500);
-    die(json_encode(['status'=>'error','mensaje'=>$e->getMessage()], JSON_UNESCAPED_UNICODE));
+    die(json_encode([
+        'status'=>'error',
+        'mensaje'=>'Error fatal',
+        'details'=>[
+            'message'=>$e->getMessage(),
+            'file'=>$e->getFile(),
+            'line'=>$e->getLine()
+        ]
+    ], JSON_UNESCAPED_UNICODE));
 }

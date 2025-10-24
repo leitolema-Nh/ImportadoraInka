@@ -1,143 +1,209 @@
 /* =========================================================
-   🧱 TARJETAS DE PRODUCTO
+   🧱 TARJETAS DE PRODUCTO - ESTILO COZASTORE
    ========================================================= */
-.product-card,
+
+/* Contenedor principal */
 .block2 {
-  border: 1px solid #e5e5e5;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  background: #fff;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  transition: all 0.3s ease;
+  background: transparent;
 }
-.product-card:hover,
+
 .block2:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  transform: translateY(-3px);
+  box-shadow: none;
+  transform: none;
 }
 
 /* Imagen de producto */
-.card-img-container,
 .block2-pic {
   position: relative;
   width: 100%;
-  height: 320px;
+  height: auto;
   overflow: hidden;
   background: #fff;
+  border: 1px solid #e6e6e6;
+}
+
+.block2-pic img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.block2:hover .block2-pic img {
+  transform: scale(1.1);
+}
+
+/* =========================================================
+   🏷️ BADGE DE CÓDIGO (Label New Style)
+   ========================================================= */
+.block2-label-new {
+  position: absolute;
+  z-index: 10;
+  top: 12px;
+  left: 12px;
+  
+  min-width: 50px;
+  height: 22px;
+  padding: 0 8px;
+  
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #eee;
-}
-.card-img-container img,
-.block2-pic img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-/* Código del producto */
-.codigo-overlay {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: #fff;
-  padding: 6px 12px;
+  
+  background-color: #66a8a6;
+  color: #fff;
+  
+  font-family: 'Montserrat-Regular', sans-serif;
+  font-size: 11px;
   font-weight: 600;
-  font-size: 14px;
-  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  border-radius: 11px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  z-index: 2;
-}
-
-/* Responsivo */
-@media (max-width: 768px) {
-  .card-img-container,
-  .block2-pic {
-    height: 300px;
-  }
 }
 
 /* =========================================================
-   🏷️ TEXTOS, TÍTULOS Y SUBCATEGORÍAS
+   🔘 BOTÓN "QUICK VIEW"
    ========================================================= */
-.product-title {
-  font-size: 15px;
-  font-weight: 600;
-  font-family: 'Poppins', 'Montserrat', sans-serif;
-  color: #222;
-  margin-bottom: 6px;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.block2-btn {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  
+  transition: all 0.4s ease;
+  white-space: nowrap;
 }
 
-.badge-subcat {
-  display: inline-block;
-  background: #f4f4f4;
-  color: #555;
-  font-size: 12px;
-  font-weight: 500;
-  font-family: 'Poppins', 'Montserrat', sans-serif;
-  padding: 3px 8px;
-  border-radius: 12px;
-  margin-bottom: 10px;
+.block2:hover .block2-btn {
+  bottom: 20px;
 }
 
 /* =========================================================
-   💰 CAJA DE PRECIOS
+   📝 TEXTO DE LA TARJETA
    ========================================================= */
-.price-box {
-  margin-top: 12px;
-  padding: 14px 0;
-  border-top: 1px solid #eee;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.block2-txt {
+  padding-top: 14px;
 }
-.price-header {
-  font-size: 15px;
-  font-weight: 700;
-  color: #2f7d32;
+
+.block2-txt-child1 {
+  width: calc(100% - 30px);
 }
-.price-row {
+
+.block2-txt-child2 {
+  width: 30px;
+  padding-top: 3px;
+}
+
+/* Nombre del producto */
+.js-name-detail {
+  display: block;
+  font-family: 'Poppins-Regular', sans-serif;
   font-size: 14px;
-  display: flex;
-  justify-content: space-between;
-  margin-left: 25px;
-  color: #666;
+  line-height: 1.5;
+  color: #555;
+  padding-bottom: 6px;
+  transition: color 0.3s ease;
 }
-.price-row .label {
-  color: #999;
+
+.js-name-detail:hover {
+  color: #6c7ae0;
+  text-decoration: none;
 }
-.price-row .value {
-  font-weight: 600;
-  color: #444;
+
+/* Precio */
+.stext-105 {
+  font-family: 'Poppins-Medium', sans-serif;
+  font-size: 15px;
+  line-height: 1.466667;
+  color: #333;
 }
 
 /* =========================================================
-   🎞️ CATEGORÍAS PRINCIPALES (tipo YouTube)
+   ❤️ BOTÓN DE FAVORITOS CON ZMDI ICONS
+   ========================================================= */
+.btn-addwish-b2 {
+  display: block;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-addwish-b2:hover {
+  background-color: #f7f7f7;
+}
+
+.btn-addwish-b2 .icon-heart1,
+.btn-addwish-b2 .icon-heart2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  color: #888;
+  transition: all 0.3s ease;
+}
+
+.btn-addwish-b2 .icon-heart2 {
+  opacity: 0;
+  color: #e65540;
+}
+
+.btn-addwish-b2:hover .icon-heart2,
+.js-addedwish-b2 .icon-heart2 {
+  opacity: 1;
+}
+
+.btn-addwish-b2:hover .icon-heart1,
+.js-addedwish-b2 .icon-heart1 {
+  opacity: 0;
+}
+
+/* Animación del corazón */
+.js-addedwish-b2 .icon-heart2 {
+  animation: heartBeat 0.3s ease-in-out;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.3); }
+}
+
+/* =========================================================
+   🎞️ CATEGORÍAS PRINCIPALES (ESTILO YOUTUBE)
    ========================================================= */
 .categories-wrapper {
   position: relative;
   margin-bottom: 20px;
   min-height: 48px;
+  background: #fff;
 }
+
 .categories-bar {
   display: flex;
   align-items: center;
   gap: 10px;
   overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  scrollbar-width: none; /* Firefox */
   padding: 8px 48px;
   white-space: nowrap;
 }
+
 .categories-bar::-webkit-scrollbar {
-  display: none;
+  display: none; /* Chrome, Safari, Edge */
 }
+
 .category-btn {
   flex: 0 0 auto;
   padding: 6px 14px;
@@ -145,20 +211,25 @@
   background: #2f2f2f;
   color: #fff;
   font-size: 14px;
+  font-family: 'Poppins-Regular', sans-serif;
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
+  white-space: nowrap;
 }
+
 .category-btn:hover {
   background: #444;
 }
+
 .category-btn.active {
   background: #fff;
   color: #000;
   font-weight: 700;
+  border: 1px solid #ddd;
 }
 
-/* Botones scroll */
+/* Botones de scroll lateral */
 .cat-scroll-btn {
   position: absolute;
   top: 50%;
@@ -175,19 +246,28 @@
   color: #555;
   transition: all 0.3s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
+
 .cat-scroll-btn i {
   font-size: 18px;
 }
+
 .cat-scroll-btn:hover {
   background: #333;
   color: #fff;
   border-color: #333;
 }
-.cat-scroll-btn.left { left: 8px; }
-.cat-scroll-btn.right { right: 8px; }
 
-/* Gradiente lateral */
+.cat-scroll-btn.left { 
+  left: 8px; 
+}
+
+.cat-scroll-btn.right { 
+  right: 8px; 
+}
+
+/* Gradiente lateral para efecto fade */
 .categories-wrapper::before,
 .categories-wrapper::after {
   content: "";
@@ -198,50 +278,44 @@
   z-index: 15;
   pointer-events: none;
 }
+
 .categories-wrapper::before {
   left: 0;
   background: linear-gradient(to right, #fff, transparent);
 }
+
 .categories-wrapper::after {
   right: 0;
   background: linear-gradient(to left, #fff, transparent);
 }
 
-/* Móviles */
-@media (max-width: 991px) {
-  .cat-scroll-btn,
-  .categories-wrapper::before,
-  .categories-wrapper::after {
-    display: none !important;
-  }
-  .categories-bar {
-    padding: 8px 0;
-  }
-}
-
 /* =========================================================
-   🎠 SUBCATEGORÍAS SLIDER (idéntico a categorías)
+   🎠 SUBCATEGORÍAS SLIDER (ESTILO YOUTUBE)
    ========================================================= */
 .subcategories-wrapper {
   position: relative;
   margin-bottom: 20px;
   min-height: 48px;
+  background: #f8f8f8;
 }
+
 .subcategories-bar {
   display: flex;
   align-items: center;
   gap: 10px;
   overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding: 8px 48px;
   white-space: nowrap;
 }
+
 .subcategories-bar::-webkit-scrollbar {
   display: none;
 }
 
-/* Botones (reutiliza mismo estilo de categoría, solo cambia color) */
+/* Botones de subcategorías (chips) */
 .subcategory-tag {
   flex: 0 0 auto;
   padding: 6px 14px;
@@ -251,13 +325,17 @@
   color: #333;
   font-size: 14px;
   font-weight: 500;
+  font-family: 'Poppins-Regular', sans-serif;
   cursor: pointer;
   transition: all 0.25s ease;
   user-select: none;
+  white-space: nowrap;
 }
+
 .subcategory-tag:hover {
   background: #f2f2f2;
 }
+
 .subcategory-tag.active {
   background: #222;
   color: #fff;
@@ -266,7 +344,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Flechas */
+/* Flechas de scroll */
 .subcat-scroll-btn {
   position: absolute;
   top: 50%;
@@ -283,14 +361,22 @@
   color: #555;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  z-index: 10;
 }
+
 .subcat-scroll-btn:hover {
   background: #333;
   color: #fff;
   border-color: #333;
 }
-.subcat-scroll-btn.left { left: 8px; }
-.subcat-scroll-btn.right { right: 8px; }
+
+.subcat-scroll-btn.left { 
+  left: 8px; 
+}
+
+.subcat-scroll-btn.right { 
+  right: 8px; 
+}
 
 /* Gradiente lateral */
 .subcategories-wrapper::before,
@@ -303,29 +389,69 @@
   z-index: 15;
   pointer-events: none;
 }
+
 .subcategories-wrapper::before {
   left: 0;
   background: linear-gradient(to right, #f8f8f8, transparent);
 }
+
 .subcategories-wrapper::after {
   right: 0;
   background: linear-gradient(to left, #f8f8f8, transparent);
 }
 
-/* Móviles */
+/* =========================================================
+   📱 RESPONSIVE - MÓVILES
+   ========================================================= */
 @media (max-width: 991px) {
+  /* Ocultar botones de scroll y gradientes en móviles */
+  .cat-scroll-btn,
   .subcat-scroll-btn,
+  .categories-wrapper::before,
+  .categories-wrapper::after,
   .subcategories-wrapper::before,
   .subcategories-wrapper::after {
     display: none !important;
   }
+  
+  /* Ajustar padding sin botones */
+  .categories-bar,
   .subcategories-bar {
     padding: 8px 0;
     gap: 8px;
   }
+  
+  /* Reducir tamaño de botones */
+  .category-btn,
   .subcategory-tag {
     font-size: 13px;
     padding: 6px 10px;
+  }
+  
+  /* Badge de código más pequeño */
+  .block2-label-new {
+    top: 8px;
+    left: 8px;
+    font-size: 10px;
+    height: 20px;
+    min-width: 45px;
+  }
+  
+  /* Botón Quick View */
+  .block2-btn {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+  
+  .block2:hover .block2-btn {
+    bottom: 15px;
+  }
+}
+
+@media (max-width: 767px) {
+  .categories-wrapper,
+  .subcategories-wrapper {
+    margin-bottom: 15px;
   }
 }
 
@@ -337,7 +463,66 @@
 .panel-filter {
   margin-bottom: 18px;
 }
+
 .catalog-grid {
   padding-top: 16px;
   padding-bottom: 60px;
+}
+
+/* =========================================================
+   🔍 BOTÓN FILTRAR Y COMPARTIR
+   ========================================================= */
+.js-show-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-share {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-share:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-share.whatsapp:hover {
+  background: #25D366;
+  color: #fff;
+  border-color: #25D366;
+}
+
+.btn-share.facebook:hover {
+  background: #1877F2;
+  color: #fff;
+  border-color: #1877F2;
+}
+
+.btn-share.twitter:hover {
+  background: #1DA1F2;
+  color: #fff;
+  border-color: #1DA1F2;
+}
+
+.btn-share.instagram:hover {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
+  border-color: transparent;
 }

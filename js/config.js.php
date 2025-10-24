@@ -3,6 +3,7 @@
  * ============================================================
  * CONFIG.JS.PHP - Configuración JavaScript dinámica
  * Genera variables globales CONFIG para el frontend
+ * ✅ CORREGIDO: Ahora usa directamente config.php (sin reimplementar lógica)
  * ============================================================
  */
 
@@ -10,44 +11,18 @@ header('Content-Type: application/javascript; charset=UTF-8');
 header('Cache-Control: no-cache, must-revalidate');
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
-// Cargar configuración PHP
+// ✅ CARGAR CONFIGURACIÓN COMPLETA DESDE config.php
 $config = include __DIR__ . '/../config/config.php';
-$env = $config['env'] ?? 'prod';
 
-// Detectar protocolo
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
-$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+// ✅ USAR DIRECTAMENTE LAS RUTAS QUE YA CALCULÓ config.php
+$env = $config['env'];
+$paths = $config['paths'];
 
-// ============================================================
-// DETECCIÓN INTELIGENTE DE BASE URL
-// ============================================================
-
-// Por defecto, asumir raíz
-$baseURL = $protocol . $host . '/';
-
-// SOLO en localhost, detectar carpeta del proyecto
-if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
-    $scriptPath = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '/');
-    $parts = explode('/', trim($scriptPath, '/'));
-    
-    // Si el primer segmento no es 'js', 'api', 'pages', etc., es la carpeta del proyecto
-    $systemFolders = ['js', 'api', 'pages', 'config', 'vendor', 'images', 'files'];
-    
-    if (!empty($parts[0]) && !in_array($parts[0], $systemFolders)) {
-        $baseURL = $protocol . $host . '/' . $parts[0] . '/';
-    }
-}
-
-// Asegurar que termine con /
-$baseURL = rtrim($baseURL, '/') . '/';
-
-// ============================================================
-// DEFINIR RUTAS
-// ============================================================
-
-$filesPath  = ($env === 'prod') ? $baseURL . 'catalogo/files/' : $baseURL . 'files/';
-$imagesPath = $baseURL . 'images/';
-$apiURL     = $baseURL . 'api/';
+// ✅ NO REIMPLEMENTAR LA LÓGICA - usar lo que ya está calculado
+$baseURL = $paths['baseURL'];
+$filesPath = $baseURL . $paths['webFiles'];
+$imagesPath = $baseURL . $paths['webImages'];
+$apiURL = $baseURL . 'api/';
 
 // ============================================================
 // GENERAR JAVASCRIPT
@@ -84,7 +59,7 @@ window.getAbsolutePath = function(path) {
   return CONFIG.baseURL + path;
 };
 
-// Log de configuración (solo en desarrollo) last change
+// Log de configuración (solo en desarrollo)
 if (CONFIG.environment === 'dev') {
   console.log('🔧 CONFIG cargado:', CONFIG);
 }

@@ -1,3 +1,22 @@
+# Servidor web
 /files/
 /catalogo/
 /appext/
+.env
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+error_log
+
+# Temporales
+/vendor/

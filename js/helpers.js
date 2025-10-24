@@ -1,26 +1,104 @@
 // ===================================================
-// ✅ helpers.js — utilidades globales INKA
+// 🔧 helpers.js — Utilidades globales INKA
 // ===================================================
 
 console.log('🔧 helpers.js cargando...');
 
-// Configuración fallback si CONFIG no existe
+// Configuración fallback
 window.CONFIG = window.CONFIG || (function() {
-  var protocol = window.location.protocol;
-  var host = window.location.host;
-  var pathname = window.location.pathname;
-  
-  // Detectar base URL
-  var base = protocol + '//' + host + '/';
-  
-  // Si estamos en localhost con carpeta
-  if (host.indexOf('localhost') !== -1) {
-    var parts = pathname.split('/').filter(function(p) { return p; });
-    if (parts.length > 0 && parts[0] !== 'pages') {
-      base = protocol + '//' + host + '/' + parts[0] + '/';
+  // 1) Si existe <base href> en el HTML, usarla (más confiable)
+  var baseTag = document.querySelector('base');
+  if (baseTag && baseTag.href) {
+    var u = new URL(baseTag.href, location.href);
+    var basePath = (u.pathname || '/').replace(/\/?$/, '/');
+    return {
+      baseURL: u.origin + basePath,
+      apiURL: u.origin + basePath + 'api/',
+      imagesPath: u.origin + basePath + 'images/',
+      filesPath: u.origin + basePath + 'files/'
+    };
+  }
+
+  // 2) Intentar derivar la base desde el src del script actual (document.currentScript)
+  var script = document.currentScript || (function() {
+    var s = document.getElementsByTagName('script');
+    return s[s.length - 1];
+  })();
+
+  if (script && script.src) {
+    try {
+      var u = new URL(script.src, location.href);
+      var pathname = u.pathname.replace(/\/+$/, '');
+
+      // Si el script está en /js/... -> cortar hasta antes de /js/
+      var idx = pathname.indexOf('/js/');
+      var projectPath = '/';
+
+      if (idx > 0) {
+        // hay una carpeta de proyecto antes de /js/
+        projectPath = pathname.substring(0, idx + 1); // incluye la barra final
+      } else if (idx === 0) {
+        // script servido desde la raíz (/js/...), revisar la ruta de la página
+        var pageParts = location.pathname.split('/').filter(function(p){ return p; });
+        var firstPage = pageParts[0] || '';
+        // si la página está en un subfolder razonable, usarlo como carpeta de proyecto
+        if (firstPage && firstPage !== 'js' && firstPage !== 'pages' && firstPage !== 'api') {
+          projectPath = '/' + firstPage + '/';
+        } else {
+          projectPath = '/';
+        }
+      } else {
+        // no encontramos /js/ en script.src, intentar tomar el primer segmento del script
+        var parts = pathname.split('/').filter(function(p){ return p; });
+        if (parts.length > 1) {
+          // si script path es /<project>/<something>, tomar <project>
+          projectPath = '/' + parts[0] + '/';
+        } else {
+          projectPath = '/';
+        }
+      }
+
+      // Preferir la carpeta que aparece en la URL de la página cuando estamos en red local
+      var pagePartsForProject = location.pathname.split('/').filter(function(p){ return p; });
+      if (pagePartsForProject.length && pagePartsForProject[0] !== 'js' && pagePartsForProject[0] !== projectPath.replace(/\//g, '')) {
+        // Si la página vive en /<algo>/... y el script fue pedido desde /js/, usar la carpeta de la página
+        var candidate = '/' + pagePartsForProject[0] + '/';
+        if (candidate !== projectPath) {
+          projectPath = candidate;
+        }
+      }
+
+      var base = u.origin + projectPath;
+      base = base.replace(/([^:]\/)\/+/g, '$1'); // normalizar dobles slashes
+      return {
+        baseURL: base,
+        apiURL: base + 'api/',
+        imagesPath: base + 'images/',
+        filesPath: base + 'files/'
+      };
+    } catch (e) {
+      console.warn('⚠️ helpers.js: error parseando script.src:', e.message);
     }
   }
-  
+
+  // 3) Fallback anterior (pathname / hostname)
+  var protocol = location.protocol;
+  var host = location.host; // con puerto si aplica
+  var pathname = location.pathname || '/';
+  var parts = pathname.split('/').filter(function(p) { return p; });
+  var first = parts[0] || '';
+
+  var hostname = location.hostname;
+  var isLocal = /^(localhost|127\.0\.0\.1|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3})$/.test(hostname);
+
+  var projectSegment = '/';
+  if (isLocal && first && first !== 'pages' && first !== 'api') {
+    projectSegment = '/' + first + '/';
+  }
+
+  var base = protocol + '//' + host.replace(/\/$/, '') + projectSegment;
+  base = base.replace(/([^:]\/)\/+/g, '$1');
+
   console.warn('⚠️ CONFIG no encontrado, usando fallback:', base);
   return {
     baseURL: base,
@@ -39,7 +117,7 @@ window.helpers = {
    * Fetch JSON desde API
    */
   fetchJSON: function(endpoint) {
-    var url = (window.CONFIG.apiURL || '/api/') + endpoint;
+    var url = window.CONFIG.apiURL + endpoint;
     console.log('📡 fetchJSON:', url);
     
     return fetch(url)
@@ -51,35 +129,6 @@ window.helpers = {
         console.error('❌ fetchJSON error:', err);
         return null;
       });
-  },
-
-  /**
-   * Normalizar URL de imagen
-   */
-  normalizeImageUrl: function(raw) {
-    try {
-      if (!raw || raw === 'null' || raw === 'undefined') {
-        return (window.CONFIG.imagesPath || '/images/') + 'default.jpg';
-      }
-      
-      // Si ya es URL completa
-      if (/^https?:\/\//i.test(raw)) return raw;
-      
-      // Limpiar ruta
-      var cleaned = raw.replace(/\\/g, '/').replace(/^\/+/, '');
-      
-      // Si ya tiene files/ o images/
-      if (/^files\//i.test(cleaned) || /^images\//i.test(cleaned)) {
-        return window.CONFIG.baseURL + cleaned;
-      }
-      
-      // Por defecto asumir que está en files/
-      return window.CONFIG.baseURL + 'files/' + cleaned;
-      
-    } catch (e) {
-      console.warn('normalizeImageUrl error:', e);
-      return (window.CONFIG.imagesPath || '/images/') + 'default.jpg';
-    }
   },
 
   /**
@@ -106,6 +155,7 @@ window.helpers = {
 
   /**
    * 🎨 RENDERIZAR PRODUCTOS EN EL GRID
+   * Ahora llama al endpoint PHP que retorna HTML renderizado
    */
   renderProducts: function(items, append) {
     append = append || false;
@@ -119,17 +169,15 @@ window.helpers = {
 
     console.log('🎨 Renderizando ' + (items ? items.length : 0) + ' productos (append: ' + append + ')');
 
-    // Limpiar contenedor si no es append
     if (!append) {
       container.innerHTML = '';
     }
 
-    // Validar que hay productos
     if (!Array.isArray(items) || items.length === 0) {
       if (!append) {
         container.innerHTML = 
           '<div class="col-12 text-center py-5">' +
-          '<i class="fa fa-inbox fa-4x text-muted mb-3"></i>' +
+          '<i class="zmdi zmdi-inbox zmdi-hc-4x text-muted mb-3"></i>' +
           '<h4 class="text-muted">No se encontraron productos</h4>' +
           '</div>';
       }
@@ -137,114 +185,109 @@ window.helpers = {
       return;
     }
 
-    // Crear fragment para mejor performance
-    var fragment = document.createDocumentFragment();
-    
-    for (var i = 0; i < items.length; i++) {
-      var producto = items[i];
+    // ✅ Llamar al endpoint PHP que renderiza el HTML
+    fetch(window.CONFIG.apiURL + 'renderProductCard.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ productos: items })
+    })
+    .then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.text();
+    })
+    .then(function(html) {
+      // Insertar HTML en el contenedor
+      if (append) {
+        container.insertAdjacentHTML('beforeend', html);
+      } else {
+        container.innerHTML = html;
+      }
       
-      var div = document.createElement('div');
-      div.className = 'col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item';
+      console.log('✅ ' + items.length + ' productos renderizados desde PHP');
       
-      // Normalizar imagen
-      var imgUrl = helpers.normalizeImageUrl(producto.imagen);
-      
-      // Formatear precios
-      var precioGeneral = parseFloat(producto.precio_general || 0).toFixed(2);
-      var precioMayor = parseFloat(producto.precio_mayor || 0).toFixed(2);
-      var precioDocena = parseFloat(producto.precio_docena || 0).toFixed(2);
-      
-      // Escapar texto
-      var descripcion = helpers.escapeHtml(producto.descripcion || 'Sin descripción');
-      var codigo = helpers.escapeHtml(producto.codigo || '');
-      var tipoProducto = helpers.escapeHtml(producto.tipoProducto || '');
-      
-      // HTML de la tarjeta
-      div.innerHTML = 
-        '<div class="block2">' +
-          '<div class="block2-pic hov-img0">' +
-            '<img src="' + imgUrl + '" alt="' + descripcion + '" ' +
-                 'onerror="this.src=\'' + CONFIG.imagesPath + 'default.jpg\'">' +
-            (codigo ? '<span class="codigo-overlay">' + codigo + '</span>' : '') +
-          '</div>' +
-          '<div class="block2-txt flex-w flex-t p-t-14">' +
-            '<div class="block2-txt-child1 flex-col-l">' +
-              (tipoProducto ? '<span class="stext-105 cl3 mb-2">' + tipoProducto + '</span>' : '') +
-              '<a href="#" class="stext-104 cl4 hov-cl1 trans-04 js-name-detail p-b-6" ' +
-                 'data-id="' + producto.id + '">' +
-                descripcion +
-              '</a>' +
-              '<div class="price-box mt-2">' +
-                '<span class="stext-105 cl3">' +
-                  '<strong>General:</strong> RD$ ' + precioGeneral +
-                '</span>' +
-                (precioMayor > 0 ? 
-                  '<span class="stext-105 cl3">' +
-                    '<strong>Mayor:</strong> RD$ ' + precioMayor +
-                  '</span>' : '') +
-                (precioDocena > 0 ? 
-                  '<span class="stext-105 cl3">' +
-                    '<strong>Docena:</strong> RD$ ' + precioDocena +
-                  '</span>' : '') +
-              '</div>' +
-            '</div>' +
-            '<div class="block2-txt-child2 flex-r p-t-3">' +
-              '<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" ' +
-                 'data-id="' + producto.id + '" title="Ver detalles">' +
-                '<i class="zmdi zmdi-eye"></i>' +
-              '</a>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
-      
-      fragment.appendChild(div);
-    }
-    
-    // Agregar todo al DOM de una vez
-    container.appendChild(fragment);
-    
-    console.log('✅ ' + items.length + ' productos renderizados correctamente');
-    
-    // Inicializar Isotope si está disponible (con delay para asegurar que el DOM esté listo)
-    setTimeout(function() {
-      if (window.$ && $.fn.isotope) {
-        try {
-          var $container = $(container);
-          
-          // Si ya está inicializado, solo recarga
-          if ($container.data('isotope')) {
-            $container.isotope('reloadItems').isotope();
-            console.log('✅ Isotope recargado');
-          } else {
-            // Primera inicialización
-            $container.isotope({
-              itemSelector: '.isotope-item',
-              layoutMode: 'fitRows',
-              percentPosition: true
-            });
-            console.log('✅ Isotope inicializado');
+      // Inicializar Isotope
+      setTimeout(function() {
+        if (window.$ && $.fn.isotope) {
+          try {
+            var $container = $(container);
+            
+            if ($container.data('isotope')) {
+              $container.isotope('reloadItems').isotope();
+              console.log('✅ Isotope recargado');
+            } else {
+              $container.isotope({
+                itemSelector: '.isotope-item',
+                layoutMode: 'fitRows',
+                percentPosition: true
+              });
+              console.log('✅ Isotope inicializado');
+            }
+          } catch (e) {
+            console.warn('⚠️ Isotope error:', e.message);
           }
-        } catch (e) {
-          console.warn('⚠️ Isotope no pudo inicializarse:', e.message);
         }
-      }
-    }, 100);
+      }, 100);
+      
+      // Vincular eventos
+      setTimeout(function() {
+        helpers.bindProductEvents();
+      }, 150);
+    })
+    .catch(function(err) {
+      console.error('❌ Error renderizando productos:', err);
+      container.innerHTML = 
+        '<div class="col-12 text-center text-danger py-4">' +
+        'Error al cargar productos' +
+        '</div>';
+    });
+  },
+  
+  /**
+   * 🎯 Vincular eventos a las tarjetas
+   */
+  bindProductEvents: function() {
+    // Quick View
+    document.querySelectorAll('.js-show-modal1').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var productId = this.getAttribute('data-id');
+        if (productId && window.shopModal) {
+          helpers.fetchJSON('product.php?id=' + productId)
+            .then(function(response) {
+              if (response && response.producto) {
+                window.shopModal.open(response.producto);
+              }
+            });
+        }
+      });
+    });
     
-    // Agregar event listeners a los botones de ver detalles
-    setTimeout(function() {
-      var buttons = document.querySelectorAll('.js-addwish-b2, .js-name-detail');
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', function(e) {
-          e.preventDefault();
-          var productId = this.getAttribute('data-id');
-          if (productId && typeof window.openProductModal === 'function') {
-            window.openProductModal(productId);
-          } else {
-            console.log('Ver producto:', productId);
-          }
-        });
-      }
-    }, 100);
+    // Título del producto
+    document.querySelectorAll('.js-name-detail').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var productId = this.getAttribute('data-id');
+        if (productId && window.shopModal) {
+          helpers.fetchJSON('product.php?id=' + productId)
+            .then(function(response) {
+              if (response && response.producto) {
+                window.shopModal.open(response.producto);
+              }
+            });
+        }
+      });
+    });
+    
+    // Favoritos
+    document.querySelectorAll('.js-addwish-b2').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        this.classList.toggle('js-addedwish-b2');
+        console.log('❤️ Favorito:', this.getAttribute('data-id'));
+      });
+    });
   },
   
   /**
@@ -266,7 +309,7 @@ window.helpers = {
 };
 
 /* =========================================================
-   🎠 SCROLL DE CATEGORÍAS Y SUBCATEGORÍAS last change
+   🎠 SCROLL DE CATEGORÍAS Y SUBCATEGORÍAS
    ========================================================= */
 function scrollSubcategories(direction) {
   var c = document.getElementById('subcategories-container');
