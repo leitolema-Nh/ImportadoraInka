@@ -1,24 +1,29 @@
-
-
 (function ($) {
-    // USE STRICT
     "use strict";
 
+    // ✅ ESPERAR A QUE EL DOM Y TODOS LOS RECURSOS ESTÉN COMPLETAMENTE LISTOS
+    $(window).on('load', function() {
+        
+        console.log('🎠 Inicializando Slick Carousels...');
+        
         /*==================================================================
         [ Slick1 ]*/
         $('.wrap-slick1').each(function(){
             var wrapSlick1 = $(this);
             var slick1 = $(this).find('.slick1');
-
-
             var itemSlick1 = $(slick1).find('.item-slick1');
             var layerSlick1 = $(slick1).find('.layer-slick1');
             var actionSlick1 = [];
             
+            // ✅ VALIDAR QUE EXISTAN SLIDES ANTES DE INICIALIZAR
+            if (itemSlick1.length === 0) {
+                console.warn('⚠️ No hay slides para inicializar Slick1');
+                return;
+            }
 
             $(slick1).on('init', function(){
                 var layerCurrentItem = $(itemSlick1[0]).find('.layer-slick1');
-
+                
                 for(var i=0; i<actionSlick1.length; i++) {
                     clearTimeout(actionSlick1[i]);
                 }
@@ -33,7 +38,6 @@
                     },$(layerCurrentItem[i]).data('delay'),i); 
                 }        
             });
-
 
             var showDot = false;
             if($(wrapSlick1).find('.wrap-slick1-dots').length > 0) {
@@ -60,13 +64,25 @@
                 customPaging: function(slick, index) {
                     var linkThumb = $(slick.$slides[index]).data('thumb');
                     var caption = $(slick.$slides[index]).data('caption');
-                    return  '<img src="' + linkThumb + '">' +
-                            '<span class="caption-dots-slick1">' + caption + '</span>';
+                    
+                    // ✅ VALIDAR QUE linkThumb NO SEA UNDEFINED O VACÍO
+                    if (!linkThumb || linkThumb === 'undefined' || linkThumb === '') {
+                        linkThumb = (window.CONFIG && window.CONFIG.imagesPath) 
+                            ? window.CONFIG.imagesPath + 'default.jpg' 
+                            : '/images/default.jpg';
+                    }
+                    
+                    // ✅ AGREGAR FALLBACK EN CASO DE ERROR DE CARGA
+                    var fallbackImg = (window.CONFIG && window.CONFIG.imagesPath) 
+                        ? window.CONFIG.imagesPath + 'default.jpg' 
+                        : '/images/default.jpg';
+                    
+                    return  '<img src="' + linkThumb + '" onerror="this.src=\'' + fallbackImg + '\'">' +
+                            '<span class="caption-dots-slick1">' + (caption || '') + '</span>';
                 },
             });
 
             $(slick1).on('afterChange', function(event, slick, currentSlide){ 
-
                 var layerCurrentItem = $(itemSlick1[currentSlide]).find('.layer-slick1');
 
                 for(var i=0; i<actionSlick1.length; i++) {
@@ -81,8 +97,7 @@
                     actionSlick1[i] = setTimeout(function(index) {
                         $(layerCurrentItem[index]).addClass($(layerCurrentItem[index]).data('appear') + ' visible-true');
                     },$(layerCurrentItem[i]).data('delay'),i); 
-                }
-                         
+                }         
             });
 
         });
@@ -90,6 +105,14 @@
         /*==================================================================
         [ Slick2 ]*/
         $('.wrap-slick2').each(function(){
+            var items = $(this).find('.slick2 > *');
+            
+            // ✅ VALIDAR QUE EXISTAN ITEMS
+            if (items.length === 0) {
+                console.warn('⚠️ No hay items para inicializar Slick2');
+                return;
+            }
+            
             $(this).find('.slick2').slick({
               slidesToShow: 4,
               slidesToScroll: 4,
@@ -131,8 +154,7 @@
                 }
               ]    
             });
-          });
-
+        });
 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           var nameTab = $(e.target).attr('href'); 
@@ -142,6 +164,14 @@
         /*==================================================================
         [ Slick3 ]*/
         $('.wrap-slick3').each(function(){
+            var slick3Items = $(this).find('.slick3 > *');
+            
+            // ✅ VALIDAR QUE EXISTAN ITEMS
+            if (slick3Items.length === 0) {
+                console.warn('⚠️ No hay items para inicializar Slick3');
+                return;
+            }
+            
             $(this).find('.slick3').slick({
                 slidesToShow: 1,
                 slidesToScroll: 1,
@@ -149,22 +179,34 @@
                 infinite: true,
                 autoplay: false,
                 autoplaySpeed: 6000,
-
                 arrows: true,
                 appendArrows: $(this).find('.wrap-slick3-arrows'),
                 prevArrow:'<button class="arrow-slick3 prev-slick3"><i class="fa fa-angle-left" aria-hidden="true"></i></button>',
                 nextArrow:'<button class="arrow-slick3 next-slick3"><i class="fa fa-angle-right" aria-hidden="true"></i></button>',
-
                 dots: true,
                 appendDots: $(this).find('.wrap-slick3-dots'),
                 dotsClass:'slick3-dots',
                 customPaging: function(slick, index) {
                     var portrait = $(slick.$slides[index]).data('thumb');
-                    return '<img src=" ' + portrait + ' "/><div class="slick3-dot-overlay"></div>';
+                    
+                    // ✅ VALIDAR QUE portrait NO SEA UNDEFINED O VACÍO
+                    if (!portrait || portrait === 'undefined' || portrait === '') {
+                        portrait = (window.CONFIG && window.CONFIG.imagesPath) 
+                            ? window.CONFIG.imagesPath + 'default.jpg' 
+                            : '/images/default.jpg';
+                    }
+                    
+                    // ✅ AGREGAR FALLBACK EN CASO DE ERROR DE CARGA
+                    var fallbackImg = (window.CONFIG && window.CONFIG.imagesPath) 
+                        ? window.CONFIG.imagesPath + 'default.jpg' 
+                        : '/images/default.jpg';
+                    
+                    return '<img src="' + portrait + '" onerror="this.src=\'' + fallbackImg + '\'"/><div class="slick3-dot-overlay"></div>';
                 },  
             });
         });
-            
-                
+        
+        console.log('✅ Slick carousels inicializados correctamente');
+    });
 
 })(jQuery);

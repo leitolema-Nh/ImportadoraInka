@@ -1,38 +1,33 @@
 <?php
 /**
  * ==============================================================
- *  TOP BAR (versión móvil)
- *  Basado en estructura original Cozastore (menu-mobile)
- *  Adaptado a Importadora Inka
+ *  TOP BAR MOBILE - Solo HTML
+ * ==============================================================
+ *  Solo estructura HTML
+ *  Los eventos se manejan en header.module.js
  * ==============================================================
  */
+
+global $config;
+$base = $config['paths']['baseURL'] ?? '/';
 ?>
 
-<!-- Topbar Mobile -->
-<ul class="topbar-mobile">
-  <li>
-    <div class="left-top-bar">
-      Envíos gratis en pedidos mayores a RD$3,000
-    </div>
-  </li>
+<!-- Logo movil -->
+<div class="logo-mobile">
+  <a href="<?= $base ?>pages/index.php">
+    <img src="<?= $base ?>images/logowebImka.png" alt="Importadora Inka" />
+  </a>
+</div>
 
-  <li>
-    <div class="right-top-bar flex-w h-full">
-      <a href="#" class="flex-c-m p-lr-10 trans-04">
-        Ayuda & Preguntas
-      </a>
+<!-- Iconos derecha -->
+<div class="header-mobile-right">
+  <div class="search-mobile js-show-search" title="Buscar productos">
+    <i class="zmdi zmdi-search fs-24"></i>
+  </div>
 
-      <a href="#" class="flex-c-m p-lr-10 trans-04">
-        Mi Cuenta
-      </a>
-
-      <a href="#" class="flex-c-m p-lr-10 trans-04">
-        ES
-      </a>
-
-      <a href="#" class="flex-c-m p-lr-10 trans-04">
-        RD$
-      </a>
-    </div>
-  </li>
-</ul>
+  <div class="btn-show-menu-mobile hamburger hamburger--squeeze">
+    <span class="hamburger-box">
+      <span class="hamburger-inner"></span>
+    </span>
+  </div>
+</div>

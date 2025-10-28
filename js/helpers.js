@@ -1,12 +1,13 @@
 // ===================================================
-// 🔧 helpers.js — Utilidades globales INKA
+// 🔧 helpers.js — UTILIDADES GLOBALES (Con Managers)
 // ===================================================
 
 console.log('🔧 helpers.js cargando...');
 
-// Configuración fallback
+// ============================================
+// 🌍 CONFIGURACIÓN GLOBAL (Fallback)
+// ============================================
 window.CONFIG = window.CONFIG || (function() {
-  // 1) Si existe <base href> en el HTML, usarla (más confiable)
   var baseTag = document.querySelector('base');
   if (baseTag && baseTag.href) {
     var u = new URL(baseTag.href, location.href);
@@ -19,7 +20,6 @@ window.CONFIG = window.CONFIG || (function() {
     };
   }
 
-  // 2) Intentar derivar la base desde el src del script actual (document.currentScript)
   var script = document.currentScript || (function() {
     var s = document.getElementsByTagName('script');
     return s[s.length - 1];
@@ -29,39 +29,30 @@ window.CONFIG = window.CONFIG || (function() {
     try {
       var u = new URL(script.src, location.href);
       var pathname = u.pathname.replace(/\/+$/, '');
-
-      // Si el script está en /js/... -> cortar hasta antes de /js/
       var idx = pathname.indexOf('/js/');
       var projectPath = '/';
 
       if (idx > 0) {
-        // hay una carpeta de proyecto antes de /js/
-        projectPath = pathname.substring(0, idx + 1); // incluye la barra final
+        projectPath = pathname.substring(0, idx + 1);
       } else if (idx === 0) {
-        // script servido desde la raíz (/js/...), revisar la ruta de la página
         var pageParts = location.pathname.split('/').filter(function(p){ return p; });
         var firstPage = pageParts[0] || '';
-        // si la página está en un subfolder razonable, usarlo como carpeta de proyecto
         if (firstPage && firstPage !== 'js' && firstPage !== 'pages' && firstPage !== 'api') {
           projectPath = '/' + firstPage + '/';
         } else {
           projectPath = '/';
         }
       } else {
-        // no encontramos /js/ en script.src, intentar tomar el primer segmento del script
         var parts = pathname.split('/').filter(function(p){ return p; });
         if (parts.length > 1) {
-          // si script path es /<project>/<something>, tomar <project>
           projectPath = '/' + parts[0] + '/';
         } else {
           projectPath = '/';
         }
       }
 
-      // Preferir la carpeta que aparece en la URL de la página cuando estamos en red local
       var pagePartsForProject = location.pathname.split('/').filter(function(p){ return p; });
       if (pagePartsForProject.length && pagePartsForProject[0] !== 'js' && pagePartsForProject[0] !== projectPath.replace(/\//g, '')) {
-        // Si la página vive en /<algo>/... y el script fue pedido desde /js/, usar la carpeta de la página
         var candidate = '/' + pagePartsForProject[0] + '/';
         if (candidate !== projectPath) {
           projectPath = candidate;
@@ -69,7 +60,7 @@ window.CONFIG = window.CONFIG || (function() {
       }
 
       var base = u.origin + projectPath;
-      base = base.replace(/([^:]\/)\/+/g, '$1'); // normalizar dobles slashes
+      base = base.replace(/([^:]\/)\/+/g, '$1');
       return {
         baseURL: base,
         apiURL: base + 'api/',
@@ -81,9 +72,8 @@ window.CONFIG = window.CONFIG || (function() {
     }
   }
 
-  // 3) Fallback anterior (pathname / hostname)
   var protocol = location.protocol;
-  var host = location.host; // con puerto si aplica
+  var host = location.host;
   var pathname = location.pathname || '/';
   var parts = pathname.split('/').filter(function(p) { return p; });
   var first = parts[0] || '';
@@ -108,13 +98,14 @@ window.CONFIG = window.CONFIG || (function() {
   };
 })();
 
-/* =========================================================
-   🧰 FUNCIONES GLOBALES DE UTILIDAD
-   ========================================================= */
+// ============================================
+// 🧰 FUNCIONES GLOBALES
+// ============================================
 window.helpers = {
   
   /**
-   * Fetch JSON desde API
+   * 📡 Fetch JSON desde API
+   * Usado en: shop.php, index.php, product.php, etc.
    */
   fetchJSON: function(endpoint) {
     var url = window.CONFIG.apiURL + endpoint;
@@ -132,7 +123,8 @@ window.helpers = {
   },
 
   /**
-   * Escapar HTML para prevenir XSS
+   * 🔒 Escapar HTML para prevenir XSS
+   * Usado en: Cualquier lugar que renderice texto del usuario
    */
   escapeHtml: function(text) {
     var map = {
@@ -146,7 +138,8 @@ window.helpers = {
   },
 
   /**
-   * Formatear precio
+   * 💰 Formatear precio
+   * Usado en: Todas las vistas de productos (shop, home, product detail)
    */
   formatPrice: function(price) {
     var num = parseFloat(price || 0);
@@ -154,13 +147,53 @@ window.helpers = {
   },
 
   /**
+   * 🔗 Actualizar parámetros de URL sin recargar
+   * ✅ CORREGIDO: Usa guiones (-) en lugar de comas para subcategorías
+   * ✅ MEJORADO: Limpia cualquier parámetro que se pase como null
+   * Usado en: Filtros, paginación, búsqueda
+   */
+  updateUrlParams: function(params) {
+    var url = new URL(window.location);
+    
+    for (var key in params) {
+      if (params.hasOwnProperty(key)) {
+        if (params[key] === null || params[key] === undefined || params[key] === '') {
+          // ✅ Eliminar parámetro si es null/undefined/vacío
+          url.searchParams.delete(key);
+        } else {
+          // ✅ Si es el parámetro subcat, reemplazar comas por guiones
+          var value = params[key];
+          if (key === 'subcat' && typeof value === 'string') {
+            value = value.replace(/,/g, '-');
+          }
+          url.searchParams.set(key, value);
+        }
+      }
+    }
+    
+    window.history.replaceState({}, '', url);
+  },
+
+  /**
    * 🎨 RENDERIZAR PRODUCTOS EN EL GRID
-   * Ahora llama al endpoint PHP que retorna HTML renderizado
+   * ✅ MIGRADO: Usa DOMManager si está disponible
+   * Llama al endpoint PHP que retorna HTML renderizado
    */
   renderProducts: function(items, append) {
     append = append || false;
     
-    var container = document.getElementById('products-container');
+    // ✅ LOG: Detectar quién llama a renderProducts
+    console.log('🎨 renderProducts llamado:', {
+      productos: items?.length || 0,
+      append: append,
+      stackTrace: new Error().stack.split('\n')[2] // Ver quién llamó
+    });
+    
+    // ✅ Intentar usar DOMManager, fallback a getElementById
+    var DOM = window.DOMManager;
+    var container = DOM && DOM.getById 
+      ? DOM.getById('products-container') 
+      : document.getElementById('products-container');
     
     if (!container) {
       console.error('❌ #products-container no encontrado');
@@ -207,7 +240,7 @@ window.helpers = {
       
       console.log('✅ ' + items.length + ' productos renderizados desde PHP');
       
-      // Inicializar Isotope
+      // Inicializar Isotope si está disponible
       setTimeout(function() {
         if (window.$ && $.fn.isotope) {
           try {
@@ -230,7 +263,7 @@ window.helpers = {
         }
       }, 100);
       
-      // Vincular eventos
+      // Vincular eventos a las tarjetas
       setTimeout(function() {
         helpers.bindProductEvents();
       }, 150);
@@ -246,11 +279,87 @@ window.helpers = {
   
   /**
    * 🎯 Vincular eventos a las tarjetas
+   * ✅ MIGRADO: Usa EventManager si está disponible, fallback a método tradicional
    */
   bindProductEvents: function() {
+    var DOM = window.DOMManager;
+    var Events = window.EventManager;
+    
+    // Si EventManager está disponible, usar delegación
+    if (Events && Events.delegate) {
+      console.log('🎯 Vinculando eventos con EventManager (delegación)...');
+      
+      // ✅ Quick View - Delegación de eventos
+      Events.delegate(
+        '#products-container',
+        '.js-show-modal1',
+        'click',
+        function(e) {
+          e.preventDefault();
+          var productId = this.getAttribute('data-id');
+          if (productId && window.shopModal) {
+            helpers.fetchJSON('product.php?id=' + productId)
+              .then(function(response) {
+                if (response && response.producto) {
+                  window.shopModal.open(response.producto);
+                }
+              });
+          }
+        }
+      );
+      
+      // ✅ Título del producto - Delegación
+      Events.delegate(
+        '#products-container',
+        '.js-name-detail',
+        'click',
+        function(e) {
+          e.preventDefault();
+          var productId = this.getAttribute('data-id');
+          if (productId && window.shopModal) {
+            helpers.fetchJSON('product.php?id=' + productId)
+              .then(function(response) {
+                if (response && response.producto) {
+                  window.shopModal.open(response.producto);
+                }
+              });
+          }
+        }
+      );
+      
+      // ✅ Favoritos - Delegación
+      Events.delegate(
+        '#products-container',
+        '.js-addwish-b2',
+        'click',
+        function(e) {
+          e.preventDefault();
+          this.classList.toggle('js-addedwish-b2');
+          console.log('❤️ Favorito:', this.getAttribute('data-id'));
+        }
+      );
+      
+      console.log('✅ Eventos vinculados con EventManager');
+    } else {
+      // ❌ Fallback: Método tradicional
+      console.log('⚠️ EventManager no disponible, usando método tradicional');
+      this._bindProductEventsLegacy();
+    }
+  },
+
+  /**
+   * 🔙 Método legacy para vincular eventos (fallback)
+   */
+  _bindProductEventsLegacy: function() {
+    console.log('🎯 Vinculando eventos (método legacy)...');
+
     // Quick View
     document.querySelectorAll('.js-show-modal1').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
+      // Remover listener anterior si existe
+      var newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+      
+      newBtn.addEventListener('click', function(e) {
         e.preventDefault();
         var productId = this.getAttribute('data-id');
         if (productId && window.shopModal) {
@@ -266,7 +375,10 @@ window.helpers = {
     
     // Título del producto
     document.querySelectorAll('.js-name-detail').forEach(function(link) {
-      link.addEventListener('click', function(e) {
+      var newLink = link.cloneNode(true);
+      link.parentNode.replaceChild(newLink, link);
+      
+      newLink.addEventListener('click', function(e) {
         e.preventDefault();
         var productId = this.getAttribute('data-id');
         if (productId && window.shopModal) {
@@ -282,49 +394,19 @@ window.helpers = {
     
     // Favoritos
     document.querySelectorAll('.js-addwish-b2').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
+      var newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+      
+      newBtn.addEventListener('click', function(e) {
         e.preventDefault();
         this.classList.toggle('js-addedwish-b2');
         console.log('❤️ Favorito:', this.getAttribute('data-id'));
       });
     });
-  },
-  
-  /**
-   * Actualizar parámetros de URL
-   */
-  updateUrlParams: function(params) {
-    var url = new URL(window.location);
-    for (var key in params) {
-      if (params.hasOwnProperty(key)) {
-        if (params[key] === null) {
-          url.searchParams.delete(key);
-        } else {
-          url.searchParams.set(key, params[key]);
-        }
-      }
-    }
-    window.history.replaceState({}, '', url);
+
+    console.log('✅ Eventos vinculados (legacy)');
   }
 };
 
-/* =========================================================
-   🎠 SCROLL DE CATEGORÍAS Y SUBCATEGORÍAS
-   ========================================================= */
-function scrollSubcategories(direction) {
-  var c = document.getElementById('subcategories-container');
-  if (!c) return;
-  c.scrollBy({ left: direction * (c.clientWidth * 0.8), behavior: 'smooth' });
-}
-
-function scrollCategories(direction) {
-  direction = direction || 1;
-  var c = document.getElementById('categories-container');
-  if (!c) return;
-  c.scrollBy({ left: direction * 200, behavior: 'smooth' });
-}
-
-window.scrollSubcategories = scrollSubcategories;
-window.scrollCategories = scrollCategories;
-
 console.log('✅ helpers.js cargado correctamente');
+console.log('📦 CONFIG:', window.CONFIG);

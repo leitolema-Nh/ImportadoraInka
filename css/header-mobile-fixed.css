@@ -1,0 +1,209 @@
+/* ============================================================================
+   📱 HEADER FIJO EN MÓVIL - header-mobile-fixed.css
+   ============================================================================ */
+
+/* ✅ Header fijo solo en móvil (< 992px) */
+@media (max-width: 991px) {
+  
+  /* Header fijo en la parte superior */
+  .header-v4 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Compensar el espacio del header fijo */
+  body {
+    padding-top: 70px; /* Altura del header móvil */
+  }
+
+  /* Header móvil específico */
+  .wrap-header-mobile {
+    position: relative;
+    z-index: 10000;
+    background-color: #fff;
+    padding: 15px;
+  }
+
+  /* Logo móvil */
+  .logo-mobile img {
+    max-height: 40px;
+    width: auto;
+  }
+
+  /* Iconos del header móvil */
+  .header-mobile-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .search-mobile,
+  .btn-show-menu-mobile {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .search-mobile:hover,
+  .btn-show-menu-mobile:hover {
+    opacity: 0.7;
+  }
+
+  /* Menú móvil desplegable */
+  .menu-mobile {
+    position: fixed;
+    top: 70px; /* Debajo del header fijo */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    z-index: 9998;
+  }
+
+  .menu-mobile.show {
+    transform: translateX(0);
+  }
+
+  /* Overlay cuando el menú está abierto */
+  body.menu-open::before {
+    content: '';
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9997;
+  }
+
+  /* ✅ IMPORTANTE: Contenido principal debe tener padding-top */
+  main,
+  .bg0 {
+    margin-top: 0 !important;
+    padding-top: 20px;
+  }
+
+  /* Breadcrumbs y filtros también con margen superior */
+  .breadcrumb-wrapper,
+  .categories-wrapper {
+    margin-top: 10px;
+  }
+}
+
+/* ============================================================================
+   💻 DESKTOP - Header normal (sin fixed)
+   ============================================================================ */
+@media (min-width: 992px) {
+  .header-v4 {
+    position: relative;
+  }
+
+  .wrap-header-mobile {
+    display: none;
+  }
+
+  .menu-mobile {
+    display: none;
+  }
+}
+
+/* ============================================================================
+   🔍 OVERLAY DE BÚSQUEDA GLOBAL (Desktop + Mobile)
+   ============================================================================ */
+#global-search-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 99999; /* Por encima del header fijo */
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#global-search-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* ============================================================================
+   🎨 ANIMACIONES
+   ============================================================================ */
+
+/* Hamburger animado */
+.hamburger {
+  padding: 0;
+  display: inline-block;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.hamburger:hover {
+  opacity: 0.7;
+}
+
+.hamburger.is-active .hamburger-inner,
+.hamburger.is-active .hamburger-inner::before,
+.hamburger.is-active .hamburger-inner::after {
+  background-color: #333;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================================================
+   📱 AJUSTES ADICIONALES PARA MÓVIL
+   ============================================================================ */
+@media (max-width: 991px) {
+  
+  /* Asegurar que el scroll funcione bien */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Cuando el menú está abierto, bloquear scroll del body */
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  /* Categorías scrolleables en móvil */
+  .categories-bar,
+  .subcategories-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .categories-bar::-webkit-scrollbar,
+  .subcategories-bar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+
+  /* Filtros en móvil */
+  .panel-filter {
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+  }
+
+  /* Grid de productos en móvil */
+  .isotope-grid {
+    padding-top: 10px;
+  }
+
+  /* Botón "Cargar más" en móvil */
+  #load-more {
+    margin-top: 20px;
+    margin-bottom: 40px;
+  }
+}

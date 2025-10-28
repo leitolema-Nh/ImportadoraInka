@@ -22,12 +22,5 @@ document.addEventListener("DOMContentLoaded", () => {
   btnTop.style.transition = "opacity 0.3s";
 
   // Mostrar/ocultar botón
-  window.addEventListener("scroll", () => {
-    btnTop.style.display = window.scrollY > 200 ? "block" : "none";
-  });
 
-  // Volver al inicio suavemente
-  btnTop.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
 });

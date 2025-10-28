@@ -1,0 +1,177 @@
+# ============================================================
+# .htaccess - Importadora INKA
+# Configuración de cache, compresión y seguridad
+# ============================================================
+
+# ============================================================
+# REWRITE ENGINE
+# ============================================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+</IfModule>
+
+# ============================================================
+# CACHE CONTROL
+# ============================================================
+<IfModule mod_headers.c>
+    # JavaScript y CSS - 30 días
+    <FilesMatch "\.(js|css)$">
+        Header set Cache-Control "max-age=2592000, public"
+        Header unset ETag
+        FileETag None
+    </FilesMatch>
+    
+    # Imágenes - 1 año (inmutables)
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        Header set Cache-Control "max-age=31536000, public, immutable"
+        Header unset ETag
+        FileETag None
+    </FilesMatch>
+    
+    # Fuentes - 1 año (inmutables)
+    <FilesMatch "\.(woff|woff2|ttf|eot|otf)$">
+        Header set Cache-Control "max-age=31536000, public, immutable"
+        Header unset ETag
+        FileETag None
+        
+        # CORS para fuentes
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+    
+    # HTML - sin cache (siempre fresco)
+    <FilesMatch "\.(html|htm|php)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+    
+    # JSON y XML - 1 hora
+    <FilesMatch "\.(json|xml)$">
+        Header set Cache-Control "max-age=3600, public"
+    </FilesMatch>
+</IfModule>
+
+# ============================================================
+# COMPRESIÓN GZIP
+# ============================================================
+<IfModule mod_deflate.c>
+    # Comprimir HTML, CSS, JavaScript, Text, XML y fuentes
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/atom_xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE font/ttf
+    AddOutputFilterByType DEFLATE font/otf
+    AddOutputFilterByType DEFLATE font/woff
+    AddOutputFilterByType DEFLATE font/woff2
+    
+    # Excluir archivos ya comprimidos
+    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|zip|gz|rar|bz2|7z)$ no-gzip
+</IfModule>
+
+# ============================================================
+# SEGURIDAD
+# ============================================================
+
+# Prevenir acceso a archivos sensibles
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Proteger archivos de configuración
+<FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$">
+    Order allow,deny
+    Deny from all
+    Satisfy All
+</FilesMatch>
+
+# Deshabilitar listado de directorios
+Options -Indexes
+
+# Proteger .htaccess
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Proteger archivos de entorno
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# ============================================================
+# TIPOS MIME
+# ============================================================
+<IfModule mod_mime.c>
+    # JavaScript
+    AddType application/javascript js
+    AddType application/json json
+    
+    # Fuentes
+    AddType font/woff woff
+    AddType font/woff2 woff2
+    AddType font/ttf ttf
+    AddType font/eot eot
+    AddType font/otf otf
+    
+    # Imágenes modernas
+    AddType image/webp webp
+    AddType image/svg+xml svg svgz
+    AddEncoding gzip svgz
+    
+    # Video
+    AddType video/mp4 mp4 m4v
+    AddType video/webm webm
+</IfModule>
+
+# ============================================================
+# PAGES DE ERROR PERSONALIZADAS (OPCIONAL)
+# ============================================================
+# ErrorDocument 404 /pages/404.php
+# ErrorDocument 500 /pages/500.php
+
+# ============================================================
+# CHARSET UTF-8
+# ============================================================
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+    AddCharset UTF-8 .html .css .js .xml .json .rss .atom
+</IfModule>
+
+# ============================================================
+# OPTIMIZACIÓN PHP (si está disponible)
+# ============================================================
+<IfModule mod_php.c>
+    php_value upload_max_filesize 20M
+    php_value post_max_size 20M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
+# ============================================================
+# CORS PARA APIS (si es necesario)
+# ============================================================
+<IfModule mod_headers.c>
+    # Permitir CORS solo para rutas API
+    <FilesMatch "^(api/)">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+    </FilesMatch>
+</IfModule>
+
+# ============================================================
+# FIN DE CONFIGURACIÓN
+# ============================================================

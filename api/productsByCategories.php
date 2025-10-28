@@ -1,9 +1,13 @@
 <?php
 /**
  * 🧩 productsByCategories.php — Productos por categoría y subcategorías
+ * ✅ ACTUALIZADO: Soporta búsqueda con parámetro q
+ * 
  * GET: category_id (int) requerido
  *      subcategory_ids[] (int[]) opcional (varios)
+ *      q (string) opcional - término de búsqueda
  *      page (int, default 1), limit (int, default 20)
+ * 
  * Devuelve: { status, total, pagina, por_pagina, total_paginas, productos: [] }
  */
 header('Content-Type: application/json; charset=utf-8');
@@ -27,6 +31,9 @@ $categoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : 0;
 $subs = isset($_GET['subcategory_ids']) ? $_GET['subcategory_ids'] : [];
 if (!is_array($subs)) $subs = [$subs];
 
+// ✅ NUEVO: Parámetro de búsqueda
+$searchQuery = isset($_GET['q']) ? trim($_GET['q']) : '';
+
 $page   = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $limit  = isset($_GET['limit']) ? max(1, (int)$_GET['limit']) : 20;
 $offset = ($page - 1) * $limit;
@@ -38,10 +45,12 @@ try {
     exit;
   }
 
+  // ✅ Construir condiciones base
   $conds = "p.prodConfirm=1 AND p.precioConfirm=1 AND p.status=0 AND cp.id = ?";
   $params = [ $categoryId ];
   $types  = "i";
 
+  // ✅ Agregar filtro de subcategorías si existen
   if (!empty($subs)) {
     $subs = array_map('intval', $subs);
     $subs = array_values(array_filter($subs, fn($n)=>$n>0));
@@ -51,6 +60,14 @@ try {
       $params = array_merge($params, $subs);
       $types .= str_repeat('i', count($subs));
     }
+  }
+
+  // ✅ NUEVO: Agregar filtro de búsqueda si existe
+  if ($searchQuery !== '') {
+    $like = "%{$searchQuery}%";
+    $conds .= " AND (p.codigo LIKE ? OR p.codigosistema LIKE ? OR p.descripcion LIKE ? OR p.tipoProducto LIKE ?)";
+    $params = array_merge($params, [$like, $like, $like, $like]);
+    $types .= "ssss";
   }
 
   // Conteo

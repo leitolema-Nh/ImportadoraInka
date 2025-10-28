@@ -32,7 +32,7 @@
 /* Ajustes responsivos */
 @media (max-width: 991px) {
   .logo-mobile img {
-    height: 25px;   /* un poco más pequeño en mobile */
+    height: 20px;   /* un poco más pequeño en mobile */
     max-height: 25px;
   }
 }
