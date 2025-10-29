@@ -1,9 +1,8 @@
 // ============================================================================
-// 🛍️ shop.module.js - Módulo del Catálogo (CON MANAGERS - VERSION FINAL)
+// 🛍️ shop.module.js - Módulo del Catálogo (OPTIMIZADO CON FILTROS TOGGLE)
 // ============================================================================
-// Consolida: categories.js, subcategories.js, products.js, 
-//            productsByCategories.js, scrollCategories.js
-// ✅ FIXES: URLs compartibles, botón cargar más, subcategorías en URL
+// ✅ NUEVO: Toggle de sidebar de filtros con botón "Filtrar"
+// ✅ Responsive: Sidebar overlay en móvil, columna en desktop
 // ============================================================================
 
 console.log('🛍️ shop.module.js cargando...');
@@ -26,7 +25,8 @@ export class ShopModule {
             currentPage: 1,                   // Página actual
             totalPages: 1,                    // Total de páginas
             isLoading: false,                 // Flag de carga
-            searchQuery: ''                   // Query de búsqueda activa
+            searchQuery: '',                  // Query de búsqueda activa
+            filtersVisible: false             // ✅ NUEVO: Estado del sidebar
         };
 
         // ============================================
@@ -66,6 +66,7 @@ export class ShopModule {
         this.setupLoadMoreButton();
         this.setupSearchInput();
         this.setupShareButton();
+        this.setupFilterToggle();  // ✅ NUEVO
         this.checkUrlParams();
         
         // Exportar funciones globales para compatibilidad
@@ -87,7 +88,12 @@ export class ShopModule {
             subcategoriesContainer: this.DOM.getById('subcategories-container'),
             loadMoreBtn: this.DOM.getById('load-more'),
             searchInput: this.DOM.getById('search-input'),
-            shareBtn: this.DOM.getById('share-btn')
+            shareBtn: this.DOM.getById('share-btn'),
+            // ✅ NUEVOS elementos para toggle
+            toggleFiltersBtn: this.DOM.getById('toggle-filters-btn'),
+            closeFiltersBtn: this.DOM.getById('close-filters-btn'),
+            filtersColumn: this.DOM.getById('filters-column'),
+            productsColumn: this.DOM.getById('products-column')
         };
 
         console.log('✅ Elementos cacheados:', {
@@ -96,8 +102,135 @@ export class ShopModule {
             subcategories: !!this.dom.subcategoriesContainer,
             loadMore: !!this.dom.loadMoreBtn,
             search: !!this.dom.searchInput,
-            share: !!this.dom.shareBtn
+            share: !!this.dom.shareBtn,
+            toggleFilters: !!this.dom.toggleFiltersBtn,
+            filtersColumn: !!this.dom.filtersColumn,
+            productsColumn: !!this.dom.productsColumn
         });
+    }
+
+    // ============================================================================
+    // 🎛️ SETUP TOGGLE DE FILTROS (NUEVO)
+    // ============================================================================
+    
+    setupFilterToggle() {
+        if (!this.dom.toggleFiltersBtn || !this.dom.filtersColumn) {
+            console.warn('⚠️ Elementos de toggle de filtros no encontrados');
+            return;
+        }
+
+        console.log('🎛️ Configurando toggle de filtros...');
+
+        // ✅ Botón "Filtrar"
+        this.Events.on(this.dom.toggleFiltersBtn, 'click', () => {
+            this.toggleFilters();
+        });
+
+        // ✅ Botón cerrar filtros (móvil)
+        if (this.dom.closeFiltersBtn) {
+            this.Events.on(this.dom.closeFiltersBtn, 'click', () => {
+                this.hideFilters();
+            });
+        }
+
+        // ✅ Crear overlay para móvil
+        this.createFiltersOverlay();
+
+        console.log('✅ Toggle de filtros configurado');
+    }
+
+    toggleFilters() {
+        if (this.state.filtersVisible) {
+            this.hideFilters();
+        } else {
+            this.showFilters();
+        }
+    }
+
+    showFilters() {
+        console.log('👁️ Mostrando filtros...');
+
+        this.state.filtersVisible = true;
+
+        // ✅ Mostrar columna de filtros
+        if (this.dom.filtersColumn) {
+            this.dom.filtersColumn.classList.remove('d-none');
+            this.dom.filtersColumn.classList.add('show');
+        }
+
+        // ✅ Ajustar columna de productos (solo en desktop)
+        if (window.innerWidth >= 992 && this.dom.productsColumn) {
+            this.dom.productsColumn.classList.remove('col-lg-12');
+            this.dom.productsColumn.classList.add('col-lg-9');
+        }
+
+        // ✅ Actualizar botón
+        if (this.dom.toggleFiltersBtn) {
+            this.dom.toggleFiltersBtn.classList.add('active');
+            const text = this.dom.toggleFiltersBtn.querySelector('.filter-text');
+            if (text) text.textContent = 'Ocultar Filtros';
+        }
+
+        // ✅ Mostrar overlay en móvil
+        const overlay = document.querySelector('.filters-overlay');
+        if (overlay) {
+            overlay.classList.add('show');
+        }
+
+        console.log('✅ Filtros visibles');
+    }
+
+    hideFilters() {
+        console.log('🙈 Ocultando filtros...');
+
+        this.state.filtersVisible = false;
+
+        // ✅ Ocultar columna de filtros
+        if (this.dom.filtersColumn) {
+            this.dom.filtersColumn.classList.add('d-none');
+            this.dom.filtersColumn.classList.remove('show');
+        }
+
+        // ✅ Restaurar columna de productos (solo en desktop)
+        if (window.innerWidth >= 992 && this.dom.productsColumn) {
+            this.dom.productsColumn.classList.remove('col-lg-9');
+            this.dom.productsColumn.classList.add('col-lg-12');
+        }
+
+        // ✅ Actualizar botón
+        if (this.dom.toggleFiltersBtn) {
+            this.dom.toggleFiltersBtn.classList.remove('active');
+            const text = this.dom.toggleFiltersBtn.querySelector('.filter-text');
+            if (text) text.textContent = 'Mostrar Filtros';
+        }
+
+        // ✅ Ocultar overlay en móvil
+        const overlay = document.querySelector('.filters-overlay');
+        if (overlay) {
+            overlay.classList.remove('show');
+        }
+
+        console.log('✅ Filtros ocultos');
+    }
+
+    createFiltersOverlay() {
+        // Verificar si ya existe
+        if (document.querySelector('.filters-overlay')) {
+            console.log('ℹ️ Overlay de filtros ya existe');
+            return;
+        }
+
+        // Crear overlay para cerrar filtros en móvil
+        const overlay = document.createElement('div');
+        overlay.className = 'filters-overlay';
+        document.body.appendChild(overlay);
+
+        // Click en overlay cierra filtros
+        this.Events.on(overlay, 'click', () => {
+            this.hideFilters();
+        });
+
+        console.log('✅ Overlay de filtros creado');
     }
 
     // ============================================================================
@@ -203,7 +336,7 @@ export class ShopModule {
                 cat: null,
                 subcat: null,
                 q: null,
-                multi: null,  // ✅ Limpiar búsqueda global
+                multi: null,
                 page: null
             });
             
@@ -231,7 +364,7 @@ export class ShopModule {
             cat: categoryId,
             subcat: null,
             q: null,
-            multi: null,  // ✅ Limpiar búsqueda global
+            multi: null,
             page: null
         });
     }
@@ -246,7 +379,6 @@ export class ShopModule {
         console.log('📑 Cargando subcategorías para categoría:', categoryId);
 
         try {
-            // ✅ CORREGIDO: category_id (con underscore)
             const data = await window.helpers.fetchJSON(`subcategories.php?category_id=${categoryId}`);
             
             if (!data || data.status !== 'ok') {
@@ -267,11 +399,10 @@ export class ShopModule {
     renderSubcategories(subcategories) {
         if (subcategories.length === 0) {
             this.dom.subcategoriesContainer.innerHTML = 
-                '<p class="text-muted small text-center py-2">Sin subcategorías</p>';
+                '<p class="text-muted small text-center py-2 mb-0">Sin subcategorías</p>';
             return;
         }
 
-        // ✅ CORREGIDO: Usar name_subcategory (como lo devuelve la API)
         const html = subcategories.map(sub => `
             <button class="subcategory-tag" 
                     data-subcategory-id="${sub.id}"
@@ -296,7 +427,7 @@ export class ShopModule {
     clearSubcategories() {
         if (this.dom.subcategoriesContainer) {
             this.dom.subcategoriesContainer.innerHTML = 
-                '<p class="text-muted small text-center py-3">Selecciona una categoría</p>';
+                '<p class="text-muted small text-center py-3 mb-0">Selecciona una categoría</p>';
         }
         this.state.selectedSubcategories.clear();
     }
@@ -340,14 +471,11 @@ export class ShopModule {
         const subIds = Array.from(this.state.selectedSubcategories);
         
         if (subIds.length > 0) {
-            // ✅ CORREGIDO: Usar guiones (-) en lugar de comas (,)
-            // Formato: ?cat=6&subcat=269-258-211
             window.helpers.updateUrlParams({
                 subcat: subIds.join('-')
             });
             console.log('🔗 URL actualizada con subcategorías:', subIds.join('-'));
         } else {
-            // ✅ Si no hay subcategorías, remover parámetro
             window.helpers.updateUrlParams({
                 subcat: null
             });
@@ -371,7 +499,6 @@ export class ShopModule {
         this.state.currentPage = page;
         this.state.currentMode = 'all';
         
-        // ✅ Actualizar botón inmediatamente (deshabilitar)
         this.updateLoadMoreButton();
 
         try {
@@ -387,10 +514,8 @@ export class ShopModule {
 
             console.log(`📊 Respuesta: ${productos.length} productos, página ${page}/${this.state.totalPages}`);
 
-            // Renderizar productos usando helpers
             window.helpers.renderProducts(productos, append);
 
-            // ✅ CRÍTICO: Establecer isLoading = false ANTES de actualizar botón
             this.state.isLoading = false;
             this.updateLoadMoreButton();
 
@@ -400,7 +525,6 @@ export class ShopModule {
             console.error('❌ Error cargando productos:', err);
             this.showError('Error al cargar productos');
             
-            // ✅ CRÍTICO: isLoading = false en caso de error
             this.state.isLoading = false;
             this.updateLoadMoreButton();
         }
@@ -422,18 +546,13 @@ export class ShopModule {
         this.state.currentPage = page;
         this.state.currentMode = 'category';
         
-        // ✅ Actualizar botón inmediatamente (deshabilitar)
         this.updateLoadMoreButton();
 
         try {
-            // ✅ CORREGIDO: category_id (con underscore)
             let url = `productsByCategories.php?category_id=${categoryId}&page=${page}&limit=${this.config.productsPerPage}`;
 
-            // Agregar subcategorías si están seleccionadas
             if (this.state.selectedSubcategories.size > 0) {
                 const subIds = Array.from(this.state.selectedSubcategories);
-                
-                // ✅ Enviar como array en formato query string
                 subIds.forEach(id => {
                     url += `&subcategory_ids[]=${id}`;
                 });
@@ -454,7 +573,6 @@ export class ShopModule {
 
             window.helpers.renderProducts(productos, append);
             
-            // ✅ CRÍTICO: Establecer isLoading = false ANTES de actualizar botón
             this.state.isLoading = false;
             this.updateLoadMoreButton();
 
@@ -464,7 +582,6 @@ export class ShopModule {
             console.error('❌ Error cargando productos por categoría:', err);
             this.showError('Error al cargar productos');
             
-            // ✅ CRÍTICO: isLoading = false en caso de error
             this.state.isLoading = false;
             this.updateLoadMoreButton();
         }
@@ -480,13 +597,11 @@ export class ShopModule {
             return;
         }
 
-        // ✅ Usar EventManager
         this.Events.on(this.dom.loadMoreBtn, 'click', () => {
             console.log('📄 Click en "Cargar más"');
 
             const nextPage = this.state.currentPage + 1;
 
-            // ✅ Si hay búsqueda activa, delegar a searchModule
             if (this.state.currentMode === 'search') {
                 console.log('🔍 Modo búsqueda activo, delegando a searchModule');
                 if (window.searchModule && window.searchModule.state.internalQuery) {
@@ -499,13 +614,11 @@ export class ShopModule {
                 return;
             }
 
-            // ✅ Modo categoría
             if (this.state.currentMode === 'category') {
                 this.loadProductsByCategory(this.state.currentCategory, nextPage, true);
                 return;
             }
 
-            // ✅ Modo normal (todos los productos)
             this.loadProducts(nextPage, true);
         });
 
@@ -525,7 +638,6 @@ export class ShopModule {
             hayMasPaginas: this.state.currentPage < this.state.totalPages
         });
 
-        // ✅ Mostrar si hay más páginas
         if (this.state.currentPage < this.state.totalPages) {
             this.dom.loadMoreBtn.style.display = 'inline-block';
             this.dom.loadMoreBtn.disabled = this.state.isLoading;
@@ -545,7 +657,6 @@ export class ShopModule {
     setupScrollButtons() {
         console.log('🎠 Configurando botones de scroll...');
 
-        // ✅ Usar delegación de eventos con EventManager
         this.Events.delegate(
             'body',
             '.scroll-btn',
@@ -600,35 +711,8 @@ export class ShopModule {
             return;
         }
 
-        // ✅ DESACTIVADO: search.module.js maneja la búsqueda interna ahora
         console.log('ℹ️ setupSearchInput desactivado (manejado por search.module.js)');
         return;
-
-        /* CÓDIGO LEGACY DESACTIVADO
-        let searchTimeout;
-
-        this.Events.on(this.dom.searchInput, 'input', (e) => {
-            clearTimeout(searchTimeout);
-            
-            const query = e.target.value.trim();
-            
-            searchTimeout = setTimeout(() => {
-                if (query.length >= 2) {
-                    console.log('🔍 Búsqueda en grid:', query);
-                    this.searchInGrid(query);
-                } else if (query.length === 0) {
-                    // Restaurar vista según el estado actual
-                    if (this.state.currentMode === 'category' && this.state.currentCategory) {
-                        this.loadProductsByCategory(this.state.currentCategory);
-                    } else {
-                        this.loadProducts();
-                    }
-                }
-            }, 500);
-        });
-
-        console.log('✅ Input de búsqueda configurado');
-        */
     }
 
     async searchInGrid(query, page = 1, append = false) {
@@ -646,7 +730,6 @@ export class ShopModule {
         try {
             let url = `products.php?q=${encodeURIComponent(query)}&page=${page}&limit=${this.config.productsPerPage}`;
 
-            // Si hay categoría activa, agregar filtro
             if (this.state.currentCategory) {
                 url += `&category_id=${this.state.currentCategory}`;
             }
@@ -689,11 +772,9 @@ export class ShopModule {
         this.Events.on(this.dom.shareBtn, 'click', () => {
             console.log('📤 Compartir catálogo');
             
-            // ✅ Obtener URL actual (con filtros)
             const url = window.location.href;
             const title = 'Catálogo de Productos - Importadora Inka';
             
-            // Mostrar qué se está compartiendo
             if (this.state.currentCategory) {
                 const categoryBtn = this.DOM.get('.category-btn.active');
                 const categoryName = categoryBtn ? categoryBtn.textContent.trim() : 'Categoría';
@@ -749,28 +830,22 @@ export class ShopModule {
         if (catParam) {
             console.log('🔄 Detectado parámetro cat en URL:', catParam);
             
-            // Esperar a que las categorías se carguen
             setTimeout(() => {
                 const categoryBtn = this.DOM.get(`[data-category-id="${catParam}"]`);
                 if (categoryBtn) {
                     console.log('✅ Categoría encontrada, activando...');
                     
-                    // Remover active de All Products
                     const allBtn = this.DOM.get('[data-category-id="all"]');
                     if (allBtn) allBtn.classList.remove('active');
                     
-                    // Activar categoría visualmente
                     categoryBtn.classList.add('active');
                     this.state.currentCategory = catParam;
                     this.state.currentMode = 'category';
                     
-                    // Cargar subcategorías de esta categoría
                     this.loadSubcategories(catParam).then(() => {
-                        // Si hay subcategorías en URL, activarlas
                         if (subcatParam) {
                             this.restoreSubcategoriesFromUrl(subcatParam);
                         } else {
-                            // Sin subcategorías, cargar todos los productos de la categoría
                             this.loadProductsByCategory(catParam);
                         }
                     });
@@ -779,7 +854,6 @@ export class ShopModule {
                 }
             }, 500);
         } else {
-            // ✅ Sin parámetros, asegurar que "All Products" esté activo
             console.log('ℹ️ Sin parámetros URL, mostrando todos los productos');
             setTimeout(() => {
                 const allBtn = this.DOM.get('[data-category-id="all"]');
@@ -795,15 +869,12 @@ export class ShopModule {
     // ============================================================================
     
     async restoreSubcategoriesFromUrl(subcatParam) {
-        // ✅ CORREGIDO: Convertir "269-258-211" → ["269", "258", "211"]
         const subIds = subcatParam.split('-').map(id => id.trim()).filter(id => id);
         
         console.log('🔄 Restaurando subcategorías desde URL:', subIds);
 
-        // Esperar un poco a que las subcategorías se rendericen
         setTimeout(() => {
             subIds.forEach(subId => {
-                // Buscar el botón de subcategoría y activarlo
                 const subBtn = this.DOM.get(`[data-subcategory-id="${subId}"]`);
                 if (subBtn) {
                     subBtn.classList.add('active');
@@ -814,7 +885,6 @@ export class ShopModule {
                 }
             });
 
-            // Cargar productos con el filtro restaurado
             if (this.state.selectedSubcategories.size > 0) {
                 console.log('📦 Cargando productos con filtro restaurado...');
                 this.loadProductsByCategory(this.state.currentCategory);
@@ -827,11 +897,9 @@ export class ShopModule {
     // ============================================================================
     
     exportGlobalFunctions() {
-        // Para compatibilidad con código legacy
         window.scrollCategories = (direction) => this.scrollCategories(direction);
         window.scrollSubcategories = (direction) => this.scrollSubcategories(direction);
         
-        // Exportar instancia
         window.shopModule = this;
         
         console.log('✅ Funciones globales exportadas');

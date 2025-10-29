@@ -1,15 +1,18 @@
 <?php
 /**
- * shop-content.php - Contenido del Catálogo
+ * ============================================================================
+ * shop-content.php - Contenido del Catálogo OPTIMIZADO
+ * ============================================================================
+ * ✅ Diseño RECTANGULAR (sin border-radius)
+ * ✅ Botón "Filtrar" funcional (toggle sidebar)
+ * ✅ Responsive: Sidebar oculta en móvil
+ * ============================================================================
  */
 
 global $config;
 $base = $config['paths']['baseURL'] ?? '/';
 ?>
 
-<!-- ============================================================================
-     🏷️ CRÍTICO: Esta clase permite a init.js detectar la página
-     ============================================================================ -->
 <body class="animsition shop-page">
 
 <!-- BREADCRUMB -->
@@ -25,106 +28,127 @@ $base = $config['paths']['baseURL'] ?? '/';
     </div>
 </div>
 
-<!-- SECCIÓN PRINCIPAL DEL CATÁLOGO -->
+<!-- ============================================================================
+     BARRA SUPERIOR: CATEGORÍAS + BOTÓN COMPARTIR
+     ============================================================================ -->
+<div class="bg0 p-t-23 p-b-15">
+    <div class="container">
+        <div class="row align-items-center">
+            
+            <!-- CATEGORÍAS CON SCROLL HORIZONTAL -->
+            <div class="col-lg-10 col-md-9 col-sm-12">
+                <div class="categories-section mb-3">
+                    <!-- Título + Subtítulo -->
+                    <div class="section-header mb-2">
+                        <h5 class="section-title d-inline-block mb-0">Categorías</h5>
+                        <span class="section-subtitle text-muted ms-2">— Explora todos nuestros productos y más...!!</span>
+                    </div>
+                    
+                    <!-- Slider de categorías -->
+                    <div class="categories-wrapper">
+                        <button class="cat-scroll-btn left" onclick="scrollCategories(-1)" aria-label="Scroll izquierda">
+                            <i class="zmdi zmdi-chevron-left"></i>
+                        </button>
+                        
+                        <div id="categories-container" class="categories-bar">
+                            <div class="text-center py-2">
+                                <i class="zmdi zmdi-spinner zmdi-hc-spin"></i>
+                                <span class="text-muted small ms-2">Cargando categorías...</span>
+                            </div>
+                        </div>
+                        
+                        <button class="cat-scroll-btn right" onclick="scrollCategories(1)" aria-label="Scroll derecha">
+                            <i class="zmdi zmdi-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTÓN COMPARTIR -->
+            <div class="col-lg-2 col-md-3 col-sm-12 text-end">
+                <button id="share-btn" class="btn-compartir">
+                    <i class="zmdi zmdi-share me-1"></i>
+                    Compartir
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================================
+     BOTÓN FILTRAR (Toggle para mostrar/ocultar sidebar)
+     ============================================================================ -->
+<div class="bg0 p-b-15">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <button id="toggle-filters-btn" class="btn-filtrar">
+                    <i class="zmdi zmdi-filter-list me-2"></i>
+                    <span class="filter-text">Filtrar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================================
+     SECCIÓN PRINCIPAL: FILTROS (Izquierda) + PRODUCTOS (Derecha)
+     ============================================================================ -->
 <section class="bg0 p-t-23 p-b-140">
     <div class="container">
         <div class="row">
             
-            <!-- PANEL DE FILTROS (Izquierda) -->
-            <div class="col-lg-3 col-md-4 col-sm-12 p-b-50">
+            <!-- ========================================
+                 COLUMNA IZQUIERDA: PANEL DE FILTROS
+                 ✅ OCULTA por defecto (clase "d-none")
+                 ✅ Se muestra al hacer click en "Filtrar"
+                 ======================================== -->
+            <div id="filters-column" class="col-lg-3 col-md-4 col-sm-12 p-b-50 d-none">
                 
-                <!-- Botón para mostrar filtros en móvil -->
-                <div class="flex-w flex-l-m filter p-b-25 d-lg-none">
-                    <button class="js-show-filter btn btn-outline-dark w-100">
-                        <i class="zmdi zmdi-filter-list mr-2"></i>
-                        Filtros
-                    </button>
-                </div>
-
-                <!-- Panel de filtros -->
-                <div class="panel-filter p-t-10">
+                <div class="panel-filtros sticky-sidebar">
                     
-                    <!-- CATEGORÍAS -->
-                    <div class="filter-section">
-                        <div class="flex-w flex-sb-m p-b-10">
-                            <h5 class="mtext-106 cl2 m-b-0">
-                                Categorías
-                            </h5>
-                        </div>
-
-                        <!-- Contenedor de categorías -->
-                        <div class="categories-wrapper">
-                            <button class="scroll-btn scroll-cat-prev" 
-                                    data-direction="-1"
-                                    data-target="categories"
-                                    aria-label="Scroll categorías izquierda">
-                                <i class="zmdi zmdi-chevron-left"></i>
-                            </button>
-                            
-                            <div id="categories-container" class="categories-bar">
-                                <div class="text-center py-3">
-                                    <i class="zmdi zmdi-spinner zmdi-hc-spin"></i>
-                                    <p class="text-muted small mt-2">Cargando categorías...</p>
-                                </div>
-                            </div>
-                            
-                            <button class="scroll-btn scroll-cat-next" 
-                                    data-direction="1"
-                                    data-target="categories"
-                                    aria-label="Scroll categorías derecha">
-                                <i class="zmdi zmdi-chevron-right"></i>
-                            </button>
-                        </div>
+                    <!-- Encabezado del panel -->
+                    <div class="filter-header d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="filter-title mb-0">Filtros</h5>
+                        <button id="close-filters-btn" class="btn-close-filters d-lg-none" aria-label="Cerrar filtros">
+                            <i class="zmdi zmdi-close"></i>
+                        </button>
                     </div>
 
                     <!-- SUBCATEGORÍAS -->
-                    <div class="filter-section mt-4">
-                        <div class="flex-w flex-sb-m p-b-10">
-                            <h5 class="mtext-106 cl2 m-b-0">
-                                Subcategorías
-                            </h5>
-                        </div>
-
-                        <!-- Contenedor de subcategorías -->
-                        <div class="subcategories-wrapper">
-                            <button class="scroll-btn scroll-sub-prev" 
-                                    data-direction="-1"
-                                    data-target="subcategories"
-                                    aria-label="Scroll subcategorías izquierda">
+                    <div class="filter-section mb-4">
+                        <h6 class="filter-subtitle mb-3">Subcategorías</h6>
+                        
+                        <div class="subcategories-wrapper position-relative">
+                            <button class="scroll-btn scroll-sub-prev" onclick="scrollSubcategories(-1)" aria-label="Scroll izquierda">
                                 <i class="zmdi zmdi-chevron-left"></i>
                             </button>
                             
-                            <div id="subcategories-container" class="subcategories-bar">
-                                <p class="text-muted small text-center py-3">
+                            <div id="subcategories-container" class="subcategories-list">
+                                <p class="text-muted small text-center py-3 mb-0">
                                     Selecciona una categoría
                                 </p>
                             </div>
                             
-                            <button class="scroll-btn scroll-sub-next" 
-                                    data-direction="1"
-                                    data-target="subcategories"
-                                    aria-label="Scroll subcategorías derecha">
+                            <button class="scroll-btn scroll-sub-next" onclick="scrollSubcategories(1)" aria-label="Scroll derecha">
                                 <i class="zmdi zmdi-chevron-right"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- BÚSQUEDA INTERNA -->
-                    <div class="filter-section mt-4">
-                        <div class="flex-w flex-sb-m p-b-10">
-                            <h5 class="mtext-106 cl2 m-b-0">
-                                Buscar en catálogo
-                            </h5>
-                        </div>
-                        
-                        <div class="search-product">
+                    <!-- BÚSQUEDA EN CATÁLOGO -->
+                    <div class="filter-section">
+                        <h6 class="filter-subtitle mb-3">Buscar en catálogo</h6>
+                        <div class="search-box position-relative">
                             <input 
                                 type="text" 
                                 id="search-input" 
-                                class="form-control" 
+                                class="form-control search-input" 
                                 placeholder="Buscar por código o nombre..."
                                 aria-label="Buscar productos"
                             >
+                            <i class="zmdi zmdi-search search-icon"></i>
                         </div>
                     </div>
 
@@ -132,28 +156,14 @@ $base = $config['paths']['baseURL'] ?? '/';
 
             </div>
 
-            <!-- GRID DE PRODUCTOS (Derecha) -->
-            <div class="col-lg-9 col-md-8 col-sm-12">
+            <!-- ========================================
+                 COLUMNA DERECHA: GRID DE PRODUCTOS
+                 ✅ DINÁMICO: 
+                    - col-lg-12 cuando filtros ocultos
+                    - col-lg-9 cuando filtros visibles
+                 ======================================== -->
+            <div id="products-column" class="col-lg-12 col-md-12 col-sm-12">
                 
-                <!-- Barra de herramientas superior -->
-                <div class="flex-w flex-sb-m p-b-52">
-                    <div class="flex-w flex-l-m filter m-r-auto">
-                        <span class="stext-106 cl6">
-                            Productos
-                        </span>
-                    </div>
-
-                    <div class="flex-w flex-r-m">
-                        <button 
-                            id="share-btn" 
-                            class="btn btn-outline-dark btn-sm"
-                            title="Compartir catálogo">
-                            <i class="zmdi zmdi-share mr-1"></i>
-                            Compartir
-                        </button>
-                    </div>
-                </div>
-
                 <!-- CONTENEDOR DE PRODUCTOS -->
                 <div id="products-container" class="row isotope-grid">
                     <div class="col-12 text-center py-5">
@@ -181,9 +191,86 @@ $base = $config['paths']['baseURL'] ?? '/';
 
 </body>
 
-<!-- ESTILOS -->
+<!-- ============================================================================
+     ESTILOS CSS - DISEÑO RECTANGULAR
+     ============================================================================ -->
 <style>
-/* Categorías */
+/* ========================================
+   BOTÓN FILTRAR (Rectangular)
+   ======================================== */
+.btn-filtrar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: 1px solid #e5e5e5;
+    background: white;
+    color: #333;
+    border-radius: 0;  /* Sin redondeo */
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-filtrar:hover {
+    background: #f5f5f5;
+    border-color: #333;
+}
+
+.btn-filtrar.active {
+    background: #333;
+    color: white;
+    border-color: #333;
+}
+
+/* ========================================
+   BOTÓN COMPARTIR (Rectangular)
+   ======================================== */
+.btn-compartir {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: 1px solid #e5e5e5;
+    background: white;
+    color: #333;
+    border-radius: 0;  /* Sin redondeo */
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-compartir:hover {
+    background: #f5f5f5;
+    border-color: #333;
+}
+
+/* ========================================
+   CATEGORÍAS (Rectangular)
+   ======================================== */
+.categories-section {
+    position: relative;
+}
+
+.section-header {
+    margin-bottom: 12px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.section-subtitle {
+    font-size: 14px;
+    color: #888;
+    font-style: italic;
+}
+
 .categories-wrapper {
     position: relative;
     overflow: hidden;
@@ -191,7 +278,7 @@ $base = $config['paths']['baseURL'] ?? '/';
 
 .categories-bar {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     overflow-x: auto;
     scroll-behavior: smooth;
     scrollbar-width: none;
@@ -204,20 +291,21 @@ $base = $config['paths']['baseURL'] ?? '/';
 
 .category-btn {
     flex-shrink: 0;
-    padding: 10px 20px;
-    border: 2px solid #e5e5e5;
+    padding: 12px 24px;
+    border: 1px solid #e5e5e5;
     background: white;
-    border-radius: 25px;
+    border-radius: 0;  /* Sin redondeo */
     cursor: pointer;
     transition: all 0.3s;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
     white-space: nowrap;
+    color: #333;
 }
 
 .category-btn:hover {
+    background: #f5f5f5;
     border-color: #333;
-    background: #f8f8f8;
 }
 
 .category-btn.active {
@@ -226,13 +314,92 @@ $base = $config['paths']['baseURL'] ?? '/';
     border-color: #333;
 }
 
-/* Subcategorías */
-.subcategories-wrapper {
-    position: relative;
-    overflow: hidden;
+.cat-scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e5e5e5;
+    background: white;
+    border-radius: 0;  /* Sin redondeo */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.subcategories-bar {
+.cat-scroll-btn:hover {
+    background: #333;
+    color: white;
+    border-color: #333;
+}
+
+.cat-scroll-btn.left {
+    left: 0;
+}
+
+.cat-scroll-btn.right {
+    right: 0;
+}
+
+/* ========================================
+   PANEL DE FILTROS
+   ======================================== */
+.panel-filtros {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 0;  /* Sin redondeo */
+    padding: 20px;
+}
+
+.filter-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+
+.filter-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+.filter-section {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.filter-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.btn-close-filters {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+}
+
+.btn-close-filters:hover {
+    color: #e74c3c;
+}
+
+/* ========================================
+   SUBCATEGORÍAS (Rectangular)
+   ======================================== */
+.subcategories-wrapper {
+    position: relative;
+}
+
+.subcategories-list {
     display: flex;
     gap: 8px;
     overflow-x: auto;
@@ -242,25 +409,26 @@ $base = $config['paths']['baseURL'] ?? '/';
     flex-wrap: wrap;
 }
 
-.subcategories-bar::-webkit-scrollbar {
+.subcategories-list::-webkit-scrollbar {
     display: none;
 }
 
 .subcategory-tag {
     flex-shrink: 0;
-    padding: 6px 16px;
+    padding: 8px 16px;
     border: 1px solid #e5e5e5;
     background: white;
-    border-radius: 20px;
+    border-radius: 0;  /* Sin redondeo */
     cursor: pointer;
     transition: all 0.3s;
     font-size: 13px;
     white-space: nowrap;
+    color: #333;
 }
 
 .subcategory-tag:hover {
+    background: #f5f5f5;
     border-color: #333;
-    background: #f8f8f8;
 }
 
 .subcategory-tag.active {
@@ -269,16 +437,15 @@ $base = $config['paths']['baseURL'] ?? '/';
     border-color: #333;
 }
 
-/* Botones de scroll */
 .scroll-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     border: 1px solid #e5e5e5;
     background: white;
-    border-radius: 50%;
+    border-radius: 0;  /* Sin redondeo */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -294,17 +461,131 @@ $base = $config['paths']['baseURL'] ?? '/';
     border-color: #333;
 }
 
-.scroll-cat-prev,
 .scroll-sub-prev {
     left: -5px;
 }
 
-.scroll-cat-next,
 .scroll-sub-next {
     right: -5px;
 }
 
-/* Grid de productos */
+/* ========================================
+   BÚSQUEDA
+   ======================================== */
+.search-box {
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border: 1px solid #e5e5e5;
+    border-radius: 0;  /* Sin redondeo */
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #333;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 18px;
+    pointer-events: none;
+}
+
+/* ========================================
+   SIDEBAR STICKY (Desktop)
+   ======================================== */
+@media (min-width: 992px) {
+    .sticky-sidebar {
+        position: sticky;
+        top: 20px;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+    }
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 991px) {
+    #filters-column {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 300px;
+        max-width: 90vw;
+        height: 100%;
+        background: white;
+        z-index: 9999;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        transition: left 0.3s ease;
+    }
+
+    #filters-column.show {
+        left: 0;
+    }
+
+    .panel-filtros {
+        height: 100%;
+        border: none;
+        border-radius: 0;
+    }
+
+    .btn-close-filters {
+        display: block !important;
+    }
+
+    .filters-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9998;
+        display: none;
+    }
+
+    .filters-overlay.show {
+        display: block;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn-filtrar,
+    .btn-compartir {
+        font-size: 13px;
+        padding: 10px 20px;
+    }
+
+    .category-btn,
+    .subcategory-tag {
+        font-size: 12px;
+        padding: 8px 14px;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+
+    .section-subtitle {
+        display: block;
+        margin-top: 4px;
+    }
+}
+
+/* ========================================
+   GRID DE PRODUCTOS
+   ======================================== */
 #products-container {
     min-height: 300px;
 }
@@ -314,88 +595,15 @@ $base = $config['paths']['baseURL'] ?? '/';
     flex-wrap: wrap;
 }
 
-.isotope-item {
-    margin-bottom: 30px;
-}
-
-/* Panel de filtros */
-.panel-filter {
-    transition: all 0.4s;
-}
-
-@media (max-width: 991px) {
-    .panel-filter {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 300px;
-        height: 100%;
-        background: white;
-        z-index: 9999;
-        overflow-y: auto;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        padding: 20px;
-    }
-
-    .panel-filter.show {
-        display: block;
-        animation: slideInLeft 0.3s;
-    }
-
-    @keyframes slideInLeft {
-        from { transform: translateX(-100%); }
-        to { transform: translateX(0); }
-    }
-}
-
-/* Búsqueda interna */
-.search-product input {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #e5e5e5;
-    border-radius: 25px;
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-.search-product input:focus {
-    outline: none;
-    border-color: #333;
-}
-
-/* Botón cargar más */
+/* ========================================
+   BOTÓN CARGAR MÁS
+   ======================================== */
 #load-more {
-    min-width: 200px;
+    border-radius: 0;  /* Sin redondeo */
 }
 
 #load-more:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-}
-
-/* Secciones */
-.filter-section {
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.filter-section:last-child {
-    border-bottom: none;
-}
-
-/* Responsive */
-@media (max-width: 576px) {
-    .category-btn,
-    .subcategory-tag {
-        font-size: 12px;
-        padding: 8px 16px;
-    }
-
-    .scroll-btn {
-        width: 25px;
-        height: 25px;
-        font-size: 12px;
-    }
 }
 </style>
