@@ -1,13 +1,11 @@
 <?php
 /**
  * ============================================================================
- * shop-content.php - Contenido del Catálogo OPTIMIZADO
+ * shop-content.php - ESTRUCTURA FINAL CORRECTA
  * ============================================================================
- * ✅ Diseño RECTANGULAR (sin border-radius)
- * ✅ Botón "Filtrar" funcional (toggle sidebar)
- * ✅ Responsive: Sidebar oculta en móvil
- * ============================================================================
- */
+ * ✅ Categorías (75%) + Botones (25%) en la MISMA FILA
+ * ✅ Botones apilados verticalmente dentro de la columna del 25%
+ * ============================================================================ */
 
 global $config;
 $base = $config['paths']['baseURL'] ?? '/';
@@ -29,15 +27,17 @@ $base = $config['paths']['baseURL'] ?? '/';
 </div>
 
 <!-- ============================================================================
-     BARRA SUPERIOR: CATEGORÍAS + BOTÓN COMPARTIR
+     SECCIÓN: CATEGORÍAS (75%) + BOTONES (25%) - MISMA FILA
      ============================================================================ -->
 <div class="bg0 p-t-23 p-b-15">
     <div class="container">
         <div class="row align-items-center">
             
-            <!-- CATEGORÍAS CON SCROLL HORIZONTAL -->
-            <div class="col-lg-10 col-md-9 col-sm-12">
-                <div class="categories-section mb-3">
+            <!-- ========================================
+                 COLUMNA IZQUIERDA: CATEGORÍAS (75%)
+                 ======================================== -->
+            <div class="col-lg-9 col-md-8 col-sm-12">
+                <div class="categories-section">
                     <!-- Título + Subtítulo -->
                     <div class="section-header mb-2">
                         <h5 class="section-title d-inline-block mb-0">Categorías</h5>
@@ -64,30 +64,28 @@ $base = $config['paths']['baseURL'] ?? '/';
                 </div>
             </div>
 
-            <!-- BOTÓN COMPARTIR -->
-            <div class="col-lg-2 col-md-3 col-sm-12 text-end">
-                <button id="share-btn" class="btn-compartir">
-                    <i class="zmdi zmdi-share me-1"></i>
-                    Compartir
-                </button>
+            <!-- ========================================
+                 COLUMNA DERECHA: BOTONES (25%)
+                 ✅ Botones apilados verticalmente
+                 ======================================== -->
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <div class="d-flex flex-column gap-3 align-items-end">
+                    
+                    <!-- Botón Compartir -->
+                    <button id="share-btn" class="btn-compartir">
+                        <i class="zmdi zmdi-share me-1"></i>
+                        Compartir
+                    </button>
+                    
+                    <!-- Botón Mostrar Filtros -->
+                    <button id="toggle-filters-btn" class="btn-filtrar">
+                        <i class="zmdi zmdi-filter-list me-2"></i>
+                        <span class="filter-text">MOSTRAR FILTROS</span>
+                    </button>
+                    
+                </div>
             </div>
 
-        </div>
-    </div>
-</div>
-
-<!-- ============================================================================
-     BOTÓN FILTRAR (Toggle para mostrar/ocultar sidebar)
-     ============================================================================ -->
-<div class="bg0 p-b-15">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <button id="toggle-filters-btn" class="btn-filtrar">
-                    <i class="zmdi zmdi-filter-list me-2"></i>
-                    <span class="filter-text">Filtrar</span>
-                </button>
-            </div>
         </div>
     </div>
 </div>
@@ -102,7 +100,7 @@ $base = $config['paths']['baseURL'] ?? '/';
             <!-- ========================================
                  COLUMNA IZQUIERDA: PANEL DE FILTROS
                  ✅ OCULTA por defecto (clase "d-none")
-                 ✅ Se muestra al hacer click en "Filtrar"
+                 ✅ Se muestra al hacer click en "MOSTRAR FILTROS"
                  ======================================== -->
             <div id="filters-column" class="col-lg-3 col-md-4 col-sm-12 p-b-50 d-none">
                 
@@ -192,418 +190,10 @@ $base = $config['paths']['baseURL'] ?? '/';
 </body>
 
 <!-- ============================================================================
-     ESTILOS CSS - DISEÑO RECTANGULAR
+     NOTAS IMPORTANTES:
+     ============================================================================
+     1. Categorías: col-lg-9 (75%)
+     2. Botones: col-lg-3 (25%)
+     3. Botones apilados con: d-flex flex-column gap-3
+     4. align-items-end: alinea botones a la derecha
      ============================================================================ -->
-<style>
-/* ========================================
-   BOTÓN FILTRAR (Rectangular)
-   ======================================== */
-.btn-filtrar {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    border: 1px solid #e5e5e5;
-    background: white;
-    color: #333;
-    border-radius: 0;  /* Sin redondeo */
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-filtrar:hover {
-    background: #f5f5f5;
-    border-color: #333;
-}
-
-.btn-filtrar.active {
-    background: #333;
-    color: white;
-    border-color: #333;
-}
-
-/* ========================================
-   BOTÓN COMPARTIR (Rectangular)
-   ======================================== */
-.btn-compartir {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    border: 1px solid #e5e5e5;
-    background: white;
-    color: #333;
-    border-radius: 0;  /* Sin redondeo */
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-compartir:hover {
-    background: #f5f5f5;
-    border-color: #333;
-}
-
-/* ========================================
-   CATEGORÍAS (Rectangular)
-   ======================================== */
-.categories-section {
-    position: relative;
-}
-
-.section-header {
-    margin-bottom: 12px;
-}
-
-.section-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #333;
-    margin: 0;
-}
-
-.section-subtitle {
-    font-size: 14px;
-    color: #888;
-    font-style: italic;
-}
-
-.categories-wrapper {
-    position: relative;
-    overflow: hidden;
-}
-
-.categories-bar {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    padding: 10px 0;
-}
-
-.categories-bar::-webkit-scrollbar {
-    display: none;
-}
-
-.category-btn {
-    flex-shrink: 0;
-    padding: 12px 24px;
-    border: 1px solid #e5e5e5;
-    background: white;
-    border-radius: 0;  /* Sin redondeo */
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 14px;
-    font-weight: 400;
-    white-space: nowrap;
-    color: #333;
-}
-
-.category-btn:hover {
-    background: #f5f5f5;
-    border-color: #333;
-}
-
-.category-btn.active {
-    background: #333;
-    color: white;
-    border-color: #333;
-}
-
-.cat-scroll-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    border: 1px solid #e5e5e5;
-    background: white;
-    border-radius: 0;  /* Sin redondeo */
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    transition: all 0.3s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.cat-scroll-btn:hover {
-    background: #333;
-    color: white;
-    border-color: #333;
-}
-
-.cat-scroll-btn.left {
-    left: 0;
-}
-
-.cat-scroll-btn.right {
-    right: 0;
-}
-
-/* ========================================
-   PANEL DE FILTROS
-   ======================================== */
-.panel-filtros {
-    background: white;
-    border: 1px solid #e5e5e5;
-    border-radius: 0;  /* Sin redondeo */
-    padding: 20px;
-}
-
-.filter-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #333;
-}
-
-.filter-subtitle {
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-}
-
-.filter-section {
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.filter-section:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.btn-close-filters {
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: #333;
-    cursor: pointer;
-    padding: 5px;
-    line-height: 1;
-}
-
-.btn-close-filters:hover {
-    color: #e74c3c;
-}
-
-/* ========================================
-   SUBCATEGORÍAS (Rectangular)
-   ======================================== */
-.subcategories-wrapper {
-    position: relative;
-}
-
-.subcategories-list {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    padding: 10px 0;
-    flex-wrap: wrap;
-}
-
-.subcategories-list::-webkit-scrollbar {
-    display: none;
-}
-
-.subcategory-tag {
-    flex-shrink: 0;
-    padding: 8px 16px;
-    border: 1px solid #e5e5e5;
-    background: white;
-    border-radius: 0;  /* Sin redondeo */
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 13px;
-    white-space: nowrap;
-    color: #333;
-}
-
-.subcategory-tag:hover {
-    background: #f5f5f5;
-    border-color: #333;
-}
-
-.subcategory-tag.active {
-    background: #333;
-    color: white;
-    border-color: #333;
-}
-
-.scroll-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 25px;
-    height: 25px;
-    border: 1px solid #e5e5e5;
-    background: white;
-    border-radius: 0;  /* Sin redondeo */
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    transition: all 0.3s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.scroll-btn:hover {
-    background: #333;
-    color: white;
-    border-color: #333;
-}
-
-.scroll-sub-prev {
-    left: -5px;
-}
-
-.scroll-sub-next {
-    right: -5px;
-}
-
-/* ========================================
-   BÚSQUEDA
-   ======================================== */
-.search-box {
-    position: relative;
-}
-
-.search-input {
-    width: 100%;
-    padding: 10px 40px 10px 15px;
-    border: 1px solid #e5e5e5;
-    border-radius: 0;  /* Sin redondeo */
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #333;
-}
-
-.search-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888;
-    font-size: 18px;
-    pointer-events: none;
-}
-
-/* ========================================
-   SIDEBAR STICKY (Desktop)
-   ======================================== */
-@media (min-width: 992px) {
-    .sticky-sidebar {
-        position: sticky;
-        top: 20px;
-        max-height: calc(100vh - 40px);
-        overflow-y: auto;
-    }
-}
-
-/* ========================================
-   RESPONSIVE
-   ======================================== */
-@media (max-width: 991px) {
-    #filters-column {
-        position: fixed;
-        top: 0;
-        left: -100%;
-        width: 300px;
-        max-width: 90vw;
-        height: 100%;
-        background: white;
-        z-index: 9999;
-        overflow-y: auto;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
-        transition: left 0.3s ease;
-    }
-
-    #filters-column.show {
-        left: 0;
-    }
-
-    .panel-filtros {
-        height: 100%;
-        border: none;
-        border-radius: 0;
-    }
-
-    .btn-close-filters {
-        display: block !important;
-    }
-
-    .filters-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 9998;
-        display: none;
-    }
-
-    .filters-overlay.show {
-        display: block;
-    }
-}
-
-@media (max-width: 576px) {
-    .btn-filtrar,
-    .btn-compartir {
-        font-size: 13px;
-        padding: 10px 20px;
-    }
-
-    .category-btn,
-    .subcategory-tag {
-        font-size: 12px;
-        padding: 8px 14px;
-    }
-
-    .section-title {
-        font-size: 20px;
-    }
-
-    .section-subtitle {
-        display: block;
-        margin-top: 4px;
-    }
-}
-
-/* ========================================
-   GRID DE PRODUCTOS
-   ======================================== */
-#products-container {
-    min-height: 300px;
-}
-
-.isotope-grid {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-/* ========================================
-   BOTÓN CARGAR MÁS
-   ======================================== */
-#load-more {
-    border-radius: 0;  /* Sin redondeo */
-}
-
-#load-more:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-</style>

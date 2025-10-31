@@ -1,6 +1,9 @@
 /* ============================================================================
-   🎨 PRODUCTS.CSS - ESTILO SEGÚN MOCKUP INKA
-   ✅ NUEVO: Sistema de toggle de filtros
+   🎨 PRODUCTS.CSS - ESTRUCTURA FINAL 75%-25%
+   ============================================================================
+   ✅ Categorías (col-lg-9) + Botones (col-lg-3) en la misma fila
+   ✅ Botones apilados verticalmente
+   ✅ Mantiene TODO el diseño de tarjetas
    ============================================================================ */
 
 /* ============================================================================
@@ -22,7 +25,7 @@
 }
 
 /* ============================================================================
-   🏷️ BARRA SUPERIOR: PRODUCTOS + CATEGORÍAS
+   🏷️ BARRA SUPERIOR: CATEGORÍAS
    ============================================================================ */
 .categories-section {
   border: 1px solid #e0e0e0;
@@ -31,7 +34,7 @@
   background: #fff;
 }
 
-/* ✅ Header con título + subtítulo en una línea */
+/* Header con título + subtítulo en una línea */
 .section-header {
   display: flex;
   align-items: baseline;
@@ -141,7 +144,7 @@
    📘 BOTÓN COMPARTIR
    ============================================================================ */
 .btn-compartir {
-  width: 100%;
+  width: 100%; /* ✅ Full width dentro de su columna */
   padding: 12px 20px;
   border: 1px solid #e0e0e0;
   background: #fff;
@@ -167,27 +170,30 @@
 }
 
 /* ============================================================================
-   ⚙️ BOTÓN FILTRAR (NUEVO)
+   ⚙️ BOTÓN FILTRAR
    ============================================================================ */
 .btn-filtrar {
+  width: 100%; /* ✅ Full width dentro de su columna */
   padding: 12px 30px;
-  border: 1px solid #333;
+  border: 1px solid #666;
   background: transparent;
   color: #333;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 
 .btn-filtrar:hover {
   background: #333;
+  border-color: #333;
   color: white;
 }
 
@@ -207,7 +213,7 @@
 }
 
 /* ============================================================================
-   🎛️ PANEL DE FILTROS (DERECHA)
+   🎛️ PANEL DE FILTROS (SIDEBAR)
    ============================================================================ */
 .panel-filtros {
   border: 1px solid #e0e0e0;
@@ -220,12 +226,19 @@
   overflow-y: auto;
 }
 
+.filter-header {
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .filter-title {
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #333;
+  margin: 0;
   color: #333;
 }
 
@@ -245,6 +258,29 @@
   font-weight: 600;
   margin-bottom: 12px;
   color: #333;
+}
+
+/* Botón cerrar (móvil) */
+.btn-close-filters {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.btn-close-filters:hover {
+  background: #fee;
+  color: #e74c3c;
 }
 
 /* ============================================================================
@@ -307,7 +343,7 @@
 
 /* Botones de scroll para subcategorías */
 .scroll-btn {
-  display: none; /* Ocultos por defecto, las subcategorías se muestran en lista vertical */
+  display: none;
 }
 
 /* ============================================================================
@@ -342,27 +378,38 @@
 }
 
 /* ============================================================================
-   🎯 ESTADOS DE VISIBILIDAD DE FILTROS (NUEVO)
+   🎯 ESTADOS DE VISIBILIDAD DE FILTROS
    ============================================================================ */
-
-/* Columna de filtros oculta por defecto */
 .filters-hidden {
   display: none !important;
 }
 
-/* Columna de filtros visible */
 .filters-visible {
   display: block !important;
 }
 
-/* Columna de productos en modo FULL (sin filtros) */
 .products-column-full {
   transition: all 0.3s ease;
 }
 
-/* Columna de productos en modo COMPACTO (con filtros) */
 .products-column-compact {
   transition: all 0.3s ease;
+}
+
+#products-column {
+  transition: all 0.3s ease;
+}
+
+#filters-column {
+  transition: left 0.3s ease, opacity 0.3s ease;
+}
+
+#filters-column.d-none {
+  opacity: 0;
+}
+
+#filters-column:not(.d-none) {
+  opacity: 1;
 }
 
 /* ============================================================================
@@ -379,14 +426,14 @@
   margin-bottom: 30px;
 }
 
-/* ✅ MODO SIN FILTROS: 5 columnas (20% cada una) */
+/* Modo sin filtros: 5 columnas */
 .products-column-full .isotope-item {
-  width: 20%; /* 5 columnas */
+  width: 20%;
 }
 
-/* ✅ MODO CON FILTROS: 4 columnas (25% cada una) */
+/* Modo con filtros: 4 columnas */
 .products-column-compact .isotope-item {
-  width: 25%; /* 4 columnas */
+  width: 25%;
 }
 
 /* ============================================================================
@@ -394,7 +441,7 @@
    ============================================================================ */
 .block2 {
   background: #fff;
-  border: 1px solid #e0e0e0; /* ✅ Borde sólido en lugar de punteado */
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s;
@@ -409,14 +456,14 @@
 }
 
 /* ============================================================================
-   📸 CONTENEDOR DE IMAGEN - Dominante (75% del espacio)
+   📸 CONTENEDOR DE IMAGEN
    ============================================================================ */
 .block2-pic {
   position: relative;
   width: 100%;
-  padding-bottom: 85%; /* ✅ Reducido de 100% para imagen más dominante */
+  padding-bottom: 85%;
   overflow: hidden;
-  background: #fafafa; /* ✅ Blanco casi puro */
+  background: #fafafa;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -427,72 +474,61 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  padding: 0; /* ✅ Sin padding para ancho completo */
+  padding: 0;
   transition: transform 0.3s;
 }
 
 .block2:hover .block2-pic img {
-  transform: scale(1.03); /* ✅ Zoom más sutil */
+  transform: scale(1.03);
 }
 
 /* ============================================================================
-   🏷️ BADGE DE CATEGORÍA (arriba izquierda) - Discreto
+   🏷️ BADGE DE CATEGORÍA
    ============================================================================ */
 .badge-categoria {
   position: absolute;
   top: 10px;
   left: 10px;
   z-index: 10;
-
-  /* CENTRADO HORIZONTAL + VERTICAL dentro del badge */
-  display: inline-flex;        /* mejor que block/inline-block para centrar */
-  align-items: center;         /* centra verticalmente */
-  justify-content: center;     /* centra horizontalmente */
-
-  /* ajuste de tamaño/padding para mantener equilibrio */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 3px 10px;
   min-width: 40px;
   min-height: 24px;
-
   background: rgba(44, 44, 44, 0.85);
   color: #fff;
-
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-
   border-radius: 3px;
   backdrop-filter: blur(4px);
-  white-space: nowrap;  
+  white-space: nowrap;
 }
 
 /* ============================================================================
-   📝 INFORMACIÓN DEL PRODUCTO - Compacta (25% del espacio)
+   📝 INFORMACIÓN DEL PRODUCTO
    ============================================================================ */
 .block2-txt {
-  padding: 12px; /* ✅ Reducido de 15px para más espacio de imagen */
+  padding: 12px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* ============================================================================
-   🔢 CÓDIGO DEL PRODUCTO (gris discreto)
-   ============================================================================ */
+/* Código del producto */
 .product-code {
   display: inline-block;
   font-size: 12px;
   font-weight: 500;
-  color: #999; /* ✅ Gris discreto en lugar de azul */
+  color: #999;
   margin-bottom: 6px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 
-/* ============================================================================
-   📖 TÍTULO DEL PRODUCTO
-   ============================================================================ */
+/* Título del producto */
 .product-title {
   font-size: 14px;
   line-height: 1.4;
@@ -507,7 +543,7 @@
 }
 
 /* ============================================================================
-   💰 CONTENEDOR DE PRECIOS
+   💰 PRECIOS
    ============================================================================ */
 .precios-container {
   margin-top: auto;
@@ -516,9 +552,6 @@
   gap: 8px;
 }
 
-/* ============================================================================
-   💵 PRECIO GENERAL (principal, negro, grande)
-   ============================================================================ */
 .precio-general {
   font-size: 20px;
   font-weight: 700;
@@ -526,24 +559,18 @@
   line-height: 1;
 }
 
-/* ============================================================================
-   💚 PRECIO MAYOR (verde, pequeño)
-   ============================================================================ */
 .precio-mayor {
   font-size: 13px;
   font-weight: 600;
-  color: #27ae60; /* Verde */
+  color: #27ae60;
   line-height: 1;
 }
 
-/* ============================================================================
-   🟡 PRECIO DOCENA (amarillo informativo)
-   ============================================================================ */
 .precio-docena {
   display: inline-block;
   padding: 6px 12px;
-  background: #ffeacf; /* ✅ Amarillo en lugar de naranja */
-  color: #333; /* Texto oscuro para mejor contraste */
+  background: #ffeacf;
+  color: #333;
   font-size: 12px;
   font-weight: 600;
   border-radius: 4px;
@@ -553,17 +580,13 @@
   align-self: flex-start;
 }
 
-.precio-docena:hover {
-  background: #ffeacf;
-}
-
 /* ============================================================================
    📘 BOTÓN "VER MÁS"
    ============================================================================ */
 .btn-ver-mas {
   width: 100%;
   padding: 10px 20px;
-  border: 1px solid #333; /* ✅ Botón outline según mockup */
+  border: 1px solid #333;
   background: transparent;
   color: #333;
   border-radius: 4px;
@@ -612,26 +635,96 @@
 }
 
 /* ============================================================================
+   ✨ ANIMACIONES
+   ============================================================================ */
+.panel-filtros {
+  animation: slideInLeft 0.3s ease;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================================================
    📱 RESPONSIVE - TABLET
    ============================================================================ */
 @media (max-width: 991px) {
-  .panel-filtros {
-    position: static;
-    margin-bottom: 30px;
+  /* En tablet, botones van debajo de categorías */
+  .btn-compartir,
+  .btn-filtrar {
+    width: 100%;
+    margin-bottom: 10px;
   }
 
-  .categories-section {
-    margin-bottom: 20px;
-  }
-
-  .btn-compartir {
-    margin-top: 15px;
-  }
-
-  /* ✅ En tablet, siempre 3 columnas */
+  /* En tablet, siempre 3 columnas */
   .products-column-full .isotope-item,
   .products-column-compact .isotope-item {
-    width: 33.333%; /* 3 columnas */
+    width: 33.333%;
+  }
+
+  /* Sidebar como overlay lateral */
+  #filters-column {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 320px;
+    max-width: 90vw;
+    height: 100%;
+    background: white;
+    z-index: 9999;
+    overflow-y: auto;
+    box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+    transition: left 0.3s ease;
+  }
+
+  #filters-column.show {
+    left: 0;
+  }
+
+  .panel-filtros {
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    padding: 20px;
+  }
+
+  /* Botón cerrar visible */
+  .btn-close-filters {
+    display: flex !important;
+  }
+
+  /* Overlay oscuro */
+  .filters-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9998;
+    display: none;
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.3s ease;
+  }
+
+  .filters-overlay.show {
+    display: block;
   }
 }
 
@@ -639,7 +732,6 @@
    📱 RESPONSIVE - MÓVIL
    ============================================================================ */
 @media (max-width: 767px) {
-  /* Ocultar botones de scroll en móvil */
   .cat-scroll-btn,
   .scroll-btn {
     display: none !important;
@@ -659,7 +751,6 @@
     padding: 6px 12px;
   }
 
-  /* ✅ Header responsive en móvil */
   .section-header {
     flex-direction: column;
     align-items: flex-start;
@@ -683,27 +774,26 @@
     padding: 15px;
   }
 
-  .stext-105 {
-    font-size: 16px;
-  }
-
   .btn-ver-mas {
     font-size: 12px;
     padding: 8px 15px;
   }
 
-  /* ✅ En móvil, siempre 2 columnas */
+  /* En móvil, siempre 2 columnas */
   .products-column-full .isotope-item,
   .products-column-compact .isotope-item {
-    width: 50%; /* 2 columnas */
+    width: 50%;
   }
 
-  /* ✅ Botón filtrar en móvil */
-  .btn-filtrar {
-    width: 100%;
-    justify-content: center;
-    padding: 10px 20px;
+  .btn-filtrar,
+  .btn-compartir {
     font-size: 13px;
+    padding: 10px 20px;
+    width: 100%;
+  }
+
+  #filters-column {
+    width: 280px;
   }
 }
 
@@ -729,402 +819,20 @@
 }
 
 /* ============================================================================
-   🎛️ TOGGLE DE FILTROS - CSS ADICIONAL
-   ============================================================================
-   Agregar al final de products.css
+   ♿ ACCESIBILIDAD
    ============================================================================ */
-
-/* ========================================
-   BOTÓN FILTRAR
-   ======================================== */
-.btn-filtrar {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border: 2px solid #333;
-    background: white;
-    color: #333;
-    border-radius: 25px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Poppins-Medium', sans-serif;
-}
-
-.btn-filtrar:hover {
-    background: #333;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(51, 51, 51, 0.2);
-}
-
-.btn-filtrar.active {
-    background: #333;
-    color: white;
-}
-
-.btn-filtrar .zmdi {
-    font-size: 18px;
-}
-
-/* ========================================
-   BOTÓN COMPARTIR
-   ======================================== */
-.btn-compartir {
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 20px;
-    border: 2px solid #6c7ae0;
-    background: #6c7ae0;
-    color: white;
-    border-radius: 25px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Poppins-Medium', sans-serif;
-}
-
-.btn-compartir:hover {
-    background: #5a68d0;
-    border-color: #5a68d0;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(108, 122, 224, 0.3);
-}
-
-.btn-compartir .zmdi {
-    font-size: 16px;
-}
-
-/* ========================================
-   PANEL DE FILTROS
-   ======================================== */
-.panel-filtros {
-    background: white;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    padding: 20px;
-}
-
-.filter-header {
-    padding-bottom: 15px;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.filter-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #333;
-    font-family: 'Poppins-Bold', sans-serif;
-}
-
-.filter-subtitle {
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-    font-family: 'Poppins-Medium', sans-serif;
-}
-
-.filter-section {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.filter-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-.btn-close-filters {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #333;
-    cursor: pointer;
-    padding: 5px;
-    line-height: 1;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.btn-close-filters:hover {
-    background: #fee;
-    color: #e74c3c;
-}
-
-/* ========================================
-   BÚSQUEDA EN FILTROS
-   ======================================== */
-.search-box {
-    position: relative;
-}
-
-.search-input {
-    width: 100%;
-    padding: 10px 40px 10px 15px;
-    border: 1px solid #e5e5e5;
-    border-radius: 25px;
-    font-size: 14px;
-    transition: all 0.3s;
-    font-family: 'Poppins-Regular', sans-serif;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #333;
-    box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.1);
-}
-
-.search-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888;
-    font-size: 18px;
-    pointer-events: none;
-}
-
-/* ========================================
-   CATEGORÍAS - MEJORAS
-   ======================================== */
-.categories-section {
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.section-header {
-    margin-bottom: 12px;
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-}
-
-.section-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #333;
-    margin: 0;
-    font-family: 'Poppins-Bold', sans-serif;
-}
-
-.section-subtitle {
-    font-size: 14px;
-    color: #888;
-    margin-left: 8px;
-    font-family: 'Poppins-Regular', sans-serif;
-}
-
-/* ========================================
-   SIDEBAR STICKY (Desktop)
-   ======================================== */
-@media (min-width: 992px) {
-    .sticky-sidebar {
-        position: sticky;
-        top: 20px;
-        max-height: calc(100vh - 40px);
-        overflow-y: auto;
-        scrollbar-width: thin;
-        scrollbar-color: #ccc transparent;
-    }
-
-    .sticky-sidebar::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .sticky-sidebar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .sticky-sidebar::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 3px;
-    }
-
-    .sticky-sidebar::-webkit-scrollbar-thumb:hover {
-        background: #999;
-    }
-}
-
-/* ========================================
-   RESPONSIVE - SIDEBAR MÓVIL
-   ======================================== */
-@media (max-width: 991px) {
-    /* Sidebar como overlay lateral */
-    #filters-column {
-        position: fixed;
-        top: 0;
-        left: -100%;
-        width: 320px;
-        max-width: 90vw;
-        height: 100%;
-        background: white;
-        z-index: 9999;
-        overflow-y: auto;
-        box-shadow: 2px 0 20px rgba(0,0,0,0.2);
-        transition: left 0.3s ease;
-    }
-
-    #filters-column.show {
-        left: 0;
-    }
-
-    .panel-filtros {
-        height: 100%;
-        border: none;
-        border-radius: 0;
-        padding: 20px;
-    }
-
-    /* Botón cerrar visible en móvil */
-    .btn-close-filters {
-        display: flex !important;
-    }
-
-    /* Overlay oscuro */
-    .filters-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 9998;
-        display: none;
-        backdrop-filter: blur(2px);
-        animation: fadeIn 0.3s ease;
-    }
-
-    .filters-overlay.show {
-        display: block;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-}
-
-/* ========================================
-   RESPONSIVE - MÓVILES PEQUEÑOS
-   ======================================== */
-@media (max-width: 576px) {
-    .btn-filtrar,
-    .btn-compartir {
-        font-size: 13px;
-        padding: 8px 16px;
-    }
-
-    .btn-filtrar .zmdi,
-    .btn-compartir .zmdi {
-        font-size: 16px;
-    }
-
-    .section-title {
-        font-size: 16px;
-    }
-
-    .section-subtitle {
-        display: block;
-        margin-left: 0;
-        margin-top: 4px;
-        font-size: 13px;
-    }
-
-    .filter-title {
-        font-size: 16px;
-    }
-
-    .filter-subtitle {
-        font-size: 13px;
-    }
-
-    .search-input {
-        font-size: 13px;
-        padding: 8px 35px 8px 12px;
-    }
-
-    .search-icon {
-        font-size: 16px;
-        right: 12px;
-    }
-
-    #filters-column {
-        width: 280px;
-    }
-}
-
-/* ========================================
-   ANIMACIONES
-   ======================================== */
-.panel-filtros {
-    animation: slideInLeft 0.3s ease;
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* ========================================
-   ESTADO LOADING
-   ======================================== */
-.btn-filtrar:disabled,
-.btn-compartir:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.btn-filtrar:disabled:hover,
-.btn-compartir:disabled:hover {
-    transform: none;
-    box-shadow: none;
-}
-
-/* ========================================
-   ACCESIBILIDAD
-   ======================================== */
 .btn-filtrar:focus,
 .btn-compartir:focus,
-.btn-close-filters:focus {
-    outline: 2px solid #6c7ae0;
-    outline-offset: 2px;
+.btn-close-filters:focus,
+.category-btn:focus,
+.subcategory-tag:focus {
+  outline: 2px solid #6c7ae0;
+  outline-offset: 2px;
 }
 
-/* ========================================
-   TRANSICIONES SUAVES
-   ======================================== */
-#products-column {
-    transition: all 0.3s ease;
-}
-
-#filters-column {
-    transition: left 0.3s ease, opacity 0.3s ease;
-}
-
-#filters-column.d-none {
-    opacity: 0;
-}
-
-#filters-column:not(.d-none) {
-    opacity: 1;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
