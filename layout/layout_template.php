@@ -1,7 +1,7 @@
 <?php
 /**
  * layout_template.php - Estructura HTML Completa
- * ✅ CORREGIDO: header.php ahora incluye todo el menú móvil
+ * ✅ MODIFICADO: Barra negra móvil siempre visible
  */
 
 global $config;
@@ -50,7 +50,8 @@ $base = $paths['baseURL'];
   <link rel="stylesheet" href="<?= $base ?>css/header.css">
   <link rel="stylesheet" href="<?= $base ?>css/products.css">
   <link rel="stylesheet" href="<?= $base ?>css/search-overlay.css">
-  <link rel="stylesheet" href="<?= $base ?>css/header-mobile-fixed.css">
+  <link rel="stylesheet" href="<?= $base ?>css/top-bar-mobile-styles.css">
+  <link rel="stylesheet" href="<?= $base ?>css/categories-sticky-mobile.css">
 
   <?= $extraHead ?? '' ?>
 </head>
@@ -109,15 +110,19 @@ $base = $paths['baseURL'];
       </div>
     </div>
 
+    <!-- ✅ NUEVO: BARRA NEGRA MÓVIL SIEMPRE VISIBLE -->
+    <div class="top-bar-mobile-fixed">
+      <div class="content-topbar-mobile">
+        <div class="left-top-bar">
+          Envios en pedidos mayores a RD$1,000
+        </div>
+      </div>
+    </div>
+
     <!-- ✅ MENU MOBILE (fuera de container-menu-desktop) -->
     <div class="menu-mobile">
-      <!-- Top bar movil -->
+      <!-- ✅ MODIFICADO: Top bar movil - Solo botones (Ayuda y Mi Cuenta) -->
       <ul class="topbar-mobile">
-        <li>
-          <div class="left-top-bar">
-            Envios en pedidos mayores a RD$1,000
-          </div>
-        </li>
         <li>
           <div class="right-top-bar flex-w h-full">
             <a href="<?= $base ?>pages/ayuda.php" class="flex-c-m p-lr-10 trans-04">

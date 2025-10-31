@@ -1,0 +1,128 @@
+/* ============================================================================
+   📌 CATEGORÍAS STICKY EN MÓVIL
+   ============================================================================
+   Hace que el bloque de categorías se quede pegado debajo del header
+   cuando se hace scroll
+   ============================================================================ */
+
+/* ============================================================================
+   MÓVIL: Categorías sticky
+   ============================================================================ */
+@media (max-width: 991px) {
+  
+  /* ============================================
+     CONTENEDOR PADRE - Sticky
+     ============================================ */
+  .bg0.p-t-23.p-b-15 {
+    position: sticky;
+    top: 95px; /* Altura del header fijo: 32px (barra negra) + 63px (logo) */
+    z-index: 90;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 0;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+  }
+  
+  /* ============================================
+     AJUSTES AL CONTENEDOR DE CATEGORÍAS
+     ============================================ */
+  .categories-section {
+    width: 100%;
+  }
+  
+  .section-header {
+    margin-bottom: 8px !important;
+  }
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .section-subtitle {
+    font-size: 11px;
+    color: #999;
+  }
+  
+  /* ============================================
+     WRAPPER DE CATEGORÍAS - Optimizado
+     ============================================ */
+  .categories-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  #categories-container {
+    flex: 1;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  #categories-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+  
+  /* Botones de scroll de categorías */
+  .cat-scroll-btn {
+    background-color: rgba(0,0,0,0.05);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  
+  .cat-scroll-btn:hover {
+    background-color: rgba(0,0,0,0.1);
+  }
+  
+  .cat-scroll-btn i {
+    font-size: 18px;
+    color: #333;
+  }
+  
+  /* ============================================
+     AJUSTE AL CONTENIDO DEBAJO
+     ============================================ */
+  
+  /* Sección de productos - Sin margin-top extra */
+  section.bg0.p-t-23 {
+    padding-top: 15px !important;
+  }
+  
+}
+
+/* ============================================================================
+   DESKTOP: Sin cambios
+   ============================================================================ */
+@media (min-width: 992px) {
+  /* En desktop las categorías se mantienen normales (no sticky) */
+  .bg0.p-t-23.p-b-15 {
+    position: relative;
+  }
+}
+
+/* ============================================================================
+   OPCIONAL: Animación smooth al hacer sticky
+   ============================================================================ */
+@media (max-width: 991px) {
+  .bg0.p-t-23.p-b-15 {
+    transition: box-shadow 0.3s ease;
+  }
+  
+  /* Cuando está en posición sticky, aumentar sombra */
+  .bg0.p-t-23.p-b-15.is-sticky {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+}

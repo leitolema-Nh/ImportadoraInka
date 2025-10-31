@@ -1,0 +1,167 @@
+/* ============================================================================
+   📱 BARRA NEGRA MÓVIL SIEMPRE VISIBLE - SIN BORDES EN BOTONES
+   ============================================================================ */
+
+.top-bar-mobile-fixed {
+  display: none;
+}
+
+/* ============================================================================
+   MOSTRAR EN MÓVIL (< 992px)
+   ============================================================================ */
+@media (max-width: 991px) {
+  
+  /* ============================================
+     🔒 BARRA NEGRA FIJA AL HACER SCROLL
+     ============================================ */
+  .top-bar-mobile-fixed {
+    display: block;
+    width: 100%;
+    background-color: #222;
+    padding: 8px 15px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+  }
+  
+  .content-topbar-mobile {
+    width: 100%;
+  }
+  
+  .top-bar-mobile-fixed .left-top-bar {
+    font-family: Poppins-Regular, sans-serif;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #b2b2b2;
+    text-align: center;
+    margin: 0;
+  }
+  
+  /* ============================================
+     🔒 LOGO + HAMBURGUESA FIJOS
+     ============================================ */
+  .wrap-header-mobile {
+    position: fixed;
+    top: 32px; /* Altura de la barra negra */
+    left: 0;
+    right: 0;
+    z-index: 9998;
+    background-color: #fff;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  /* ============================================
+     📏 COMPENSAR ESPACIO DEL HEADER FIJO
+     ============================================ */
+  body {
+    padding-top: 95px; /* 32px (barra negra) + 63px (logo/hamburguesa) */
+  }
+  
+  /* ============================================
+     MENÚ HAMBURGUESA - POSICIÓN AJUSTADA
+     ============================================ */
+  .menu-mobile {
+    position: fixed;
+    top: 95px; /* Debajo del header fijo */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    overflow-y: auto;
+    z-index: 9997;
+    display: none; /* Oculto por defecto */
+  }
+  
+  .menu-mobile.show {
+    display: block;
+  }
+  
+  /* ============================================
+     ✅ BOTONES SIN BORDES NI LÍNEAS
+     ============================================ */
+  .topbar-mobile {
+    background-color: #222;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .topbar-mobile li {
+    padding: 0;
+    margin: 0;
+    border: none; /* ✅ Sin bordes */
+    background-color: #222;
+  }
+  
+  .topbar-mobile .right-top-bar {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+  }
+  
+  .topbar-mobile .right-top-bar a {
+    font-family: Poppins-Regular, sans-serif;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #b2b2b2;
+    text-align: center;
+    padding: 12px 20px;
+    border: none; /* ✅ Sin bordes */
+    background-color: #222;
+    transition: all 0.3s;
+    display: block;
+  }
+  
+  .topbar-mobile .right-top-bar a:hover {
+    color: #6c7ae0;
+    background-color: rgba(108, 122, 224, 0.1);
+  }
+  
+  /* ============================================
+     SEPARADOR SUTIL ENTRE BOTONES (OPCIONAL)
+     ============================================ */
+  .topbar-mobile .right-top-bar a + a {
+    border-top: 1px solid rgba(255,255,255,0.03); /* Línea muy sutil */
+  }
+  
+  /* ============================================
+     MENÚ PRINCIPAL (Links)
+     ============================================ */
+  .main-menu-m {
+    background-color: #fff;
+    margin: 0;
+    padding: 20px 0;
+  }
+  
+  .main-menu-m li {
+    border: none;
+  }
+  
+  .main-menu-m li a {
+    display: block;
+    padding: 12px 30px;
+    font-family: Poppins-Regular, sans-serif;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.3s;
+  }
+  
+  .main-menu-m li a:hover,
+  .main-menu-m li.active-menu a {
+    color: #6c7ae0;
+    background-color: rgba(108, 122, 224, 0.05);
+  }
+  
+}
+
+/* ============================================================================
+   💻 DESKTOP - Sin cambios
+   ============================================================================ */
+@media (min-width: 992px) {
+  .top-bar-mobile-fixed {
+    display: none;
+  }
+}

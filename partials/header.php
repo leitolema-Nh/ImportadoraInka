@@ -3,8 +3,8 @@
  * ==============================================================
  *  HEADER - Menu Principal
  * ==============================================================
- *  Solo HTML - Sin <!DOCTYPE>, sin <head>, sin scripts
- *  Los eventos se manejan en header.module.js
+ *  ✅ MODIFICADO: Barra negra móvil siempre visible arriba
+ *  ✅ Desktop: Sin cambios
  * ==============================================================
  */
 
@@ -46,15 +46,22 @@ $activePage = $activePage ?? 'home'; // Definir pagina activa
   </div>
 </nav>
 
+<!-- ============================================================================
+     ✅ NUEVO: BARRA NEGRA MÓVIL SIEMPRE VISIBLE
+     Solo visible en móvil (< 992px)
+     ============================================================================ -->
+<div class="top-bar-mobile-fixed">
+  <div class="content-topbar-mobile">
+    <div class="left-top-bar">
+      Envios en pedidos mayores a RD$1,000
+    </div>
+  </div>
+</div>
+
 <!-- MENU MOBILE -->
 <div class="menu-mobile">
-  <!-- Top bar movil -->
+  <!-- ✅ MODIFICADO: Top bar movil - Solo botones (Ayuda y Mi Cuenta) -->
   <ul class="topbar-mobile">
-    <li>
-      <div class="left-top-bar">
-        Envios en pedidos mayores a RD$1,000
-      </div>
-    </li>
     <li>
       <div class="right-top-bar flex-w h-full">
         <a href="<?= $base ?>pages/ayuda.php" class="flex-c-m p-lr-10 trans-04">
@@ -129,3 +136,22 @@ $activePage = $activePage ?? 'home'; // Definir pagina activa
     <div id="searchResultsDropdown" class="search-dropdown"></div>
   </div>
 </div>
+
+<!-- ============================================================================
+     CAMBIOS REALIZADOS:
+     ============================================================================
+     1. AGREGADO (líneas 49-57): 
+        - Nueva sección .top-bar-mobile-fixed
+        - Contiene el encabezado "Envios en pedidos..."
+        - Solo visible en móvil
+     
+     2. MODIFICADO (líneas 61-72):
+        - .topbar-mobile ahora solo tiene los 2 botones
+        - Eliminado el <li> con .left-top-bar
+     
+     3. SIN CAMBIOS:
+        - MENU DESKTOP (líneas 16-47) ✅
+        - MENU MOBILE links (líneas 75-88) ✅
+        - HEADER MOBILE (líneas 92-119) ✅
+        - OVERLAY BUSQUEDA (líneas 121-141) ✅
+     ============================================================================ -->
