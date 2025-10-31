@@ -1,8 +1,8 @@
 // ============================================================================
-// 🚀 init.js - Inicializador Global de la Aplicación (ACTUALIZADO)
+// 🚀 init.js - Inicializador Global de la Aplicación (CORREGIDO)
 // ============================================================================
-// Detecta la página actual y carga los módulos específicos necesarios
-// ✅ AÑADIDO: Carga automática de search.module.js en páginas shop
+// ✅ CAMBIO PRINCIPAL: search.module.js ahora se carga GLOBALMENTE
+// ✅ Funciona en index.php, shop.php y cualquier otra página
 // ============================================================================
 
 console.log('🚀 init.js cargando...');
@@ -52,6 +52,9 @@ const GlobalApp = {
         
         // Componentes del footer
         this.initScrollToTop();
+        
+        // ✅ NUEVO: Cargar módulo de búsqueda globalmente
+        this.loadSearchModule();
         
         console.log('✅ Componentes globales inicializados');
     },
@@ -175,13 +178,36 @@ const GlobalApp = {
     },
 
     // ============================================================================
+    // 🔍 CARGAR MÓDULO DE BÚSQUEDA (GLOBAL)
+    // ============================================================================
+    
+    loadSearchModule() {
+        console.log('🔍 Cargando search.module.js globalmente...');
+        
+        import('./modules/search.module.js')
+            .then(module => {
+                const SearchModule = module.default || module.SearchModule;
+                const search = new SearchModule();
+                search.init();
+                
+                // Guardar referencia global
+                window.searchModule = search;
+                
+                console.log('✅ search.module.js cargado e inicializado globalmente');
+            })
+            .catch(err => {
+                console.error('❌ Error cargando search.module.js:', err);
+            });
+    },
+
+    // ============================================================================
     // 🎯 DETECCIÓN DE PÁGINA Y CARGA DE MÓDULOS
     // ============================================================================
     
     detectPageAndLoadModule() {
         const body = document.body;
         
-        console.log('🔍 Detectando página actual...');
+        console.log('🔎 Detectando página actual...');
         console.log('   Body classes:', body.className);
         
         // ✅ Página de catálogo (shop.php)
@@ -215,7 +241,7 @@ const GlobalApp = {
     loadShopModule() {
         console.log('📦 Cargando shop.module.js...');
         
-        // Cargar shop.module.js
+        // ✅ CAMBIO: Ya no carga search.module.js aquí (se carga globalmente)
         import('./modules/shop.module.js')
             .then(module => {
                 const ShopModule = module.default || module.ShopModule;
@@ -226,22 +252,9 @@ const GlobalApp = {
                 window.shopModule = shop;
                 
                 console.log('✅ shop.module.js cargado e inicializado');
-                
-                // ✅ Cargar search.module.js después de shop
-                return import('./modules/search.module.js');
-            })
-            .then(module => {
-                const SearchModule = module.default || module.SearchModule;
-                const search = new SearchModule();
-                search.init();
-                
-                // Guardar referencia global
-                window.searchModule = search;
-                
-                console.log('✅ search.module.js cargado e inicializado');
             })
             .catch(err => {
-                console.error('❌ Error cargando módulos:', err);
+                console.error('❌ Error cargando shop.module.js:', err);
             });
     },
 
