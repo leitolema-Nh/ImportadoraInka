@@ -1,10 +1,10 @@
 <?php
 /**
  * ============================================================================
- * shop-content.php - ESTRUCTURA FINAL CORRECTA
+ * shop-content.php - CON BREADCRUMB 80-10-10 MÓVIL
  * ============================================================================
- * ✅ Categorías (75%) + Botones (25%) en la MISMA FILA
- * ✅ Botones apilados verticalmente dentro de la columna del 25%
+ * ✅ Desktop: Categorías (75%) + Botones (25%)
+ * ✅ Móvil: Breadcrumb (80%) + Iconos (10% + 10%)
  * ============================================================================ */
 
 global $config;
@@ -15,14 +15,36 @@ $base = $config['paths']['baseURL'] ?? '/';
 
 <!-- BREADCRUMB -->
 <div class="container">
-    <div class="bread-crumb flex-w p-t-30 p-lr-0-lg">
-        <a href="<?= $base ?>pages/index.php" class="stext-109 cl8 hov-cl1 trans-04">
-            Inicio
-            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
-        </a>
-        <span class="stext-109 cl4">
-            Catálogo
-        </span>
+    <div class="row align-items-center p-t-30">
+        
+        <!-- Breadcrumb: Desktop 100% | Móvil 80% -->
+        <div class="col-lg-12 col-8">
+            <div class="bread-crumb flex-w p-lr-0-lg">
+                <a href="<?= $base ?>pages/index.php" class="stext-109 cl8 hov-cl1 trans-04">
+                    Inicio
+                    <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+                </a>
+                <span class="stext-109 cl4">
+                    Catálogo
+                </span>
+            </div>
+        </div>
+        
+        <!-- Botones móvil: Solo visibles en móvil (10% + 10%) -->
+        <div class="col-4 d-lg-none">
+            <div class="d-flex gap-2 justify-content-end">
+                <!-- Botón Filtrar (10%) -->
+                <button id="toggle-filters-btn-mobile" class="btn-icon-mobile">
+                    <i class="zmdi zmdi-filter-list"></i>
+                </button>
+                
+                <!-- Botón Compartir (10%) -->
+                <button id="share-btn-mobile" class="btn-icon-mobile">
+                    <i class="zmdi zmdi-share"></i>
+                </button>
+            </div>
+        </div>
+        
     </div>
 </div>
 
@@ -66,9 +88,9 @@ $base = $config['paths']['baseURL'] ?? '/';
 
             <!-- ========================================
                  COLUMNA DERECHA: BOTONES (25%)
-                 ✅ Botones apilados verticalmente
+                 ✅ Solo visible en desktop
                  ======================================== -->
-            <div class="col-lg-3 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 d-none d-lg-block">
                 <div class="d-flex flex-column gap-3 align-items-end">
                     
                     <!-- Botón Compartir -->
@@ -80,7 +102,7 @@ $base = $config['paths']['baseURL'] ?? '/';
                     <!-- Botón Mostrar Filtros -->
                     <button id="toggle-filters-btn" class="btn-filtrar">
                         <i class="zmdi zmdi-filter-list me-2"></i>
-                        <span class="filter-text">MOSTRAR FILTROS</span>
+                        <span class="filter-text">Mostrar Filtros</span>
                     </button>
                     
                 </div>
@@ -192,8 +214,14 @@ $base = $config['paths']['baseURL'] ?? '/';
 <!-- ============================================================================
      NOTAS IMPORTANTES:
      ============================================================================
-     1. Categorías: col-lg-9 (75%)
-     2. Botones: col-lg-3 (25%)
-     3. Botones apilados con: d-flex flex-column gap-3
-     4. align-items-end: alinea botones a la derecha
+     DESKTOP:
+     - Breadcrumb: col-lg-12 (100%)
+     - Categorías: col-lg-9 (75%)
+     - Botones: col-lg-3 (25%) - Apilados verticalmente
+     
+     MÓVIL:
+     - Breadcrumb: col-8 (80%)
+     - Botones iconos: col-4 (20%) dividido en 10% + 10%
+     - Categorías: col-12 (100%)
+     - Productos: 1 columna (100%)
      ============================================================================ -->

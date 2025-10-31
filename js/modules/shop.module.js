@@ -93,7 +93,10 @@ export class ShopModule {
             toggleFiltersBtn: this.DOM.getById('toggle-filters-btn'),
             closeFiltersBtn: this.DOM.getById('close-filters-btn'),
             filtersColumn: this.DOM.getById('filters-column'),
-            productsColumn: this.DOM.getById('products-column')
+            productsColumn: this.DOM.getById('products-column'),
+            // ✅ BOTONES MÓVILES
+            toggleFiltersBtnMobile: this.DOM.getById('toggle-filters-btn-mobile'),
+            shareBtnMobile: this.DOM.getById('share-btn-mobile')
         };
 
         console.log('✅ Elementos cacheados:', {
@@ -121,10 +124,19 @@ export class ShopModule {
 
         console.log('🎛️ Configurando toggle de filtros...');
 
-        // ✅ Botón "Filtrar"
+        // ✅ Botón "Filtrar" DESKTOP
         this.Events.on(this.dom.toggleFiltersBtn, 'click', () => {
             this.toggleFilters();
         });
+
+        // ✅ Botón "Filtrar" MÓVIL
+        if (this.dom.toggleFiltersBtnMobile) {
+            this.Events.on(this.dom.toggleFiltersBtnMobile, 'click', () => {
+                console.log('📱 Click en botón filtros móvil');
+                this.toggleFilters();
+            });
+            console.log('✅ Botón filtros móvil conectado');
+        }
 
         // ✅ Botón cerrar filtros (móvil)
         if (this.dom.closeFiltersBtn) {
@@ -769,7 +781,8 @@ export class ShopModule {
             return;
         }
 
-        this.Events.on(this.dom.shareBtn, 'click', () => {
+        // ✅ Función de compartir (reutilizable)
+        const shareAction = () => {
             console.log('📤 Compartir catálogo');
             
             const url = window.location.href;
@@ -801,7 +814,19 @@ export class ShopModule {
             } else {
                 this.fallbackShare(url);
             }
-        });
+        };
+
+        // ✅ Botón DESKTOP
+        this.Events.on(this.dom.shareBtn, 'click', shareAction);
+
+        // ✅ Botón MÓVIL
+        if (this.dom.shareBtnMobile) {
+            this.Events.on(this.dom.shareBtnMobile, 'click', () => {
+                console.log('📱 Click en botón compartir móvil');
+                shareAction();
+            });
+            console.log('✅ Botón compartir móvil conectado');
+        }
 
         console.log('✅ Botón de compartir configurado');
     }

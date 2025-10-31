@@ -25,6 +25,41 @@
 }
 
 /* ============================================================================
+   📱 BOTONES MÓVIL EN BREADCRUMB (Solo iconos)
+   ============================================================================ */
+.btn-icon-mobile {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon-mobile i {
+  font-size: 20px;
+  color: #333;
+}
+
+.btn-icon-mobile:hover {
+  background: #f8f8f8;
+  border-color: #333;
+}
+
+.btn-icon-mobile:active {
+  background: #333;
+}
+
+.btn-icon-mobile:active i {
+  color: white;
+}
+
+/* ============================================================================
    🏷️ BARRA SUPERIOR: CATEGORÍAS
    ============================================================================ */
 .categories-section {
@@ -188,6 +223,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  margin-top: 3%;
 }
 
 .btn-filtrar:hover {
@@ -771,10 +807,10 @@
     padding: 8px 15px;
   }
 
-  /* En móvil, siempre 2 columnas */
+  /* ✅ PRODUCTOS EN 1 COLUMNA EN MÓVIL */
   .products-column-full .isotope-item,
   .products-column-compact .isotope-item {
-    width: 50%;
+    width: 100% !important;
   }
 
   .btn-filtrar,
