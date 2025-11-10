@@ -1,7 +1,7 @@
 <?php
 /**
- * 🧩 product.php — Detalle individual para modal
- * Devuelve JSON limpio del producto (con imagen normalizada y galería)
+ * product.php - Detalle individual para modal
+ * Devuelve JSON limpio del producto (con imagen normalizada y galeria)
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -23,7 +23,7 @@ try {
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id <= 0) {
-    echo json_encode(['status'=>'error','mensaje'=>'ID inválido']);
+    echo json_encode(['status'=>'error','mensaje'=>'ID invalido']);
     exit;
 }
 
@@ -58,9 +58,12 @@ try {
     $row['precio_mayor']   = (float)($row['precio_mayor']   ?? 0);
     $row['precio_docena']  = (float)($row['precio_docena']  ?? 0);
 
-    // Imagen principal + galería
-    $row['imagen']   = obtenerRutaImagen($row['imagen'], $paths);
-    $row['imagenes'] = obtenerGaleriaImagenes($row['imagen'], $paths);
+    // CORRECCION: Guardar valor RAW antes de procesar
+    $imagenRaw = $row['imagen'];
+    
+    // Imagen principal + galeria
+    $row['imagen']   = obtenerRutaImagen($imagenRaw, $paths);
+    $row['imagenes'] = obtenerGaleriaImagenes($imagenRaw, $paths);
 
     echo json_encode(['status'=>'ok','producto'=>$row], JSON_UNESCAPED_UNICODE);
 

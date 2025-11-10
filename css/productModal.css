@@ -1,0 +1,779 @@
+/* ============================================================================
+   🎭 productModal.css - VERSIÓN FINAL CORREGIDA
+   ============================================================================
+   ✅ Modal centrado con position: fixed
+   ✅ Z-index correcto (overlay 99998, modal 99999)
+   ✅ Estilos completos de Slick Slider
+   ✅ Layout vertical: Imagen principal arriba + Thumbnails centrados abajo
+   ✅ Imagen única centrada sin Slick
+   ============================================================================ */
+
+/* BASE */
+.wrap-modal1 {
+    position: fixed;
+    z-index: 99999;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.wrap-modal1.show-modal1 {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: all;
+}
+
+.overlay-modal1 {
+    display: none;
+    pointer-events: none;
+}
+
+.modal-container {
+    width: 100%;
+    height: 100%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* HEADER */
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e6e6e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.modal-drag-indicator {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: #ccc;
+    border-radius: 2px;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    flex: 1;
+}
+
+.modal-close {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.modal-close:hover {
+    background: #f5f5f5;
+}
+
+/* BODY */
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal-gallery-section,
+.modal-info-section {
+    width: 100%;
+}
+
+.modal-gallery-section {
+    margin-bottom: 30px;
+}
+
+/* ============================================================================
+   📸 GALERÍA - LAYOUT VERTICAL
+   ============================================================================ */
+
+/* Contenedor principal con layout vertical */
+.wrap-slick3 {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 20px !important;
+    width: 100%;
+}
+
+/* Galería principal - Primera fila */
+.modal-gallery {
+    width: 100%;
+    position: relative;
+    min-height: 400px;
+    order: 1;
+}
+
+.modal-gallery-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Thumbnails - Segunda fila, centrados */
+.wrap-slick3-dots {
+    order: 2 !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px;
+    width: 100%;
+    margin-top: 0 !important;
+    flex-wrap: wrap;
+}
+
+/* Flechas permanecen en la imagen principal */
+.wrap-slick3-arrows {
+    display: none;
+    order: 1;
+}
+
+/* INFORMACIÓN */
+.modal-code-section {
+    font-size: 13px;
+    color: #888;
+}
+
+.modal-category-section .badge {
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 15px;
+    background: #6c757d;
+    color: white;
+}
+
+.modal-description-section h5 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.modal-description-section p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #666;
+}
+
+/* PRECIOS */
+.price-box {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.price-header {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.price-row .label {
+    font-weight: 500;
+    color: #666;
+}
+
+.price-row .value {
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+}
+
+.price-row:first-of-type .value {
+    color: #e74c3c;
+    font-size: 18px;
+}
+
+/* COMPARTIR */
+.modal-share-section h5 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.modal-share-section .tooltip100 {
+    position: relative;
+}
+
+.modal-share-section .tooltip100::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    z-index: 100;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    pointer-events: none;
+}
+
+.modal-share-section .tooltip100:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* BOTONES */
+.modal-actions-desktop {
+    margin-top: 20px;
+}
+
+/* FOOTER MÓVIL */
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #e6e6e6;
+    background: white;
+    position: sticky;
+    bottom: 0;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.modal-footer-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    background: #717fe0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.modal-footer-btn:hover {
+    background: #5a6bc7;
+}
+
+/* ============================================================================
+   💻 DESKTOP (≥768px)
+   ============================================================================ */
+
+@media (min-width: 768px) {
+    
+    .overlay-modal1 {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        cursor: pointer;
+        z-index: 99998;
+        pointer-events: none;
+    }
+    
+    .wrap-modal1.show-modal1 .overlay-modal1 {
+        display: block;
+        pointer-events: all;
+    }
+
+    .modal-container {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 90%;
+        max-width: 1100px;
+        height: auto;
+        max-height: 90vh;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: visible !important;
+        z-index: 99999;
+    }
+
+    .modal-header {
+        padding: 25px 30px;
+    }
+
+    .modal-drag-indicator {
+        display: none;
+    }
+
+    .modal-title {
+        font-size: 24px;
+    }
+
+    .modal-close {
+        width: 40px;
+        height: 40px;
+    }
+
+    .modal-body {
+        padding: 30px;
+        max-height: calc(90vh - 100px);
+        overflow-y: auto;
+        overflow-x: visible;
+    }
+    
+    .modal-body .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .modal-body .col-md-6 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .modal-body .col-md-6:first-child {
+        padding-left: 0;
+    }
+    
+    .modal-body .col-md-6:last-child {
+        padding-right: 0;
+    }
+
+    .modal-gallery-section {
+        margin-bottom: 0;
+    }
+
+    /* Layout vertical con mayor espaciado */
+    .wrap-slick3 {
+        gap: 25px !important;
+    }
+
+    .wrap-slick3-dots {
+        gap: 12px;
+    }
+
+    /* Flechas visibles en desktop */
+    .wrap-slick3-arrows {
+        display: flex;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        z-index: 10;
+        pointer-events: none;
+        justify-content: space-between;
+        padding: 0 15px;
+    }
+
+    .modal-footer {
+        display: none;
+    }
+
+    .wrap-modal1.show-modal1 {
+        animation: modalFadeIn 0.4s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .wrap-modal1.show-modal1 .modal-container {
+        animation: modalSlideIn 0.4s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            transform: translate(-50%, -45%);
+            opacity: 0;
+        }
+        to {
+            transform: translate(-50%, -50%);
+            opacity: 1;
+        }
+    }
+}
+
+/* LARGE DESKTOP */
+@media (min-width: 1200px) {
+    .modal-container {
+        max-width: 1200px;
+    }
+
+    .modal-body {
+        padding: 40px;
+    }
+    
+    .modal-body .col-md-6:first-child {
+        flex: 0 0 55%;
+        max-width: 55%;
+    }
+    
+    .modal-body .col-md-6:last-child {
+        flex: 0 0 45%;
+        max-width: 45%;
+    }
+
+    .price-row {
+        font-size: 15px;
+    }
+
+    .price-row .value {
+        font-size: 18px;
+    }
+
+    .price-row:first-of-type .value {
+        font-size: 22px;
+    }
+}
+
+/* PREVENIR SCROLL */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* ============================================================================
+   🖼️ IMAGEN
+   ============================================================================ */
+
+.modal-gallery-image {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 300px;
+    max-height: 600px;
+    display: block !important;
+    object-fit: contain;
+    background: transparent;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.image-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    z-index: 5;
+    transition: opacity 0.4s ease;
+}
+
+.loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #e0e0e0;
+    border-top-color: #717fe0;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.wrap-pic-w::before {
+    display: none !important;
+}
+
+@media (min-width: 768px) {
+    .modal-gallery-image {
+        min-height: 400px;
+        max-height: 700px;
+    }
+    
+    .loader-spinner {
+        width: 60px;
+        height: 60px;
+        border-width: 5px;
+    }
+}
+
+@media (max-width: 767px) {
+    .modal-gallery-image {
+        min-height: 250px;
+        max-height: 500px;
+    }
+    
+    .loader-spinner {
+        width: 40px;
+        height: 40px;
+        border-width: 3px;
+    }
+}
+
+.slick-slide img {
+    display: block;
+    width: 100%;
+}
+
+.slick-slider {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.slick-initialized {
+    opacity: 1;
+}
+
+.modal-gallery {
+    position: relative;
+    min-height: 400px;
+}
+
+@media (min-width: 768px) {
+    .modal-gallery {
+        min-height: 500px;
+    }
+}
+
+.modal-body.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.wrap-pic-w {
+    position: relative;
+    overflow: visible !important;
+    background: transparent;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================================================
+   🖼️ IMAGEN ÚNICA SIN SLICK
+   ============================================================================ */
+
+.modal-gallery.single-image {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 400px;
+    overflow: visible !important;
+}
+
+.modal-gallery.single-image .item-slick3 {
+    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.modal-gallery.single-image .wrap-pic-w {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: visible !important;
+}
+
+.modal-gallery.single-image .modal-gallery-image {
+    object-fit: contain;
+    max-width: 100%;
+    height: auto;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.modal-gallery.single-image ~ .wrap-slick3-dots,
+.modal-gallery.single-image ~ .wrap-slick3-arrows,
+.wrap-slick3.has-single-image .wrap-slick3-dots,
+.wrap-slick3.has-single-image .wrap-slick3-arrows {
+    display: none !important;
+}
+
+.wrap-slick3-dots:empty,
+.wrap-slick3-arrows:empty {
+    display: none !important;
+}
+
+@media (min-width: 768px) {
+    .modal-gallery.single-image {
+        min-height: 500px;
+    }
+    
+    .modal-gallery.single-image .wrap-pic-w {
+        max-width: 900px;
+    }
+}
+
+/* ============================================================================
+   🎠 SLICK SLIDER - ESTILOS COMPLETOS
+   ============================================================================ */
+
+/* FLECHAS */
+.slick-prev, .slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 45px;
+    height: 45px;
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+    font-size: 0;
+    pointer-events: all;
+}
+
+.slick-prev:hover, .slick-next:hover {
+    background: #333;
+    color: white;
+    border-color: #333;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slick-prev {
+    left: 15px;
+}
+
+.slick-next {
+    right: 15px;
+}
+
+.slick-prev:before {
+    content: '←';
+    font-size: 20px;
+    color: #333;
+}
+
+.slick-next:before {
+    content: '→';
+    font-size: 20px;
+    color: #333;
+}
+
+.slick-prev:hover:before, .slick-next:hover:before {
+    color: white;
+}
+
+.slick-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* DOTS/THUMBNAILS */
+.slick-dots {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.slick-dots li {
+    width: 70px;
+    height: 70px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.slick-dots li.slick-active {
+    border-color: #717fe0;
+}
+
+.slick-dots li:hover {
+    border-color: #999;
+}
+
+.slick-dots li img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.slick-dots li button {
+    display: none;
+}
+
+.slick3-dot-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.slick-dots li:hover .slick3-dot-overlay {
+    opacity: 1;
+}
+
+.slick-dots li.slick-active .slick3-dot-overlay {
+    opacity: 0;
+}
+
+/* TRACK */
+.slick-track {
+    display: flex;
+}
+
+.slick-slide {
+    float: none;
+    height: auto;
+}
+
+.slick-slide > div {
+    width: 100%;
+}
+
+.slick-slide img {
+    display: block;
+}

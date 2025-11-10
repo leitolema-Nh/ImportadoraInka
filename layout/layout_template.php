@@ -53,6 +53,11 @@ $base = $paths['baseURL'];
   <link rel="stylesheet" href="<?= $base ?>css/top-bar-mobile-styles.css">
   <link rel="stylesheet" href="<?= $base ?>css/categories-sticky-mobile.css">
 
+  <!-- ✅ NUEVOS CSS DEL MODAL DE PRODUCTO -->
+  <link rel="stylesheet" href="<?= $base ?>css/productModal.css">
+  <link rel="stylesheet" href="<?= $base ?>css/productModal-mobile.css">
+  <link rel="stylesheet" href="<?= $base ?>css/product-card-clickable.css">
+
   <?= $extraHead ?? '' ?>
 </head>
 

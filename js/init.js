@@ -1,8 +1,9 @@
 // ============================================================================
-// 🚀 init.js - Inicializador Global de la Aplicación (CORREGIDO)
+// 🚀 init.js - Inicializador Global de la Aplicación
 // ============================================================================
-// ✅ CAMBIO PRINCIPAL: search.module.js ahora se carga GLOBALMENTE
-// ✅ Funciona en index.php, shop.php y cualquier otra página
+// ✅ Módulos globales: search.module.js + productModal.module.js
+// ✅ Sistema modular con detección automática de página
+// ✅ Mobile First & Responsive
 // ============================================================================
 
 console.log('🚀 init.js cargando...');
@@ -16,11 +17,8 @@ const GlobalApp = {
     init() {
         console.log('🎬 GlobalApp: Iniciando aplicación...');
         
-        // Esperar a que el DOM esté listo
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                this.start();
-            });
+            document.addEventListener('DOMContentLoaded', () => this.start());
         } else {
             this.start();
         }
@@ -29,39 +27,37 @@ const GlobalApp = {
     start() {
         console.log('✅ DOM listo, iniciando componentes...');
         
-        // Inicializar componentes globales
         this.initGlobalComponents();
-        
-        // Detectar página y cargar módulo específico
         this.detectPageAndLoadModule();
         
         console.log('✅ GlobalApp inicializado correctamente');
     },
 
     // ============================================================================
-    // 🌐 COMPONENTES GLOBALES (presentes en todas las páginas)
+    // 🌐 COMPONENTES GLOBALES
     // ============================================================================
     
     initGlobalComponents() {
         console.log('🌐 Inicializando componentes globales...');
         
-        // Componentes del header
+        // Header
         this.initMobileMenu();
         this.initSearchOverlay();
         this.initCartIcon();
         
-        // Componentes del footer
+        // Footer
         this.initScrollToTop();
         
-        // ✅ NUEVO: Cargar módulo de búsqueda globalmente
+        // Módulos globales
         this.loadSearchModule();
+        this.loadModalModule();
         
         console.log('✅ Componentes globales inicializados');
     },
 
-    // ============================================
+    // ============================================================================
     // 📱 MENÚ MÓVIL
-    // ============================================
+    // ============================================================================
     
     initMobileMenu() {
         const hamburger = document.querySelector('.btn-show-menu-mobile');
@@ -69,7 +65,6 @@ const GlobalApp = {
         
         if (hamburger && mobileMenu) {
             hamburger.addEventListener('click', function() {
-                console.log('🍔 Toggle menú móvil');
                 this.classList.toggle('is-active');
                 mobileMenu.classList.toggle('show');
             });
@@ -78,9 +73,9 @@ const GlobalApp = {
         }
     },
 
-    // ============================================
+    // ============================================================================
     // 🔍 OVERLAY DE BÚSQUEDA
-    // ============================================
+    // ============================================================================
     
     initSearchOverlay() {
         const searchBtns = document.querySelectorAll('.js-show-search');
@@ -88,13 +83,12 @@ const GlobalApp = {
         const closeBtn = document.getElementById('closeGlobalSearch');
         
         if (searchBtns.length > 0 && searchOverlay) {
+            // Abrir overlay
             searchBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    console.log('🔍 Abriendo overlay de búsqueda');
                     searchOverlay.classList.add('active');
                     
-                    // Focus en input después de abrir
                     setTimeout(() => {
                         const input = document.getElementById('globalSearchInput');
                         if (input) input.focus();
@@ -102,9 +96,9 @@ const GlobalApp = {
                 });
             });
             
+            // Cerrar con botón
             if (closeBtn) {
                 closeBtn.addEventListener('click', () => {
-                    console.log('❌ Cerrando overlay de búsqueda');
                     searchOverlay.classList.remove('active');
                 });
             }
@@ -116,7 +110,7 @@ const GlobalApp = {
                 }
             });
             
-            // Cerrar al hacer click fuera
+            // Cerrar con click fuera
             searchOverlay.addEventListener('click', (e) => {
                 if (e.target === searchOverlay) {
                     searchOverlay.classList.remove('active');
@@ -127,9 +121,9 @@ const GlobalApp = {
         }
     },
 
-    // ============================================
-    // 🛒 ICONO DEL CARRITO
-    // ============================================
+    // ============================================================================
+    // 🛒 CARRITO
+    // ============================================================================
     
     initCartIcon() {
         const cartBtn = document.querySelector('.js-show-cart');
@@ -138,13 +132,11 @@ const GlobalApp = {
         
         if (cartBtn && cartPanel) {
             cartBtn.addEventListener('click', () => {
-                console.log('🛒 Abriendo carrito');
                 cartPanel.classList.add('show-header-cart');
             });
             
             if (closeCart) {
                 closeCart.addEventListener('click', () => {
-                    console.log('❌ Cerrando carrito');
                     cartPanel.classList.remove('show-header-cart');
                 });
             }
@@ -153,20 +145,16 @@ const GlobalApp = {
         }
     },
 
-    // ============================================
+    // ============================================================================
     // ⬆️ SCROLL TO TOP
-    // ============================================
+    // ============================================================================
     
     initScrollToTop() {
         const btnTop = document.getElementById('myBtn');
         
         if (btnTop) {
             window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) {
-                    btnTop.style.display = 'flex';
-                } else {
-                    btnTop.style.display = 'none';
-                }
+                btnTop.style.display = window.scrollY > 300 ? 'flex' : 'none';
             });
             
             btnTop.addEventListener('click', () => {
@@ -178,7 +166,7 @@ const GlobalApp = {
     },
 
     // ============================================================================
-    // 🔍 CARGAR MÓDULO DE BÚSQUEDA (GLOBAL)
+    // 🔍 MÓDULO DE BÚSQUEDA (GLOBAL)
     // ============================================================================
     
     loadSearchModule() {
@@ -190,10 +178,9 @@ const GlobalApp = {
                 const search = new SearchModule();
                 search.init();
                 
-                // Guardar referencia global
                 window.searchModule = search;
                 
-                console.log('✅ search.module.js cargado e inicializado globalmente');
+                console.log('✅ search.module.js cargado e inicializado');
             })
             .catch(err => {
                 console.error('❌ Error cargando search.module.js:', err);
@@ -201,7 +188,29 @@ const GlobalApp = {
     },
 
     // ============================================================================
-    // 🎯 DETECCIÓN DE PÁGINA Y CARGA DE MÓDULOS
+    // 🎭 MÓDULO DE MODAL (GLOBAL)
+    // ============================================================================
+    
+    loadModalModule() {
+        console.log('🎭 Cargando productModal.module.js globalmente...');
+        
+        import('./modules/productModal.module.js')
+            .then(module => {
+                const ModalModule = module.default || module.ModalModule;
+                const modal = new ModalModule();
+                modal.init();
+                
+                window.modalModule = modal;
+                
+                console.log('✅ productModal.module.js cargado e inicializado');
+            })
+            .catch(err => {
+                console.error('❌ Error cargando productModal.module.js:', err);
+            });
+    },
+
+    // ============================================================================
+    // 🎯 DETECCIÓN DE PÁGINA
     // ============================================================================
     
     detectPageAndLoadModule() {
@@ -210,21 +219,18 @@ const GlobalApp = {
         console.log('🔎 Detectando página actual...');
         console.log('   Body classes:', body.className);
         
-        // ✅ Página de catálogo (shop.php)
         if (body.classList.contains('shop-page')) {
             console.log('🛍️ Página detectada: SHOP');
             this.loadShopModule();
             return;
         }
         
-        // ✅ Página de inicio (index.php)
         if (body.classList.contains('home-page')) {
             console.log('🏠 Página detectada: HOME');
             this.loadHomeModule();
             return;
         }
         
-        // ✅ Página de producto individual
         if (body.classList.contains('product-page')) {
             console.log('📦 Página detectada: PRODUCT');
             this.loadProductModule();
@@ -234,21 +240,19 @@ const GlobalApp = {
         console.log('ℹ️ Página sin módulo específico');
     },
 
-    // ============================================
-    // 🛍️ CARGAR MÓDULO DE SHOP
-    // ============================================
+    // ============================================================================
+    // 🛍️ MÓDULO DE SHOP
+    // ============================================================================
     
     loadShopModule() {
         console.log('📦 Cargando shop.module.js...');
         
-        // ✅ CAMBIO: Ya no carga search.module.js aquí (se carga globalmente)
         import('./modules/shop.module.js')
             .then(module => {
                 const ShopModule = module.default || module.ShopModule;
                 const shop = new ShopModule();
                 shop.init();
                 
-                // Guardar referencia global
                 window.shopModule = shop;
                 
                 console.log('✅ shop.module.js cargado e inicializado');
@@ -258,31 +262,27 @@ const GlobalApp = {
             });
     },
 
-    // ============================================
-    // 🏠 CARGAR MÓDULO DE HOME
-    // ============================================
+    // ============================================================================
+    // 🏠 MÓDULO DE HOME
+    // ============================================================================
     
     loadHomeModule() {
         console.log('📦 Cargando home.module.js...');
-        
-        // TODO: Implementar cuando sea necesario
         console.log('ℹ️ home.module.js aún no implementado');
     },
 
-    // ============================================
-    // 📦 CARGAR MÓDULO DE PRODUCTO
-    // ============================================
+    // ============================================================================
+    // 📦 MÓDULO DE PRODUCTO
+    // ============================================================================
     
     loadProductModule() {
         console.log('📦 Cargando product.module.js...');
-        
-        // TODO: Implementar cuando sea necesario
         console.log('ℹ️ product.module.js aún no implementado');
     }
 };
 
 // ============================================================================
-// 🚀 EJECUTAR INICIALIZACIÓN
+// 🚀 EJECUTAR
 // ============================================================================
 
 GlobalApp.init();

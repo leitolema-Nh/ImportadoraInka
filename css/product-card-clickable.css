@@ -1,0 +1,256 @@
+/* ============================================================================
+   🎴 product-card-clickable.css - Estilos para Tarjeta Clickeable
+   ============================================================================
+   ✅ Imagen clickeable con hover
+   ✅ Título clickeable con hover
+   ✅ Zona de acciones para futuros botones
+   ============================================================================ */
+
+/* ============================================================================
+   📸 IMAGEN CLICKEABLE
+   ============================================================================ */
+
+.block2-pic {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.block2-pic img.js-show-modal1 {
+    transition: transform 0.4s ease, filter 0.3s ease;
+    cursor: pointer;
+}
+
+.block2-pic:hover img {
+    transform: scale(1.08);
+    filter: brightness(0.95);
+}
+
+/* Overlay sutil en hover */
+.block2-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.block2-pic:hover .block2-overlay {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+/* Badge de categoría */
+.badge-categoria {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(113, 127, 224, 0.95);
+    color: white;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    z-index: 2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================================
+   📖 TÍTULO CLICKEABLE
+   ============================================================================ */
+
+.product-title {
+    margin-bottom: 8px;
+}
+
+.product-title-link {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: inline-block;
+}
+
+.product-title-link:hover {
+    color: #717fe0;
+    text-decoration: none;
+}
+
+.product-title-link:active {
+    color: #5a6bc7;
+}
+
+/* Indicador sutil de clickeable */
+.product-title-link::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #717fe0;
+    transition: width 0.3s ease;
+}
+
+.product-title-link:hover::after {
+    width: 100%;
+}
+
+/* ============================================================================
+   🔢 CÓDIGO DEL PRODUCTO
+   ============================================================================ */
+
+.product-code {
+    display: inline-block;
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+/* ============================================================================
+   💰 PRECIOS
+   ============================================================================ */
+
+.precios-container {
+    margin-top: 10px;
+    margin-bottom: 12px;
+}
+
+.precio-general {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e74c3c;
+    margin-bottom: 5px;
+}
+
+.precio-mayor {
+    font-size: 13px;
+    color: #27ae60;
+    margin-bottom: 3px;
+    font-weight: 500;
+}
+
+.precio-docena {
+    font-size: 13px;
+    color: #3498db;
+    margin-bottom: 3px;
+    font-weight: 500;
+}
+
+/* ============================================================================
+   🛒 ZONA DE ACCIONES (Futuros botones e-commerce)
+   ============================================================================ */
+
+.product-actions {
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+    min-height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.product-actions-hint {
+    font-size: 11px;
+    color: #999;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.product-actions-hint i {
+    font-size: 14px;
+    color: #717fe0;
+}
+
+/* ============================================================================
+   🎨 HOVER EN TARJETA COMPLETA
+   ============================================================================ */
+
+.block2 {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.block2:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================================
+   📱 RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 767px) {
+    
+    .block2-pic:hover img {
+        transform: scale(1.05); /* Menos zoom en móvil */
+    }
+
+    .precio-general {
+        font-size: 16px;
+    }
+
+    .precio-mayor,
+    .precio-docena {
+        font-size: 12px;
+    }
+
+    .product-actions-hint {
+        font-size: 10px;
+    }
+
+    /* En móvil, reducir efecto de elevación */
+    .block2:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+}
+
+@media (max-width: 480px) {
+    
+    .badge-categoria {
+        font-size: 10px;
+        padding: 4px 10px;
+    }
+
+    .product-code {
+        font-size: 11px;
+    }
+
+    .product-actions {
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+}
+
+/* ============================================================================
+   ♿ ACCESIBILIDAD
+   ============================================================================ */
+
+/* Focus visible para navegación con teclado */
+.product-title-link:focus,
+.block2-pic img:focus {
+    outline: 2px solid #717fe0;
+    outline-offset: 2px;
+}
+
+/* Mejorar contraste en modo alto contraste */
+@media (prefers-contrast: high) {
+    .product-title-link {
+        color: #000;
+    }
+    
+    .product-title-link:hover {
+        color: #00f;
+    }
+    
+    .badge-categoria {
+        border: 2px solid white;
+    }
+}

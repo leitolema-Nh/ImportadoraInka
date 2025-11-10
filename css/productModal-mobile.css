@@ -1,0 +1,341 @@
+/* ============================================================================
+   📱 productModal-mobile.css - Estilos Específicos Móvil
+   ============================================================================
+   ✅ Mejoras UX móvil
+   ✅ Animación slide-up
+   ✅ Gestos táctiles
+   ✅ Solo aplica en <768px
+   ============================================================================ */
+
+@media (max-width: 767px) {
+    
+    /* ========================================
+       🎬 ANIMACIÓN SLIDE-UP DESDE ABAJO
+       ======================================== */
+    
+    .wrap-modal1 {
+        transform: translateY(100%);
+        transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .wrap-modal1.show-modal1 {
+        transform: translateY(0);
+    }
+
+    /* ========================================
+       📋 HEADER MÓVIL
+       ======================================== */
+    
+    .modal-header {
+        padding-top: 25px; /* Espacio para el drag indicator */
+    }
+
+    .modal-drag-indicator {
+        display: block;
+        animation: pulseIndicator 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseIndicator {
+        0%, 100% {
+            opacity: 0.3;
+        }
+        50% {
+            opacity: 0.6;
+        }
+    }
+
+    .modal-title {
+        font-size: 18px;
+        padding-right: 10px;
+    }
+
+    .modal-close {
+        width: 44px;
+        height: 44px;
+        min-width: 44px; /* Asegurar tamaño touch-friendly */
+    }
+
+    .modal-close i {
+        font-size: 22px;
+    }
+
+    /* ========================================
+       📦 BODY MÓVIL
+       ======================================== */
+    
+    .modal-body {
+        padding: 15px;
+        padding-bottom: 80px; /* Espacio para footer fijo */
+    }
+
+    /* ========================================
+       📸 GALERÍA MÓVIL
+       ======================================== */
+    
+    .modal-gallery-section {
+        margin-bottom: 25px;
+    }
+
+    .modal-gallery {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .modal-gallery-image {
+        border-radius: 10px;
+    }
+
+    /* Dots más grandes y touch-friendly */
+    .wrap-slick3-dots {
+        margin-top: 12px;
+        gap: 6px;
+    }
+
+    .slick3-dots li {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ddd;
+        transition: all 0.3s;
+    }
+
+    .slick3-dots li.slick-active {
+        background: #717fe0;
+        width: 25px;
+        border-radius: 5px;
+    }
+
+    /* ========================================
+       📝 INFORMACIÓN MÓVIL
+       ======================================== */
+    
+    .modal-info-section {
+        padding-bottom: 20px;
+    }
+
+    .modal-code-section {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .modal-category-section {
+        margin-bottom: 15px;
+    }
+
+    .modal-description-section h5 {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .modal-description-section p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* ========================================
+       💰 PRECIOS MÓVIL
+       ======================================== */
+    
+    .price-box {
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .price-header {
+        font-size: 14px;
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+    }
+
+    .price-row {
+        padding: 6px 0;
+        font-size: 13px;
+    }
+
+    .price-row .value {
+        font-size: 15px;
+    }
+
+    .price-row:first-of-type .value {
+        font-size: 17px;
+    }
+
+    /* ========================================
+       📤 COMPARTIR MÓVIL
+       ======================================== */
+    
+    .modal-share-section {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .modal-share-section h5 {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .modal-share-section a {
+        font-size: 24px !important;
+        padding: 10px !important;
+    }
+
+    /* ========================================
+       🎬 BOTONES DESKTOP (Ocultos en móvil)
+       ======================================== */
+    
+    .modal-actions-desktop {
+        display: none;
+    }
+
+    /* ========================================
+       📱 FOOTER FIJO MÓVIL
+       ======================================== */
+    
+    .modal-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 12px 15px;
+        background: white;
+        border-top: 1px solid #e6e6e6;
+        box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+        z-index: 101;
+    }
+
+    .modal-footer-btn {
+        padding: 14px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .modal-footer-btn:active {
+        transform: scale(0.98);
+    }
+
+    /* ========================================
+       ♿ MEJORAS DE ACCESIBILIDAD MÓVIL
+       ======================================== */
+    
+    /* Aumentar área de tap en elementos interactivos */
+    .modal-share-section a {
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ========================================
+       🎨 SMOOTH SCROLLING MÓVIL
+       ======================================== */
+    
+    .modal-body {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+
+    /* ========================================
+       🔍 ZOOM EN IMÁGENES (Opcional)
+       ======================================== */
+    
+    .modal-gallery-image {
+        touch-action: pan-y pinch-zoom;
+    }
+
+}
+
+/* ========================================
+   📱 EXTRA SMALL (≤375px)
+   ======================================== */
+
+@media (max-width: 375px) {
+    
+    .modal-header {
+        padding: 20px 12px;
+    }
+
+    .modal-body {
+        padding: 12px;
+    }
+
+    .modal-title {
+        font-size: 16px;
+    }
+
+    .price-box {
+        padding: 10px;
+    }
+
+    .price-row {
+        font-size: 12px;
+    }
+
+    .price-row .value {
+        font-size: 14px;
+    }
+
+    .modal-footer {
+        padding: 10px 12px;
+    }
+
+    .modal-footer-btn {
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+
+/* ============================================================================
+   📱 MEJORAS DE CARGA MÓVIL
+   ============================================================================ */
+
+@media (max-width: 767px) {
+    
+    /* Ajustar altura mínima en móvil */
+    .modal-gallery-image {
+        min-height: 280px;
+        max-height: 450px;
+    }
+    
+    /* Loader más pequeño */
+    .loader-spinner {
+        width: 35px;
+        height: 35px;
+        border-width: 3px;
+    }
+    
+    /* Galería móvil */
+    .modal-gallery {
+        min-height: 280px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    /* Optimizar skeleton en móvil */
+    @keyframes shimmer {
+        0% {
+            background-position: -100% 0;
+        }
+        100% {
+            background-position: 100% 0;
+        }
+    }
+}
+
+/* Extra pequeño */
+@media (max-width: 375px) {
+    .modal-gallery-image {
+        min-height: 250px;
+        max-height: 400px;
+    }
+    
+    .loader-spinner {
+        width: 30px;
+        height: 30px;
+    }
+}

@@ -5,7 +5,7 @@
 console.log('🔧 helpers.js cargando...');
 
 // ============================================
-// 🌍 CONFIGURACIÓN GLOBAL (Fallback)
+// 🌐 CONFIGURACIÓN GLOBAL (Fallback)
 // ============================================
 window.CONFIG = window.CONFIG || (function() {
   var baseTag = document.querySelector('base');
@@ -103,10 +103,6 @@ window.CONFIG = window.CONFIG || (function() {
 // ============================================
 window.helpers = {
   
-  /**
-   * 📡 Fetch JSON desde API
-   * Usado en: shop.php, index.php, product.php, etc.
-   */
   fetchJSON: function(endpoint) {
     var url = window.CONFIG.apiURL + endpoint;
     console.log('📡 fetchJSON:', url);
@@ -122,10 +118,6 @@ window.helpers = {
       });
   },
 
-  /**
-   * 🔒 Escapar HTML para prevenir XSS
-   * Usado en: Cualquier lugar que renderice texto del usuario
-   */
   escapeHtml: function(text) {
     var map = {
       '&': '&amp;',
@@ -137,31 +129,19 @@ window.helpers = {
     return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
   },
 
-  /**
-   * 💰 Formatear precio
-   * Usado en: Todas las vistas de productos (shop, home, product detail)
-   */
   formatPrice: function(price) {
     var num = parseFloat(price || 0);
     return 'RD$ ' + num.toFixed(2);
   },
 
-  /**
-   * 🔗 Actualizar parámetros de URL sin recargar
-   * ✅ CORREGIDO: Usa guiones (-) en lugar de comas para subcategorías
-   * ✅ MEJORADO: Limpia cualquier parámetro que se pase como null
-   * Usado en: Filtros, paginación, búsqueda
-   */
   updateUrlParams: function(params) {
     var url = new URL(window.location);
     
     for (var key in params) {
       if (params.hasOwnProperty(key)) {
         if (params[key] === null || params[key] === undefined || params[key] === '') {
-          // ✅ Eliminar parámetro si es null/undefined/vacío
           url.searchParams.delete(key);
         } else {
-          // ✅ Si es el parámetro subcat, reemplazar comas por guiones
           var value = params[key];
           if (key === 'subcat' && typeof value === 'string') {
             value = value.replace(/,/g, '-');
@@ -174,22 +154,9 @@ window.helpers = {
     window.history.replaceState({}, '', url);
   },
 
-  /**
-   * 🎨 RENDERIZAR PRODUCTOS EN EL GRID
-   * ✅ MIGRADO: Usa DOMManager si está disponible
-   * Llama al endpoint PHP que retorna HTML renderizado
-   */
   renderProducts: function(items, append) {
     append = append || false;
     
-    // ✅ LOG: Detectar quién llama a renderProducts
-    console.log('🎨 renderProducts llamado:', {
-      productos: items?.length || 0,
-      append: append,
-      stackTrace: new Error().stack.split('\n')[2] // Ver quién llamó
-    });
-    
-    // ✅ Intentar usar DOMManager, fallback a getElementById
     var DOM = window.DOMManager;
     var container = DOM && DOM.getById 
       ? DOM.getById('products-container') 
@@ -214,11 +181,9 @@ window.helpers = {
           '<h4 class="text-muted">No se encontraron productos</h4>' +
           '</div>';
       }
-      console.log('⚠️ No hay productos para renderizar');
       return;
     }
 
-    // ✅ Llamar al endpoint PHP que renderiza el HTML
     fetch(window.CONFIG.apiURL + 'renderProductCard.php', {
       method: 'POST',
       headers: {
@@ -231,7 +196,6 @@ window.helpers = {
       return res.text();
     })
     .then(function(html) {
-      // Insertar HTML en el contenedor
       if (append) {
         container.insertAdjacentHTML('beforeend', html);
       } else {
@@ -240,7 +204,6 @@ window.helpers = {
       
       console.log('✅ ' + items.length + ' productos renderizados desde PHP');
       
-      // Inicializar Isotope si está disponible
       setTimeout(function() {
         if (window.$ && $.fn.isotope) {
           try {
@@ -248,25 +211,18 @@ window.helpers = {
             
             if ($container.data('isotope')) {
               $container.isotope('reloadItems').isotope();
-              console.log('✅ Isotope recargado');
             } else {
               $container.isotope({
                 itemSelector: '.isotope-item',
                 layoutMode: 'fitRows',
                 percentPosition: true
               });
-              console.log('✅ Isotope inicializado');
             }
           } catch (e) {
             console.warn('⚠️ Isotope error:', e.message);
           }
         }
       }, 100);
-      
-      // Vincular eventos a las tarjetas
-      setTimeout(function() {
-        helpers.bindProductEvents();
-      }, 150);
     })
     .catch(function(err) {
       console.error('❌ Error renderizando productos:', err);
@@ -277,134 +233,12 @@ window.helpers = {
     });
   },
   
-  /**
-   * 🎯 Vincular eventos a las tarjetas
-   * ✅ MIGRADO: Usa EventManager si está disponible, fallback a método tradicional
-   */
   bindProductEvents: function() {
-    var DOM = window.DOMManager;
-    var Events = window.EventManager;
-    
-    // Si EventManager está disponible, usar delegación
-    if (Events && Events.delegate) {
-      console.log('🎯 Vinculando eventos con EventManager (delegación)...');
-      
-      // ✅ Quick View - Delegación de eventos
-      Events.delegate(
-        '#products-container',
-        '.js-show-modal1',
-        'click',
-        function(e) {
-          e.preventDefault();
-          var productId = this.getAttribute('data-id');
-          if (productId && window.shopModal) {
-            helpers.fetchJSON('product.php?id=' + productId)
-              .then(function(response) {
-                if (response && response.producto) {
-                  window.shopModal.open(response.producto);
-                }
-              });
-          }
-        }
-      );
-      
-      // ✅ Título del producto - Delegación
-      Events.delegate(
-        '#products-container',
-        '.js-name-detail',
-        'click',
-        function(e) {
-          e.preventDefault();
-          var productId = this.getAttribute('data-id');
-          if (productId && window.shopModal) {
-            helpers.fetchJSON('product.php?id=' + productId)
-              .then(function(response) {
-                if (response && response.producto) {
-                  window.shopModal.open(response.producto);
-                }
-              });
-          }
-        }
-      );
-      
-      // ✅ Favoritos - Delegación
-      Events.delegate(
-        '#products-container',
-        '.js-addwish-b2',
-        'click',
-        function(e) {
-          e.preventDefault();
-          this.classList.toggle('js-addedwish-b2');
-          console.log('❤️ Favorito:', this.getAttribute('data-id'));
-        }
-      );
-      
-      console.log('✅ Eventos vinculados con EventManager');
-    } else {
-      // ❌ Fallback: Método tradicional
-      console.log('⚠️ EventManager no disponible, usando método tradicional');
-      this._bindProductEventsLegacy();
-    }
+    console.log('ℹ️ Eventos de productos manejados por productModal.module.js');
   },
 
-  /**
-   * 🔙 Método legacy para vincular eventos (fallback)
-   */
   _bindProductEventsLegacy: function() {
-    console.log('🎯 Vinculando eventos (método legacy)...');
-
-    // Quick View
-    document.querySelectorAll('.js-show-modal1').forEach(function(btn) {
-      // Remover listener anterior si existe
-      var newBtn = btn.cloneNode(true);
-      btn.parentNode.replaceChild(newBtn, btn);
-      
-      newBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        var productId = this.getAttribute('data-id');
-        if (productId && window.shopModal) {
-          helpers.fetchJSON('product.php?id=' + productId)
-            .then(function(response) {
-              if (response && response.producto) {
-                window.shopModal.open(response.producto);
-              }
-            });
-        }
-      });
-    });
-    
-    // Título del producto
-    document.querySelectorAll('.js-name-detail').forEach(function(link) {
-      var newLink = link.cloneNode(true);
-      link.parentNode.replaceChild(newLink, link);
-      
-      newLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        var productId = this.getAttribute('data-id');
-        if (productId && window.shopModal) {
-          helpers.fetchJSON('product.php?id=' + productId)
-            .then(function(response) {
-              if (response && response.producto) {
-                window.shopModal.open(response.producto);
-              }
-            });
-        }
-      });
-    });
-    
-    // Favoritos
-    document.querySelectorAll('.js-addwish-b2').forEach(function(btn) {
-      var newBtn = btn.cloneNode(true);
-      btn.parentNode.replaceChild(newBtn, btn);
-      
-      newBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        this.classList.toggle('js-addedwish-b2');
-        console.log('❤️ Favorito:', this.getAttribute('data-id'));
-      });
-    });
-
-    console.log('✅ Eventos vinculados (legacy)');
+    console.log('ℹ️ Eventos de productos manejados por productModal.module.js');
   }
 };
 

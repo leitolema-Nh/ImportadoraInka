@@ -3,9 +3,9 @@
  * ============================================================
  * 🎴 productCard.php - Template de Tarjeta de Producto
  * ============================================================
- * ✅ Optimizado: Imagen dominante, jerarquía visual mejorada
- * Template HTML puro para renderizar productos
- * Recibe: $producto (array con datos del producto)
+ * ✅ Imagen clickeable → Abre modal
+ * ✅ Título clickeable → Abre modal
+ * ✅ Zona libre para botones e-commerce
  * ============================================================
  */
 
@@ -33,63 +33,105 @@ $imagenDefault = ($config['paths']['baseURL'] ?? '') . 'images/default.jpg';
 ?>
 
 <!-- ============================================================
-     🎴 TARJETA DE PRODUCTO - ESTILO INKA OPTIMIZADO
+     🎴 TARJETA DE PRODUCTO - CON ELEMENTOS CLICKEABLES
      ============================================================ -->
 <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
     <div class="block2">
         
-        <!-- 📸 IMAGEN DEL PRODUCTO -->
-        <div class="block2-pic">
+        <!-- ========================================
+             📸 IMAGEN DEL PRODUCTO (Clickeable)
+             ======================================== -->
+        <div class="block2-pic hov-img0">
             
             <!-- 🏷️ Badge de Categoría (arriba izquierda) -->
             <?php if ($tipoProducto): ?>
                 <span class="badge-categoria"><?= strtoupper($tipoProducto) ?></span>
             <?php endif; ?>
             
-            <!-- Imagen con lazy loading -->
+            <!-- ✅ Imagen clickeable con clase js-show-modal1 -->
             <img src="<?= $imagen ?>" 
                  alt="<?= $descripcion ?>"
+                 class="js-show-modal1"
+                 data-id="<?= $id ?>"
                  loading="lazy"
+                 style="cursor: pointer;"
+                 title="Click para ver detalles de <?= $tipoProducto ?>"
                  onerror="this.onerror=null;this.src='<?= $imagenDefault ?>'">
+            
+            <!-- Overlay sutil en hover -->
+            <div class="block2-overlay"></div>
+            
         </div>
         
-        <!-- 📝 INFORMACIÓN DEL PRODUCTO -->
-        <div class="block2-txt">
-            
-            <!-- 🔢 Código del Producto -->
-            <?php if ($codigo): ?>
-                <span class="product-code"><?= $codigo ?></span>
-            <?php endif; ?>
-            
-            <!-- 📖 Título/Descripción -->
-            <h3 class="product-title">
-                <?= $descripcion ?>
-            </h3>
-            
-            <!-- 💰 PRECIOS -->
-            <div class="precios-container">
+        <!-- ========================================
+             📝 INFORMACIÓN DEL PRODUCTO
+             ======================================== -->
+        <div class="block2-txt flex-w flex-t p-t-14">
+            <div class="block2-txt-child1 flex-col-l">
                 
-                <!-- Precio General (principal) -->
-                <div class="precio-general">
-                    RD$ <?= $precioGeneral ?>
+                <!-- 🔢 Código del Producto -->
+                <?php if ($codigo): ?>
+                    <span class="product-code stext-105 cl3">
+                        <?= $codigo ?>
+                    </span>
+                <?php endif; ?>
+                
+                <!-- ========================================
+                     📖 TÍTULO/DESCRIPCIÓN (Clickeable)
+                     ======================================== -->
+                <h3 class="product-title stext-104 cl4 hov-cl1 trans-04 js-name-b-detail p-b-6">
+                    <a href="#" 
+                       class="js-name-detail js-show-modal1 product-title-link" 
+                       data-id="<?= $id ?>"
+                       title="Ver detalles de <?= $descripcion ?>"
+                       onclick="return false;">
+                        <?= $descripcion ?>
+                    </a>
+                </h3>
+                
+                <!-- ========================================
+                     💰 PRECIOS
+                     ======================================== -->
+                <div class="precios-container">
+                    
+                    <!-- Precio General (principal) -->
+                    <div class="precio-general stext-105 cl3">
+                        RD$ <?= $precioGeneral ?>
+                    </div>
+                    
+                    <!-- Precio Mayor (verde) -->
+                    <?php if ($mostrarMayor): ?>
+                        <div class="precio-mayor stext-107 cl10">
+                            Mayor: RD$ <?= $precioMayor ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <!-- Precio Docena (azul) -->
+                    <?php if ($mostrarDocena): ?>
+                        <div class="precio-docena stext-107 cl11">
+                            Docena: RD$ <?= $precioDocena ?>
+                        </div>
+                    <?php endif; ?>
+                    
                 </div>
                 
-                <!-- Precio Mayor (verde) -->
-                <?php if ($mostrarMayor): ?>
-                    <div class="precio-mayor">
-                        Mayor: RD$ <?= $precioMayor ?>
-                    </div>
-                <?php endif; ?>
-                
-                <!-- Precio Docena (amarillo) -->
-                <?php if ($mostrarDocena): ?>
-                    <div class="precio-docena">
-                        Docena: RD$ <?= $precioDocena ?>
-                    </div>
-                <?php endif; ?>
+                <!-- ========================================
+                     🛒 ZONA DE ACCIONES (Futuro e-commerce)
+                     ======================================== -->
+                <div class="product-actions">
+                    <!-- 
+                    ✅ Espacio reservado para botones:
+                    - Agregar al carrito
+                    - Lista de deseos
+                    - Comparar productos
+                    - etc.
+                    -->
+                    <span class="product-actions-hint stext-107 cl6">
+                        <i class="zmdi zmdi-eye"></i> Click en imagen o título para ver detalles
+                    </span>
+                </div>
                 
             </div>
-            
         </div>
         
     </div>

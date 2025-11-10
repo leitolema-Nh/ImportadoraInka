@@ -1,4 +1,3 @@
-
 (function ($) {
     "use strict";
 
@@ -268,7 +267,22 @@
     });
     
     /*==================================================================
-    [ Show modal1 ]*/
+    [ Show modal1 ]
+    ==================================================================*/
+    // ============================================================================
+    // ❌ CÓDIGO LEGACY - DESACTIVADO
+    // ============================================================================
+    // Este código jQuery antiguo solo abría/cerraba el modal sin cargar datos.
+    // Ha sido reemplazado por el sistema modular (modal.module.js) que:
+    //   ✅ Carga datos del producto desde la API
+    //   ✅ Renderiza galería de imágenes
+    //   ✅ Muestra precios y descripción
+    //   ✅ Maneja eventos de forma delegada
+    // 
+    // Si necesitas habilitar este código legacy, comenta la línea de carga
+    // en init.js: loadModalModule()
+    // ============================================================================
+    /*
     $('.js-show-modal1').on('click',function(e){
         e.preventDefault();
         $('.js-modal1').addClass('show-modal1');
@@ -277,6 +291,10 @@
     $('.js-hide-modal1').on('click',function(){
         $('.js-modal1').removeClass('show-modal1');
     });
+    */
+    // ============================================================================
+    // FIN CÓDIGO LEGACY
+    // ============================================================================
 
 
 
