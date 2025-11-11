@@ -1,9 +1,10 @@
 /* ============================================================================
-   🎨 PRODUCTS.CSS - ESTRUCTURA FINAL 75%-25%
+   🎨 PRODUCTS.CSS - LIMPIO (Sin estilos de Product Card)
    ============================================================================
-   ✅ Categorías (col-lg-9) + Botones (col-lg-3) en la misma fila
-   ✅ Botones apilados verticalmente
-   ✅ Mantiene TODO el diseño de tarjetas
+   ✅ Solo estilos de categorías, filtros, búsqueda y layout general
+   ❌ SIN estilos de .block2, .block2-pic, .product-title, .precios-container
+   
+   NOTA: Los estilos de tarjetas de producto están en productCard.css
    ============================================================================ */
 
 /* ============================================================================
@@ -179,7 +180,7 @@
    📘 BOTÓN COMPARTIR
    ============================================================================ */
 .btn-compartir {
-  width: 100%; /* ✅ Full width dentro de su columna */
+  width: 100%;
   padding: 12px 20px;
   border: 1px solid #e0e0e0;
   background: #fff;
@@ -209,7 +210,7 @@
    ⚙️ BOTÓN FILTRAR
    ============================================================================ */
 .btn-filtrar {
-  width: 100%; /* ✅ Full width dentro de su columna */
+  width: 100%;
   padding: 12px 20px;
   border: 1px solid #e0e0e0;
   background: #fff;
@@ -377,8 +378,13 @@
 /* ============================================================================
    🔍 CAJA DE BÚSQUEDA
    ============================================================================ */
+.search-section {
+  margin-bottom: 20px;
+}
+
 .search-box {
   position: relative;
+  width: 100%;
 }
 
 .search-input {
@@ -393,246 +399,34 @@
 .search-input:focus {
   outline: none;
   border-color: #333;
-  box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.1);
+  box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.1);
 }
 
 .search-icon {
   position: absolute;
-  right: 15px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: #999;
+  font-size: 18px;
   pointer-events: none;
 }
 
 /* ============================================================================
-   🎯 ESTADOS DE VISIBILIDAD DE FILTROS
+   📦 GRID DE PRODUCTOS
    ============================================================================ */
-.filters-hidden {
-  display: none !important;
-}
-
-.filters-visible {
-  display: block !important;
-}
-
-.products-column-full {
-  transition: all 0.3s ease;
-}
-
-.products-column-compact {
-  transition: all 0.3s ease;
-}
-
-#products-column {
-  transition: all 0.3s ease;
-}
-
-#filters-column {
-  transition: left 0.3s ease, opacity 0.3s ease;
-}
-
-#filters-column.d-none {
-  opacity: 0;
-}
-
-#filters-column:not(.d-none) {
-  opacity: 1;
-}
-
-/* ============================================================================
-   🛍️ GRID DE PRODUCTOS
-   ============================================================================ */
-.isotope-grid {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 -10px;
-}
-
-.isotope-item {
-  padding: 0 10px;
-  margin-bottom: 30px;
-}
-
-/* Modo sin filtros: 5 columnas */
-.products-column-full .isotope-item {
-  width: 20%;
-}
-
-/* Modo con filtros: 4 columnas */
-.products-column-compact .isotope-item {
-  width: 25%;
-}
-
-/* ============================================================================
-   🎴 TARJETAS DE PRODUCTO (ESTILO INKA)
-   ============================================================================ */
-.block2 {
+.products-section {
   background: #fff;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.3s;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.block2:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
-}
-
-/* ============================================================================
-   📸 CONTENEDOR DE IMAGEN
-   ============================================================================ */
-.block2-pic {
-  position: relative;
-  width: 100%;
-  padding-bottom: 85%;
-  overflow: hidden;
-  background: #fafafa;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.block2-pic img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  padding: 0;
-  transition: transform 0.3s;
-}
-
-.block2:hover .block2-pic img {
-  transform: scale(1.03);
-}
-
-/* ============================================================================
-   🏷️ BADGE DE CATEGORÍA
-   ============================================================================ */
-.badge-categoria {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 10;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3px 10px;
-  min-width: 40px;
-  min-height: 24px;
-  background: rgba(44, 44, 44, 0.85);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  border-radius: 3px;
-  backdrop-filter: blur(4px);
-  white-space: nowrap;
-}
-
-/* ============================================================================
-   📝 INFORMACIÓN DEL PRODUCTO
-   ============================================================================ */
-.block2-txt {
-  padding: 12px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Código del producto */
-.product-code {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 500;
-  color: #999;
-  margin-bottom: 6px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-/* Título del producto */
-.product-title {
-  font-size: 14px;
-  line-height: 1.4;
-  color: #333;
-  margin: 0 0 12px 0;
-  font-weight: 400;
-  min-height: 40px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* ============================================================================
-   💰 PRECIOS
-   ============================================================================ */
-.precios-container {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.precio-general {
-  font-size: 20px;
-  font-weight: 700;
-  color: #333;
-  line-height: 1;
-}
-
-.precio-mayor {
-  font-size: 13px;
-  font-weight: 600;
-  color: #27ae60;
-  line-height: 1;
-}
-
-.precio-docena {
-  display: inline-block;
-  padding: 6px 12px;
-  background: #ffeacf;
-  color: #333;
-  font-size: 12px;
-  font-weight: 600;
   border-radius: 4px;
-  line-height: 1;
-  transition: all 0.3s;
-  cursor: default;
-  align-self: flex-start;
+  padding: 20px;
+  min-height: 400px;
 }
 
-/* ============================================================================
-   📘 BOTÓN "VER MÁS"
-   ============================================================================ */
-.btn-ver-mas {
-  width: 100%;
-  padding: 10px 20px;
-  border: 1px solid #333;
-  background: transparent;
-  color: #333;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-align: center;
-  display: block;
-  text-decoration: none;
-}
-
-.btn-ver-mas:hover {
-  background: #333;
-  color: white;
-  text-decoration: none;
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
 }
 
 /* ============================================================================
@@ -802,11 +596,6 @@
     padding: 15px;
   }
 
-  .btn-ver-mas {
-    font-size: 12px;
-    padding: 8px 15px;
-  }
-
   /* ✅ PRODUCTOS EN 1 COLUMNA EN MÓVIL */
   .products-column-full .isotope-item,
   .products-column-compact .isotope-item {
@@ -864,3 +653,21 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================================
+   📝 NOTAS
+   ============================================================================
+   
+   Este archivo ya NO contiene estilos de:
+   - .block2 (tarjeta de producto)
+   - .block2-pic (imagen de producto)
+   - .block2-txt (texto de producto)
+   - .badge-categoria (badge)
+   - .product-code (código)
+   - .product-title (título)
+   - .precios-container (precios)
+   - .precio-general, .precio-mayor, .precio-docena
+   
+   Todos esos estilos están ahora en: productCard.css
+   
+   ============================================================================ */
