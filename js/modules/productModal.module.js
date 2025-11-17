@@ -160,10 +160,24 @@ export class ModalModule {
         try {
             console.log('📡 Cargando producto:', productId);
             
-            const apiUrl = `${window.location.origin}/inka/api/product.php?id=${productId}`;
+            // Detectar entorno: desarrollo incluye '/inka/', producción no
+            const isDev = window.location.pathname.includes('/inka/');
+            const basePath = isDev ? '/inka/api' : '/api';
+            const apiUrl = `${window.location.origin}${basePath}/product.php?id=${productId}`;
+            
+            console.log('📡 Entorno:', isDev ? 'Desarrollo' : 'Producción');
             console.log('📡 Fetching:', apiUrl);
             
             const response = await fetch(apiUrl);
+            
+            // Verificar que la respuesta sea JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                const textResponse = await response.text();
+                console.error('❌ La API no devolvió JSON:', textResponse.substring(0, 200));
+                throw new Error('La API devolvió un formato inválido. Verifica la URL del endpoint.');
+            }
+            
             const data = await response.json();
             
             console.log('📦 Respuesta API:', data);
