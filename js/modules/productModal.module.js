@@ -319,25 +319,60 @@ export class ModalModule {
     updatePrices(product) {
         if (!this.dom.priceBox) return;
 
-        const precios = [];
-        if (product.precioGeneral) precios.push({ label: 'General', value: product.precioGeneral });
-        if (product.precioMayor) precios.push({ label: 'Mayor', value: product.precioMayor });
-        if (product.precioDocena) precios.push({ label: 'Docena', value: product.precioDocena });
+        // La API envía precio_general / precio_mayor / precio_docena
+        // (se aceptan también los nombres en camelCase por compatibilidad)
+        const num = (v) => {
+            const n = parseFloat(v);
+            return Number.isFinite(n) ? n : 0;
+        };
+        const general = num(product.precio_general ?? product.precioGeneral);
+        const mayor = num(product.precio_mayor ?? product.precioMayor);
+        const docena = num(product.precio_docena ?? product.precioDocena);
 
-        if (precios.length === 0) {
+        if (general <= 0) {
             this.dom.priceBox.innerHTML = '<p class="text-muted">Precio no disponible</p>';
             return;
         }
 
+        const fmt = (n) => 'RD$' + n.toLocaleString('en-US', {
+            minimumFractionDigits: Number.isInteger(n) ? 0 : 2,
+            maximumFractionDigits: 2
+        });
+        const saving = (price) => {
+            const pct = Math.round((general - price) / general * 100);
+            return pct >= 5 ? `<em class="mprice__save">-${pct}%</em>` : '';
+        };
+
+        const hasMayor = mayor > 0 && mayor !== general;
+        const hasDocena = docena > 0 && docena !== general;
+
+        // Fila destacada: el mejor precio por cantidad (docena, o 6 o más si no hay docena)
+        const row = (label, price, { hero = false, detail = '' } = {}) => `
+            <div class="mprice__row${hero ? ' mprice__row--hero' : ''}">
+                <span class="mprice__label"><span>${label}</span>${detail ? `<small>${detail}</small>` : ''}</span>
+                ${price < general ? saving(price) : ''}
+                <strong class="mprice__value">${fmt(price)}${hero ? ' <small>c/u</small>' : ''}</strong>
+            </div>`;
+
+        let rows = row('1 unidad', general);
+        if (hasMayor) {
+            rows += row('6 o más', mayor, { hero: !hasDocena });
+        }
+        if (hasDocena) {
+            rows += row('Docena', docena, {
+                hero: true,
+                detail: `12 × ${fmt(docena)} = <b>${fmt(docena * 12)}</b>`
+            });
+        }
+
+        const head = hasMayor || hasDocena
+            ? 'Precio por unidad, según cuántas lleves'
+            : 'Precio por unidad';
+
         const html = `
-            <div class="price-box">
-                <div class="price-header">Precios</div>
-                ${precios.map(p => `
-                    <div class="price-row">
-                        <span class="label">${p.label}:</span>
-                        <span class="value">RD$ ${parseFloat(p.value).toFixed(2)}</span>
-                    </div>
-                `).join('')}
+            <div class="mprice">
+                <div class="mprice__head">${head}</div>
+                ${rows}
             </div>
         `;
 
@@ -367,10 +402,11 @@ export class ModalModule {
         const availabilityElement = this.dom.modal.querySelector('.js-modal-disponibilidad');
         if (!availabilityElement) return;
 
-        const stock = parseInt(product.disponibilidad) || 0;
-        
+        // La API envía la existencia en "cantidad"
+        const stock = parseInt(product.cantidad ?? product.disponibilidad) || 0;
+
         if (stock > 0) {
-            availabilityElement.textContent = 'En stock';
+            availabilityElement.textContent = 'En existencia';
             availabilityElement.style.color = '#27ae60';
         } else {
             availabilityElement.textContent = 'Agotado';
@@ -382,9 +418,11 @@ export class ModalModule {
 
     updateUnit(product) {
         const unitElement = this.dom.modal.querySelector('.js-modal-unidad');
-        if (unitElement && product.unidad) {
-            unitElement.textContent = product.unidad;
-            console.log('✅ Unidad actualizada:', product.unidad);
+        // La API envía la unidad de venta en "tipoUnidad"
+        const unit = product.tipoUnidad ?? product.unidad;
+        if (unitElement && unit) {
+            unitElement.textContent = unit;
+            console.log('✅ Unidad actualizada:', unit);
         }
     }
 

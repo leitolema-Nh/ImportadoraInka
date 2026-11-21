@@ -1196,3 +1196,138 @@ body.shopx-lock {
   padding-right: 40px;
   line-height: 13px;
 }
+
+/* Precios más legibles en la tarjeta y foto vertical completa.
+   Las fotos del catálogo son 4:5: la tarjeta usa esa proporción y muestra la
+   imagen entera y centrada (sin recortar), aunque no llene todo el recuadro. */
+.pcard__pic {
+  aspect-ratio: 4 / 5;
+}
+
+.pcard__pic img {
+  object-fit: contain;
+  object-position: center;
+}
+
+.pcard__ref {
+  font-size: 13px;
+  line-height: 19px;
+}
+
+.pcard__box .pcard__price--deal {
+  padding-right: 48px;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.pcard__box .pcard__price--deal small {
+  font-size: 12px;
+}
+
+.pcard__box .pcard__deal {
+  padding-right: 48px;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.pcard__box .pcard__save {
+  top: 2px;
+  width: 42px;
+  height: 28px;
+  font-size: 12px;
+}
+
+/* Tabla de precios del detalle del producto (modal) */
+.mprice {
+  border: 1px solid #e3e0d9;
+  border-radius: 14px;
+  overflow: hidden;
+  font-family: Poppins-Regular, sans-serif;
+  color: var(--sx-ink);
+}
+
+.mprice__head {
+  padding: 10px 14px;
+  background: var(--sx-softer);
+  border-bottom: 1px solid #e3e0d9;
+  font-family: Poppins-SemiBold, sans-serif;
+  font-size: 13px;
+}
+
+.mprice__row {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px solid #eeece7;
+  font-size: 15px;
+}
+
+.mprice__row:last-child {
+  border-bottom: 0;
+}
+
+.mprice__label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-right: auto;
+}
+
+.mprice__label small {
+  font-size: 13px;
+}
+
+.mprice__label small b,
+.mprice__row--hero .mprice__label > span {
+  font-family: Poppins-SemiBold, sans-serif;
+  font-weight: normal;
+}
+
+.mprice__save {
+  flex: none;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  padding: 0 7px;
+  border-radius: 6px;
+  background: var(--sx-tier-bg);
+  color: var(--sx-tier-ink);
+  font-family: Poppins-SemiBold, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+}
+
+.mprice__value {
+  flex: none;
+  font-family: Poppins-SemiBold, sans-serif;
+  font-size: 18px;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.mprice__value small {
+  font-family: Poppins-Regular, sans-serif;
+  font-size: 13px;
+}
+
+.mprice__row--hero {
+  padding: 12px 14px;
+  background: var(--sx-tier-bg);
+  color: var(--sx-tier-ink);
+}
+
+.mprice__row--hero .mprice__save {
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 7px;
+  background: var(--sx-tier-ink);
+  color: #fff;
+  font-size: 13px;
+}
+
+.mprice__row--hero .mprice__value {
+  font-size: 28px;
+  line-height: 32px;
+}

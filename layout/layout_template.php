@@ -58,7 +58,7 @@ $base = $paths['baseURL'];
   <link rel="stylesheet" href="<?= $base ?>css/productModal-mobile.css">
   <link rel="stylesheet" href="<?= $base ?>css/productCard.css">
   <!-- Catálogo rediseñado (tarjeta, pestañas, hojas de filtros) -->
-  <link rel="stylesheet" href="<?= $base ?>css/shop-v2.css?v=20261121k">
+  <link rel="stylesheet" href="<?= $base ?>css/shop-v2.css?v=20261122a">
 
   <?= $extraHead ?? '' ?>
 </head>
@@ -247,7 +247,7 @@ $base = $paths['baseURL'];
   <script src="<?= $base ?>js/modules/footer.module.js"></script>
 
   <!-- INIT.JS (último) -->
-  <script src="<?= $base ?>js/init.js?v=20261121c"></script>
+  <script src="<?= $base ?>js/init.js?v=20261122a"></script>
 
   <?= $extraScripts ?? '' ?>
 

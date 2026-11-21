@@ -194,7 +194,7 @@ const GlobalApp = {
     loadModalModule() {
         console.log('🎭 Cargando productModal.module.js globalmente...');
         
-        import('./modules/productModal.module.js')
+        import('./modules/productModal.module.js?v=20261122a')
             .then(module => {
                 const ModalModule = module.default || module.ModalModule;
                 const modal = new ModalModule();
