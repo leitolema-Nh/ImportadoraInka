@@ -58,7 +58,7 @@ $base = $paths['baseURL'];
   <link rel="stylesheet" href="<?= $base ?>css/productModal-mobile.css">
   <link rel="stylesheet" href="<?= $base ?>css/productCard.css">
   <!-- Catálogo rediseñado (tarjeta, pestañas, hojas de filtros) -->
-  <link rel="stylesheet" href="<?= $base ?>css/shop-v2.css?v=20261121i">
+  <link rel="stylesheet" href="<?= $base ?>css/shop-v2.css?v=20261121k">
 
   <?= $extraHead ?? '' ?>
 </head>

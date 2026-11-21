@@ -1108,21 +1108,23 @@ body.shopx-lock {
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   font-family: Poppins-SemiBold, sans-serif;
+  /* Sin mayúsculas ni espaciado: así caben tipos largos ("Productos cosméticos") */
+  text-transform: none;
+  letter-spacing: 0;
   color: var(--sx-ink);
   z-index: 1;
 }
 
 .pcard__badge {
   top: 10px;
-  left: auto;
-  right: 10px;
+  left: 10px;
   z-index: 1;
 }
 
-/* Con el tipo y la etiqueta "Nuevo" a la vez, el tipo cede espacio */
-.pcard__badge ~ .pcard__type,
-.pcard__type:has(~ .pcard__badge) {
-  max-width: calc(100% - 78px);
+/* Con tipo y "Nuevo" a la vez, la etiqueta va debajo del tipo para que
+   ninguno de los dos se corte */
+.pcard__type + .pcard__badge {
+  top: 39px;
 }
 
 .pcard__body {
