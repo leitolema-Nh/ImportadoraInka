@@ -81,24 +81,28 @@ try {
     }
     
     // ✅ QUERY SIN BÚSQUEDA (CASO NORMAL)
-    $countRes = $conn->query("SELECT COUNT(*) AS total FROM products WHERE prodConfirm=1 AND precioConfirm=1 AND status=0");
-    if (!$countRes) throw new Exception($conn->error);
-    $total = (int)($countRes->fetch_assoc()['total'] ?? 0);
-    $countRes->free();
-    
-    $sql = "SELECT p.id, p.codigo, p.imagen, p.tipoProducto, p.descripcion, p.cantidad, p.tipoUnidad, p.Pv1 AS precio_general, p.Pv2 AS precio_mayor, p.Pv3 AS precio_docena, cp.Name_category AS categoria, p.containerid FROM products p LEFT JOIN subcategory_products sp ON p.tipoProducto = sp.name_subcategory LEFT JOIN category_products cp ON sp.category_id = cp.id WHERE p.prodConfirm=1 AND p.precioConfirm=1 AND p.status=0 ORDER BY p.containerid DESC, p.id ASC LIMIT ? OFFSET ?";
-    
+    // Filtros y orden opcionales (precio, foto, sort)
+    [$fConds, $fParams, $fTypes, $orderBy] = catalogoFiltros($_GET);
+    $baseWhere = "p.prodConfirm=1 AND p.precioConfirm=1 AND p.status=0" . $fConds;
+
+    $countStmt = $conn->prepare("SELECT COUNT(*) AS total FROM products p WHERE $baseWhere");
+    if (!$countStmt) throw new Exception($conn->error);
+    if ($fTypes !== '') $countStmt->bind_param($fTypes, ...$fParams);
+    $countStmt->execute();
+    $total = (int)($countStmt->get_result()->fetch_assoc()['total'] ?? 0);
+    $countStmt->close();
+
+    // La categoría va en subconsulta para no duplicar productos cuando un
+    // nombre de subcategoría existe en más de una categoría.
+    $sql = "SELECT p.id, p.codigo, p.imagen, p.tipoProducto, p.descripcion, p.cantidad, p.tipoUnidad, p.Pv1 AS precio_general, p.Pv2 AS precio_mayor, p.Pv3 AS precio_docena, (SELECT cp.Name_category FROM subcategory_products sp JOIN category_products cp ON sp.category_id = cp.id WHERE sp.name_subcategory = p.tipoProducto LIMIT 1) AS categoria, p.containerid, " . catalogoSqlNuevo() . " FROM products p WHERE $baseWhere ORDER BY $orderBy LIMIT ? OFFSET ?";
+
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         throw new Exception("Error preparing statement: " . $conn->error);
     }
-    
-    // ✅ ASEGURAR QUE LAS VARIABLES SEAN ENTEROS ANTES DEL BIND
-    $limitInt = (int)$limit;
-    $offsetInt = (int)$offset;
-    
-    // ✅ BIND CORREGIDO - usar variables separadas
-    if (!$stmt->bind_param("ii", $limitInt, $offsetInt)) {
+
+    $dataParams = array_merge($fParams, [(int)$limit, (int)$offset]);
+    if (!$stmt->bind_param($fTypes . "ii", ...$dataParams)) {
         throw new Exception("Error binding parameters: " . $stmt->error);
     }
     

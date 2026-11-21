@@ -1,0 +1,1196 @@
+/* ============================================================================
+   shop-v2.css — Catálogo rediseñado (móvil primero)
+   ----------------------------------------------------------------------------
+   1. Tokens
+   2. Tarjeta de producto (.pcard) — se usa donde se rendericen productos
+   3. Página de catálogo (.shopx-*): pestañas, subcategorías, barra, cuadrícula
+   4. Hojas inferiores (categorías y filtros)
+   5. Cabecera móvil compacta (solo body.shop-page)
+   6. Escritorio
+   ============================================================================ */
+
+/* 1. TOKENS ----------------------------------------------------------------- */
+:root {
+  --sx-ink: #161616;
+  --sx-muted: #5e5e5e;
+  --sx-line: #e6e4df;
+  --sx-soft: #f3f2ef;
+  --sx-softer: #f7f6f3;
+  --sx-tier-bg: #e7f3ee;
+  --sx-tier-ink: #0b5c44;
+  --sx-topbar-h: 32px;   /* barra negra de envíos (móvil) */
+  --sx-header-h: 56px;   /* cabecera móvil compacta */
+  --hdr-top: 32px;       /* posición de la cabecera móvil; la actualiza shop.module.js al hacer scroll */
+}
+
+.shopx [hidden],
+.shopx-sheet[hidden],
+.shopx-backdrop[hidden] {
+  display: none !important;
+}
+
+/* 2. TARJETA DE PRODUCTO ---------------------------------------------------- */
+.pcard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  color: var(--sx-ink);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pcard:hover,
+.pcard:focus {
+  color: var(--sx-ink);
+  text-decoration: none;
+}
+
+.pcard:focus-visible {
+  outline: 2px solid var(--sx-ink);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+.pcard__pic {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  background: var(--sx-soft);
+  overflow: hidden;
+}
+
+.pcard__pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.pcard:hover .pcard__pic img {
+  transform: scale(1.04);
+}
+
+.pcard__nopic {
+  display: none;
+  position: absolute;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: Poppins-Regular, sans-serif;
+  font-size: 11px;
+  color: var(--sx-muted);
+}
+
+.pcard__nopic b {
+  font-family: Poppins-SemiBold, sans-serif;
+  font-size: 18px;
+  font-weight: normal;
+  letter-spacing: 0.14em;
+  color: #8b877e;
+}
+
+.pcard__pic.is-empty .pcard__nopic {
+  display: flex;
+}
+
+.pcard__badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 11px;
+  background: var(--sx-ink);
+  color: #fff;
+  font-family: Poppins-Medium, sans-serif;
+  font-size: 11px;
+}
+
+.pcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pcard__type {
+  font-family: Poppins-Medium, sans-serif;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sx-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pcard__title {
+  font-family: Poppins-Regular, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  min-height: 36px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.pcard__code {
+  display: none; /* visible en escritorio */
+  font-family: Poppins-Regular, sans-serif;
+  font-size: 11px;
+  color: var(--sx-muted);
+}
+
+.pcard__price {
+  margin-top: 2px;
+  font-family: Poppins-SemiBold, sans-serif;
+  font-size: 17px;
+  line-height: 22px;
+}
+
+.pcard__price strong {
+  font-weight: normal;
+}
+
+.pcard__price small {
+  font-family: Poppins-Regular, sans-serif;
+  font-size: 11px;
+  color: var(--sx-muted);
+}
+
+/* Precio por cantidad destacado (docena o 6+) */
+.pcard__price--deal {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 5px;
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--sx-tier-ink);
+}
+
+.pcard__price--deal small {
+  color: var(--sx-tier-ink);
+}
+
+.pcard__save {
+  align-self: center;
+  margin-left: auto;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  border-radius: 6px;
+  background: var(--sx-tier-ink);
+  color: #fff;
+  font-family: Poppins-SemiBold, sans-serif;
+  font-size: 11px;
+  font-style: normal;
+}
+
+.pcard__deal {
+  font-family: Poppins-Medium, sans-serif;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--sx-tier-ink);
+}
+
+.pcard__deal b {
+  font-family: Poppins-SemiBold, sans-serif;
+  font-weight: normal;
+}
+
+/* Caja que agrupa todos los precios del producto */
+.pcard__box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+  padding: 8px 9px;
+  border-radius: 10px;
+  background: var(--sx-tier-bg);
+}
+
+.pcard__box .pcard__price {
+  margin-top: 0;
+}
+
+/* Precios de referencia (1 und., 6 o más): pequeños, arriba del destacado */
+.pcard__ref {
+  display: flex;
+  flex-direction: column;
+  font-family: Poppins-Regular, sans-serif;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--sx-tier-ink);
+}
+
+.pcard__ref > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.pcard__deal {
+  white-space: nowrap;
+}
+
+.pcard__unit {
+  font-family: Poppins-Regular, sans-serif;
+  font-size: 11px;
+  line-height: 22px;
+  color: var(--sx-muted);
+}
+
+/* Esqueleto de carga */
+.pcard--skeleton .pcard__pic,
+.pcard--skeleton .pcard__line {
+  background: linear-gradient(90deg, #f0eeea 25%, #f7f6f3 37%, #f0eeea 63%);
+  background-size: 400% 100%;
+  animation: sx-shimmer 1.4s ease infinite;
+}
+
+.pcard--skeleton .pcard__line {
+  height: 12px;
+  border-radius: 6px;
+}
+
+.pcard--skeleton .pcard__line:nth-child(2) { width: 90%; }
+.pcard--skeleton .pcard__line:nth-child(3) { width: 45%; height: 16px; }
+
+@keyframes sx-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* 3. PÁGINA DE CATÁLOGO ----------------------------------------------------- */
+.shopx {
+  font-family: Poppins-Regular, sans-serif;
+  color: var(--sx-ink);
+  padding-bottom: 64px;
+}
+
+.shopx button,
+.shopx-sheet button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.shopx-crumbs {
+  display: none; /* solo escritorio */
+}
+
+/* Pestañas de categorías */
+.shopx-tabs {
+  position: sticky;
+  top: calc(var(--hdr-top) + var(--sx-header-h));
+  z-index: 90;
+  background: #fff;
+  border-bottom: 1px solid var(--sx-line);
+}
+
+.shopx-tabs__inner {
+  display: flex;
+  align-items: stretch;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.shopx-tabs__all {
+  flex: none;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid var(--sx-line);
+  background: #fff;
+  color: var(--sx-ink);
+  font-family: Poppins-Medium, sans-serif;
+  font-size: 13px;
+}
+
+.shopx-tabs__scroll {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.shopx-tabs__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.shopx-tabs__loading {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 14px;
+  font-size: 12px;
+  color: var(--sx-muted);
+}
+
+.shopx-tab {
+  flex: none;
+  height: 44px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: var(--sx-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.shopx-tab:hover {
+  color: var(--sx-ink);
+}
+
+.shopx-tab.active {
+  color: var(--sx-ink);
+  font-family: Poppins-SemiBold, sans-serif;
+  box-shadow: inset 0 -2px 0 var(--sx-ink);
+}
+
+/* Chips de subcategorías */
+.shopx-subs {
+  display: flex;
+  gap: 6px;
+  margin: 0 -15px;
+  padding: 4px 16px 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.shopx-subs::-webkit-scrollbar {
+  display: none;
+}
+
+/* Chip: zona táctil de 44px con la píldora visual de 32px adentro */
+.shopx-chip {
+  flex: none;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.shopx-chip > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 16px;
+  background: var(--sx-soft);
+  color: var(--sx-ink);
+  font-size: 12px;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.shopx-chip > span small {
+  font-size: 11px;
+  color: var(--sx-muted);
+}
+
+.shopx-chip.active > span {
+  background: var(--sx-ink);
+  color: #fff;
+  font-family: Poppins-Medium, sans-serif;
+}
+
+.shopx-chip.active > span small {
+  color: #d4d1ca;
+}
+
+/* Barra de resultados */
+.shopx-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding-left: 16px;
+  padding-right: 6px;
+}
+
+.shopx-count {
+  font-size: 12px;
+  color: var(--sx-muted);
+}
+
+.shopx-count strong {
+  font-family: Poppins-SemiBold, sans-serif;
+  font-weight: normal;
+  color: var(--sx-ink);
+}
+
+.shopx-toolbar__actions {
+  display: flex;
+  align-items: center;
+}
+
+.shopx-tool {
+  position: relative;
+  height: 44px;
+  min-width: 44px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--sx-ink);
+  font-family: Poppins-Medium, sans-serif;
+  font-size: 12px;
+}
+
+.shopx-tool__label--wide {
+  display: none; /* solo escritorio */
+}
+
+.shopx-sort select {
+  height: 44px;
+  max-width: 120px;
+  border: 0;
+  background: transparent;
+  color: var(--sx-ink);
+  font-family: Poppins-Medium, sans-serif;
+  font-size: 12px;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.shopx-badge {
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--sx-ink);
+  color: #fff;
+  font-size: 11px;
+}
+
+/* Cuadrícula */
+.shopx-products {
+  padding-top: 4px;
+}
+
+.shopx-grid {
+  display: grid;
+  height: auto !important; /* por si Isotope (versión en caché de helpers.js) fija un alto */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 10px;
+  padding: 0 1px;
+}
+
+.shopx-grid > .col-12 {
+  grid-column: 1 / -1;
+}
+
+.shopx-more {
+  display: flex;
+  justify-content: center;
+  padding-top: 32px;
+}
+
+.shopx-more__btn,
+.shopx-btn {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 24px;
+  border: 1px solid #d4d1ca;
+  background: #fff;
+  color: var(--sx-ink);
+  font-family: Poppins-Medium, sans-serif;
+  font-size: 14px;
+}
+
+.shopx-more__btn:disabled {
+  opacity: 0.5;
+}
+
+.shopx-btn--solid {
+  flex: 1;
+  border-color: var(--sx-ink);
+  background: var(--sx-ink);
+  color: #fff;
+  font-family: Poppins-SemiBold, sans-serif;
+}
+
+/* 4. HOJAS INFERIORES ------------------------------------------------------- */
+body.shopx-lock {
+  overflow: hidden;
+}
+
+.shopx-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(22, 22, 22, 0.55);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.shopx-backdrop.is-open {
+  opacity: 1;
+}
+
+.shopx-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10001;
+  max-height: 88vh;
+  max-height: 88dvh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: var(--sx-ink);
+  border-radius: 20px 20px 0 0;
+  font-family: Poppins-Regular, sans-serif;
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.shopx-sheet.is-open {
+  transform: none;
+}
+
+.shopx-sheet__handle {
+  flex: none;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shopx-sheet__handle span {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: #d4d1ca;
+}
+
+.shopx-sheet__head {
+  flex: none;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px 0 16px;
+}
+
+.shopx-sheet__head h2 {
+  margin: 0;
+  font-family: Poppins-SemiBold, sans-serif;
+  font-size: 18px;
+  font-weight: normal;
+  color: var(--sx-ink);
+}
+
+.shopx-sheet__close {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--sx-ink);
+}
+
+.shopx-sheet__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.shopx-sheet__foot {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--sx-line);
+}
+
+/* Lista de categorías */
+.shopx-catlist {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.shopx-catrow {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 16px;
+  border: 0;
+  border-bottom: 1px solid #eeece7;
+  background: #fff;
+  color: var(--sx-ink);
+  font-size: 14px;
+  text-align: left;
+}
+
+.shopx-catrow__meta {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--sx-muted);
+}
+
+.shopx-catrow__meta svg {
+  transition: transform 0.2s ease;
+}
+
+.shopx-catrow[aria-expanded="true"] {
+  background: var(--sx-softer);
+  border-bottom-color: transparent;
+  font-family: Poppins-SemiBold, sans-serif;
+}
+
+.shopx-catrow[aria-expanded="true"] .shopx-catrow__meta svg {
+  transform: rotate(180deg);
+}
+
+.shopx-catrow.is-current .shopx-catrow__name {
+  font-family: Poppins-SemiBold, sans-serif;
+}
+
+.shopx-catpanel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+  padding: 0 16px 10px;
+  background: var(--sx-softer);
+  border-bottom: 1px solid #eeece7;
+}
+
+.shopx-catpanel .shopx-chip > span {
+  height: 36px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #d4d1ca;
+}
+
+.shopx-catpanel .shopx-chip.active > span {
+  background: var(--sx-ink);
+  box-shadow: none;
+}
+
+/* Filtros */
+.shopx-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 8px 16px 20px;
+}
+
+.shopx-fgroup h3 {
+  margin: 0 0 6px;
+  font-family: Poppins-SemiBold, sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  color: var(--sx-ink);
+}
+
+.shopx-fgroup h3 label {
+  margin: 0;
+}
+
+.shopx-fgroup h3 span {
+  font-family: Poppins-Regular, sans-serif;
+  color: var(--sx-muted);
+}
+
+.shopx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+}
+
+.shopx-chips .shopx-chip {
+  height: 48px;
+}
+
+.shopx-chips .shopx-chip > span {
+  height: 40px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #d4d1ca;
+  font-size: 13px;
+}
+
+.shopx-chips .shopx-chip.active > span {
+  background: var(--sx-ink);
+  box-shadow: none;
+}
+
+.shopx-chips--grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.shopx-chips--grid .shopx-chip > span {
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.shopx-search {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  border-radius: 22px;
+  background: var(--sx-soft);
+  color: var(--sx-ink);
+}
+
+.shopx-search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  outline: 0;
+  box-shadow: none;
+  border: 0;
+  background: transparent;
+  color: var(--sx-ink);
+  font-family: Poppins-Regular, sans-serif;
+  font-size: 16px; /* evita el zoom automático de iOS al enfocar */
+}
+
+.shopx-search input::placeholder {
+  color: var(--sx-muted);
+  font-size: 13px;
+}
+
+.shopx-switch {
+  min-height: 44px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.shopx-switch input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--sx-ink);
+}
+
+/* 5. CABECERA MÓVIL COMPACTA (solo catálogo) -------------------------------- */
+@media (max-width: 991px) {
+  body.shop-page {
+    padding-top: calc(var(--sx-topbar-h) + var(--sx-header-h));
+  }
+
+  /* La barra negra deja de ser fija: se va con el scroll */
+  body.shop-page .top-bar-mobile-fixed {
+    position: absolute;
+    height: var(--sx-topbar-h);
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body.shop-page .wrap-header-mobile {
+    top: var(--hdr-top);
+    height: var(--sx-header-h);
+    padding: 0 4px 0 16px;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    box-shadow: none;
+  }
+
+  body.shop-page .menu-mobile {
+    top: calc(var(--hdr-top) + var(--sx-header-h));
+  }
+
+  body.shop-page .logo-mobile {
+    flex: none;
+    height: auto;
+    padding-right: 0;
+  }
+
+  /* main.css posiciona el logo en absoluto; aquí vuelve al flujo para medir su ancho */
+  body.shop-page .logo-mobile img {
+    position: static;
+    display: block;
+    height: 16px;
+    width: auto;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+  }
+
+  body.shop-page .header-mobile-right {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  /* La lupa pasa a ser un campo de búsqueda visible (abre el buscador global) */
+  body.shop-page .search-mobile {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    margin: 0;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 20px;
+    background: var(--sx-soft);
+    color: var(--sx-ink);
+    cursor: pointer;
+  }
+
+  body.shop-page .search-mobile i {
+    font-size: 20px;
+  }
+
+  body.shop-page .search-mobile::after {
+    content: "Buscar";
+    font-family: Poppins-Regular, sans-serif;
+    font-size: 13px;
+    color: var(--sx-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.shop-page .btn-show-menu-mobile {
+    flex: none;
+  }
+}
+
+@media (max-width: 359px) {
+  .shopx-tool__label {
+    display: none;
+  }
+}
+
+/* 6. ESCRITORIO ------------------------------------------------------------- */
+@media (min-width: 576px) {
+  .shopx-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 16px;
+  }
+}
+
+@media (min-width: 992px) {
+  .shopx-crumbs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 24px;
+    padding-bottom: 8px;
+    font-size: 13px;
+    color: var(--sx-muted);
+  }
+
+  .shopx-crumbs a {
+    color: var(--sx-muted);
+  }
+
+  .shopx-crumbs a:hover {
+    color: var(--sx-ink);
+  }
+
+  .shopx-tabs {
+    top: 70px; /* alto del menú de escritorio fijo */
+  }
+
+  .shopx-tabs__inner {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .shopx-tab,
+  .shopx-tabs__all {
+    height: 52px;
+    font-size: 14px;
+  }
+
+  .shopx-subs {
+    margin: 0;
+    padding: 10px 0 0;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  .shopx-toolbar {
+    min-height: 56px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .shopx-count,
+  .shopx-tool,
+  .shopx-sort select {
+    font-size: 13px;
+  }
+
+  .shopx-tool__label--wide {
+    display: inline;
+  }
+
+  .shopx-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 36px 24px;
+  }
+
+  .pcard__code {
+    display: block;
+  }
+
+  .pcard__title {
+    font-size: 14px;
+    line-height: 20px;
+    min-height: 40px;
+  }
+
+  /* Las hojas pasan a ser un panel lateral derecho */
+  .shopx-sheet {
+    top: 0;
+    left: auto;
+    width: 420px;
+    max-height: none;
+    border-radius: 0;
+    transform: translateX(100%);
+  }
+
+  .shopx-sheet__handle {
+    display: none;
+  }
+
+  .shopx-sheet__head {
+    height: 64px;
+    padding: 0 12px 0 24px;
+  }
+
+  .shopx-filters {
+    padding: 8px 24px 24px;
+  }
+
+  .shopx-sheet__foot {
+    padding: 16px 24px;
+  }
+
+  .shopx-catrow {
+    padding: 0 24px;
+  }
+
+  .shopx-catpanel {
+    padding: 0 24px 10px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .shopx-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shopx-sheet,
+  .shopx-backdrop,
+  .pcard__pic img,
+  .shopx-tabs__scroll {
+    transition: none;
+    scroll-behavior: auto;
+  }
+
+  .pcard--skeleton .pcard__pic,
+  .pcard--skeleton .pcard__line {
+    animation: none;
+  }
+}
+
+/* 7. TARJETA CERRADA ---------------------------------------------------------
+   Cada producto es una pieza blanca con borde sobre el fondo gris de la página:
+   foto arriba (con el tipo encima), descripción fundida con la foto y la caja
+   de precios pegada al borde inferior. Estas reglas ajustan las de la sección 2.
+   ------------------------------------------------------------------------- */
+.shopx {
+  background: #f1efea;
+}
+
+.shopx-subs .shopx-chip > span {
+  background: #fff;
+}
+
+.shopx-subs .shopx-chip.active > span {
+  background: var(--sx-ink);
+}
+
+.pcard {
+  position: relative;
+  gap: 0;
+  background: #fff;
+  border: 1px solid #e3e0d9;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.pcard:focus-visible {
+  border-radius: 14px;
+  outline-offset: 2px;
+}
+
+.pcard__pic {
+  border-radius: 0;
+}
+
+/* La parte baja de la foto se difumina hacia el blanco de la descripción */
+.pcard__pic::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 28%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.85) 70%, #fff);
+  pointer-events: none;
+}
+
+/* Tipo de producto sobre la foto */
+.pcard__type {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  max-width: calc(100% - 20px);
+  height: 24px;
+  line-height: 24px;
+  padding: 0 9px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  font-family: Poppins-SemiBold, sans-serif;
+  color: var(--sx-ink);
+  z-index: 1;
+}
+
+.pcard__badge {
+  top: 10px;
+  left: auto;
+  right: 10px;
+  z-index: 1;
+}
+
+/* Con el tipo y la etiqueta "Nuevo" a la vez, el tipo cede espacio */
+.pcard__badge ~ .pcard__type,
+.pcard__type:has(~ .pcard__badge) {
+  max-width: calc(100% - 78px);
+}
+
+.pcard__body {
+  position: relative;
+  margin-top: -10px;
+  padding: 0 10px 8px;
+}
+
+.pcard__box {
+  margin-top: auto;
+  padding: 8px 10px 9px;
+  border-radius: 0;
+}
+
+.pcard__box--plain {
+  background: var(--sx-softer);
+}
+
+/* Esqueleto de carga dentro de la tarjeta cerrada */
+.pcard--skeleton .pcard__pic::after {
+  display: none;
+}
+
+.pcard--skeleton .pcard__body {
+  margin-top: 0;
+  padding: 10px;
+  gap: 8px;
+}
+
+@media (min-width: 992px) {
+  .pcard__body {
+    padding: 0 12px 10px;
+  }
+
+  .pcard__box {
+    padding: 10px 12px 11px;
+  }
+}
+
+/* Bloque de precio compacto: el precio por cantidad usa la misma letra que los
+   precios de referencia (se distingue por la negrita) y la etiqueta de ahorro
+   ocupa los dos renglones: precio y total de la docena. */
+.pcard__box .pcard__price--deal {
+  position: relative;
+  display: block;
+  margin-top: 3px;
+  padding-right: 40px;
+  font-size: 11px;
+  line-height: 13px;
+  white-space: nowrap;
+}
+
+.pcard__box .pcard__price--deal small {
+  font-size: 11px;
+}
+
+.pcard__box .pcard__save {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  width: 36px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+}
+
+.pcard__box .pcard__deal {
+  padding-right: 40px;
+  line-height: 13px;
+}

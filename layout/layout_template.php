@@ -29,7 +29,7 @@ $base = $paths['baseURL'];
   <script src="<?= $base ?>js/core/loader.js"></script>
   
   <!-- HELPERS -->
-  <script src="<?= $base ?>js/helpers.js"></script>
+  <script src="<?= $base ?>js/helpers.js?v=20261121"></script>
 
   <!-- CSS VENDOR -->
   <link rel="stylesheet" href="<?= $base ?>vendor/bootstrap/css/bootstrap.min.css">
@@ -57,6 +57,8 @@ $base = $paths['baseURL'];
   <link rel="stylesheet" href="<?= $base ?>css/productModal.css">
   <link rel="stylesheet" href="<?= $base ?>css/productModal-mobile.css">
   <link rel="stylesheet" href="<?= $base ?>css/productCard.css">
+  <!-- Catálogo rediseñado (tarjeta, pestañas, hojas de filtros) -->
+  <link rel="stylesheet" href="<?= $base ?>css/shop-v2.css?v=20261121i">
 
   <?= $extraHead ?? '' ?>
 </head>
@@ -245,7 +247,7 @@ $base = $paths['baseURL'];
   <script src="<?= $base ?>js/modules/footer.module.js"></script>
 
   <!-- INIT.JS (último) -->
-  <script src="<?= $base ?>js/init.js"></script>
+  <script src="<?= $base ?>js/init.js?v=20261121c"></script>
 
   <?= $extraScripts ?? '' ?>
 
