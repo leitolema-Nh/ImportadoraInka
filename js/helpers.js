@@ -205,7 +205,8 @@ window.helpers = {
       console.log('✅ ' + items.length + ' productos renderizados desde PHP');
       
       setTimeout(function() {
-        if (window.$ && $.fn.isotope) {
+        // Solo los contenedores .isotope-grid usan Isotope; el catálogo nuevo usa CSS grid
+        if (window.$ && $.fn.isotope && container.classList.contains('isotope-grid')) {
           try {
             var $container = $(container);
             

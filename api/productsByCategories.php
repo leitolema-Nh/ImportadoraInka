@@ -70,6 +70,12 @@ try {
     $types .= "ssss";
   }
 
+  // Filtros y orden opcionales (precio, foto, sort)
+  [$fConds, $fParams, $fTypes, $orderBy] = catalogoFiltros($_GET);
+  $conds .= $fConds;
+  $params = array_merge($params, $fParams);
+  $types .= $fTypes;
+
   // Conteo
   $sqlCount = "
     SELECT COUNT(*) AS total
@@ -92,12 +98,13 @@ try {
       p.id, p.codigo, p.imagen, p.tipoProducto, p.descripcion,
       p.cantidad, p.tipoUnidad,
       p.Pv1 AS precio_general, p.Pv2 AS precio_mayor, p.Pv3 AS precio_docena,
-      cp.Name_category AS categoria, p.containerid
+      cp.Name_category AS categoria, p.containerid,
+      " . catalogoSqlNuevo() . "
     FROM products p
     LEFT JOIN subcategory_products sp ON p.tipoProducto = sp.name_subcategory
     LEFT JOIN category_products cp ON sp.category_id = cp.id
     WHERE $conds
-    ORDER BY p.containerid DESC, p.id ASC
+    ORDER BY $orderBy
     LIMIT ? OFFSET ?
   ";
   $params2 = array_merge($params, [ $limit, $offset ]);

@@ -247,7 +247,7 @@ const GlobalApp = {
     loadShopModule() {
         console.log('📦 Cargando shop.module.js...');
         
-        import('./modules/shop.module.js')
+        import('./modules/shop.module.js?v=20261121c')
             .then(module => {
                 const ShopModule = module.default || module.ShopModule;
                 const shop = new ShopModule();

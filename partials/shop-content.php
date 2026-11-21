@@ -1,10 +1,15 @@
 <?php
 /**
  * ============================================================================
- * shop-content.php - CON BREADCRUMB 80-10-10 MÓVIL
+ * shop-content.php - Catálogo (rediseño móvil primero)
  * ============================================================================
- * ✅ Desktop: Categorías (75%) + Botones (25%)
- * ✅ Móvil: Breadcrumb (80%) + Iconos (10% + 10%)
+ * Estructura:
+ *   1. Pestañas de categorías (sticky) + botón "Todas" que abre la hoja
+ *   2. Chips de subcategorías de la categoría activa
+ *   3. Barra: conteo de resultados · compartir · ordenar · filtros
+ *   4. Cuadrícula de productos (2 columnas en móvil)
+ *   5. Hojas inferiores: categorías y filtros
+ * Estilos: css/shop-v2.css · Lógica: js/modules/shop.module.js
  * ============================================================================ */
 
 global $config;
@@ -13,215 +18,137 @@ $base = $config['paths']['baseURL'] ?? '/';
 
 <body class="animsition shop-page">
 
-<!-- BREADCRUMB -->
-<div class="container">
-    <div class="row align-items-center p-t-30">
-        
-        <!-- Breadcrumb: Desktop 100% | Móvil 80% -->
-        <div class="col-lg-12 col-8">
-            <div class="bread-crumb flex-w p-lr-0-lg">
-                <a href="<?= $base ?>pages/index.php" class="stext-109 cl8 hov-cl1 trans-04">
-                    Inicio
-                    <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
-                </a>
-                <span class="stext-109 cl4">
-                    Catálogo
-                </span>
-            </div>
-        </div>
-        
-        <!-- Botones móvil: Solo visibles en móvil (10% + 10%) -->
-        <div class="col-4 d-lg-none">
-            <div class="d-flex gap-2 justify-content-end">
-                <!-- Botón Filtrar (10%) -->
-                <button id="toggle-filters-btn-mobile" class="btn-icon-mobile">
-                    <i class="zmdi zmdi-filter-list"></i>
-                </button>
-                
-                <!-- Botón Compartir (10%) -->
-                <button id="share-btn-mobile" class="btn-icon-mobile">
-                    <i class="zmdi zmdi-share"></i>
-                </button>
-            </div>
-        </div>
-        
+<div class="shopx">
+
+    <!-- Migas: solo escritorio -->
+    <div class="container shopx-crumbs">
+        <a href="<?= $base ?>pages/index.php">Inicio</a>
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+        <span>Catálogo</span>
     </div>
+
+    <!-- 1. PESTAÑAS DE CATEGORÍAS -->
+    <nav class="shopx-tabs" aria-label="Categorías">
+        <div class="container shopx-tabs__inner">
+            <button type="button" id="open-cats-btn" class="shopx-tabs__all" aria-haspopup="dialog" aria-controls="cats-sheet" aria-label="Ver todas las categorías">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg>
+            </button>
+            <div id="categories-container" class="shopx-tabs__scroll">
+                <span class="shopx-tabs__loading">Cargando categorías…</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. SUBCATEGORÍAS DE LA CATEGORÍA ACTIVA -->
+    <div class="container">
+        <div id="subcategories-container" class="shopx-subs" aria-label="Subcategorías" hidden></div>
+    </div>
+
+    <!-- 3. BARRA DE RESULTADOS -->
+    <div class="container shopx-toolbar">
+        <span id="results-count" class="shopx-count" aria-live="polite"></span>
+        <div class="shopx-toolbar__actions">
+            <button type="button" id="share-btn" class="shopx-tool" aria-label="Compartir este catálogo">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.5"></circle><circle cx="18" cy="6" r="2.5"></circle><circle cx="18" cy="18" r="2.5"></circle><path d="M8.2 10.9l7.6-3.8M8.2 13.1l7.6 3.8"></path></svg>
+                <span class="shopx-tool__label shopx-tool__label--wide">Compartir</span>
+            </button>
+            <label class="shopx-tool shopx-sort">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M7 20l-3-3M17 20V4M17 4l3 3"></path></svg>
+                <span class="sr-only">Ordenar por</span>
+                <select id="sort-select">
+                    <option value="recent">Recientes</option>
+                    <option value="price_asc">Menor precio</option>
+                    <option value="price_desc">Mayor precio</option>
+                    <option value="name">Nombre A–Z</option>
+                </select>
+            </label>
+            <button type="button" id="toggle-filters-btn" class="shopx-tool" aria-haspopup="dialog" aria-controls="filters-sheet">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M7 12h10M10 17h4"></path></svg>
+                <span class="shopx-tool__label">Filtros</span>
+                <span id="filters-badge" class="shopx-badge" hidden></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 4. PRODUCTOS -->
+    <section class="container shopx-products">
+        <div id="products-container" class="shopx-grid">
+            <div class="col-12 text-center py-5">
+                <i class="zmdi zmdi-spinner zmdi-hc-spin zmdi-hc-3x mb-3"></i>
+                <p class="text-muted small">Cargando productos…</p>
+            </div>
+        </div>
+
+        <div class="shopx-more">
+            <button type="button" id="load-more" class="shopx-more__btn" style="display: none;">
+                Cargar más productos
+            </button>
+        </div>
+    </section>
+
 </div>
 
-<!-- ============================================================================
-     SECCIÓN: CATEGORÍAS (75%) + BOTONES (25%) - MISMA FILA
-     ============================================================================ -->
-<div class="bg0 p-t-23 p-b-15">
-    <div class="container">
-        <div class="row align-items-center">
-            
-            <!-- ========================================
-                 COLUMNA IZQUIERDA: CATEGORÍAS (75%)
-                 ======================================== -->
-            <div class="col-lg-9 col-md-8 col-sm-12">
-                <div class="categories-section">
-                    <!-- Título + Subtítulo -->
-                    <div class="section-header mb-2">
-                        <h5 class="section-title d-inline-block mb-0">Categorías</h5>
-                        <span class="section-subtitle text-muted ms-2">— Explora todos nuestros productos y más...!!</span>
-                    </div>
-                    
-                    <!-- Slider de categorías -->
-                    <div class="categories-wrapper">
-                        <button class="cat-scroll-btn left" onclick="scrollCategories(-1)" aria-label="Scroll izquierda">
-                            <i class="zmdi zmdi-chevron-left"></i>
-                        </button>
-                        
-                        <div id="categories-container" class="categories-bar">
-                            <div class="text-center py-2">
-                                <i class="zmdi zmdi-spinner zmdi-hc-spin"></i>
-                                <span class="text-muted small ms-2">Cargando categorías...</span>
-                            </div>
-                        </div>
-                        
-                        <button class="cat-scroll-btn right" onclick="scrollCategories(1)" aria-label="Scroll derecha">
-                            <i class="zmdi zmdi-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+<!-- 5. HOJAS INFERIORES -->
+<div id="shopx-backdrop" class="shopx-backdrop" hidden></div>
 
-            <!-- ========================================
-                 COLUMNA DERECHA: BOTONES (25%)
-                 ✅ Solo visible en desktop
-                 ======================================== -->
-            <div class="col-lg-3 col-md-4 d-none d-lg-block">
-                <div class="d-flex flex-column gap-3 align-items-end">
-                    
-                    <!-- Botón Compartir -->
-                    <button id="share-btn" class="btn-compartir">
-                        <i class="zmdi zmdi-share me-1"></i>
-                        Compartir
-                    </button>
-                    
-                    <!-- Botón Mostrar Filtros -->
-                    <button id="toggle-filters-btn" class="btn-filtrar">
-                        <i class="zmdi zmdi-filter-list me-2"></i>
-                        <span class="filter-text">Mostrar Filtros</span>
-                    </button>
-                    
-                </div>
-            </div>
+<!-- Hoja: categorías y subcategorías -->
+<section id="cats-sheet" class="shopx-sheet" role="dialog" aria-modal="true" aria-labelledby="cats-sheet-title" hidden>
+    <div class="shopx-sheet__handle" aria-hidden="true"><span></span></div>
+    <header class="shopx-sheet__head">
+        <h2 id="cats-sheet-title">Categorías</h2>
+        <button type="button" class="shopx-sheet__close" data-close-sheet aria-label="Cerrar">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+    </header>
+    <div id="cats-sheet-list" class="shopx-sheet__body shopx-catlist"></div>
+</section>
 
+<!-- Hoja: filtros y orden -->
+<section id="filters-sheet" class="shopx-sheet" role="dialog" aria-modal="true" aria-labelledby="filters-sheet-title" hidden>
+    <div class="shopx-sheet__handle" aria-hidden="true"><span></span></div>
+    <header class="shopx-sheet__head">
+        <h2 id="filters-sheet-title">Filtros</h2>
+        <button type="button" id="close-filters-btn" class="shopx-sheet__close" data-close-sheet aria-label="Cerrar">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+    </header>
+
+    <div class="shopx-sheet__body shopx-filters">
+
+        <div class="shopx-fgroup">
+            <h3>Ordenar por</h3>
+            <div id="filter-sort" class="shopx-chips"></div>
         </div>
-    </div>
-</div>
 
-<!-- ============================================================================
-     SECCIÓN PRINCIPAL: FILTROS (Izquierda) + PRODUCTOS (Derecha)
-     ============================================================================ -->
-<section class="bg0 p-t-23 p-b-140">
-    <div class="container">
-        <div class="row">
-            
-            <!-- ========================================
-                 COLUMNA IZQUIERDA: PANEL DE FILTROS
-                 ✅ OCULTA por defecto (clase "d-none")
-                 ✅ Se muestra al hacer click en "MOSTRAR FILTROS"
-                 ======================================== -->
-            <div id="filters-column" class="col-lg-3 col-md-4 col-sm-12 p-b-50 d-none">
-                
-                <div class="panel-filtros sticky-sidebar">
-                    
-                    <!-- Encabezado del panel -->
-                    <div class="filter-header d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="filter-title mb-0">Filtros</h5>
-                        <button id="close-filters-btn" class="btn-close-filters d-lg-none" aria-label="Cerrar filtros">
-                            <i class="zmdi zmdi-close"></i>
-                        </button>
-                    </div>
-
-                    <!-- SUBCATEGORÍAS -->
-                    <div class="filter-section mb-4">
-                        <h6 class="filter-subtitle mb-3">Subcategorías</h6>
-                        
-                        <div class="subcategories-wrapper position-relative">
-                            <button class="scroll-btn scroll-sub-prev" onclick="scrollSubcategories(-1)" aria-label="Scroll izquierda">
-                                <i class="zmdi zmdi-chevron-left"></i>
-                            </button>
-                            
-                            <div id="subcategories-container" class="subcategories-list">
-                                <p class="text-muted small text-center py-3 mb-0">
-                                    Selecciona una categoría
-                                </p>
-                            </div>
-                            
-                            <button class="scroll-btn scroll-sub-next" onclick="scrollSubcategories(1)" aria-label="Scroll derecha">
-                                <i class="zmdi zmdi-chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- BÚSQUEDA EN CATÁLOGO -->
-                    <div class="filter-section">
-                        <h6 class="filter-subtitle mb-3">Buscar en catálogo</h6>
-                        <div class="search-box position-relative">
-                            <input 
-                                type="text" 
-                                id="search-input" 
-                                class="form-control search-input" 
-                                placeholder="Buscar por código o nombre..."
-                                aria-label="Buscar productos"
-                            >
-                            <i class="zmdi zmdi-search search-icon"></i>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- ========================================
-                 COLUMNA DERECHA: GRID DE PRODUCTOS
-                 ✅ DINÁMICO: 
-                    - col-lg-12 cuando filtros ocultos
-                    - col-lg-9 cuando filtros visibles
-                 ======================================== -->
-            <div id="products-column" class="col-lg-12 col-md-12 col-sm-12">
-                
-                <!-- CONTENEDOR DE PRODUCTOS -->
-                <div id="products-container" class="row isotope-grid">
-                    <div class="col-12 text-center py-5">
-                        <i class="zmdi zmdi-spinner zmdi-hc-spin zmdi-hc-4x text-primary mb-3"></i>
-                        <h5 class="text-muted">Cargando productos...</h5>
-                        <p class="text-muted small">Por favor espera un momento</p>
-                    </div>
-                </div>
-
-                <!-- BOTÓN CARGAR MÁS -->
-                <div class="flex-c-m flex-w w-full p-t-45">
-                    <button 
-                        id="load-more" 
-                        class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04"
-                        style="display: none;">
-                        Cargar más productos
-                    </button>
-                </div>
-
-            </div>
-
+        <div class="shopx-fgroup">
+            <h3>Precio por unidad</h3>
+            <div id="filter-price" class="shopx-chips shopx-chips--grid"></div>
         </div>
+
+        <div id="filter-subs-group" class="shopx-fgroup" hidden>
+            <h3>Subcategoría <span id="filter-subs-cat"></span></h3>
+            <div id="filter-subs" class="shopx-chips"></div>
+        </div>
+
+        <div class="shopx-fgroup">
+            <h3><label for="search-input">Buscar en esta vista</label></h3>
+            <div class="shopx-search">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+                <input type="search" id="search-input" class="search-input" placeholder="Código o nombre" autocomplete="off">
+            </div>
+        </div>
+
+        <label class="shopx-switch">
+            <span>Solo productos con foto</span>
+            <input type="checkbox" id="filter-photo">
+        </label>
+
     </div>
+
+    <footer class="shopx-sheet__foot">
+        <button type="button" id="clear-filters-btn" class="shopx-btn shopx-btn--ghost">Limpiar</button>
+        <button type="button" id="apply-filters-btn" class="shopx-btn shopx-btn--solid" data-close-sheet>Ver resultados</button>
+    </footer>
 </section>
 
 </body>
-
-<!-- ============================================================================
-     NOTAS IMPORTANTES:
-     ============================================================================
-     DESKTOP:
-     - Breadcrumb: col-lg-12 (100%)
-     - Categorías: col-lg-9 (75%)
-     - Botones: col-lg-3 (25%) - Apilados verticalmente
-     
-     MÓVIL:
-     - Breadcrumb: col-8 (80%)
-     - Botones iconos: col-4 (20%) dividido en 10% + 10%
-     - Categorías: col-12 (100%)
-     - Productos: 1 columna (100%)
-     ============================================================================ -->

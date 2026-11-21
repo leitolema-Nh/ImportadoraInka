@@ -1,148 +1,131 @@
 <?php
 /**
  * ============================================================
- * 🎴 productCard.php - Template OPTIMIZADO de Tarjeta
+ * 🎴 productCard.php - Tarjeta de producto (catálogo)
  * ============================================================
- * ✅ Badge → Título principal
- * ✅ Descripción → Descripción secundaria (clickeable)
- * ✅ Código con formato "ID: XXX"
- * ✅ Precios en español estructurados
- * ✅ Imagen clickeable → Abre modal
+ * - Toda la tarjeta abre el modal (.js-show-modal1 + data-id)
+ * - Foto cuadrada; si no hay foto se muestra un fondo neutro
+ * - Título: descripción (2 líneas); si falta, se usa el tipo de producto
+ * - Precio por unidad grande; por mayor (6+) y por docena (12+) como etiquetas
  * ============================================================
  */
 
-// Validación
 if (!isset($producto) || !is_array($producto)) {
     return;
 }
 
-// Extraer datos
-$id = $producto['id'] ?? 0;
-$codigo = htmlspecialchars($producto['codigo'] ?? '', ENT_QUOTES, 'UTF-8');
-$descripcion = htmlspecialchars($producto['descripcion'] ?? 'Sin descripción', ENT_QUOTES, 'UTF-8');
-$tipoProducto = htmlspecialchars($producto['tipoProducto'] ?? '', ENT_QUOTES, 'UTF-8');
-$imagen = $producto['imagen'] ?? '';
-$precioGeneral = number_format($producto['precio_general'] ?? 0, 2);
-$precioMayor = number_format($producto['precio_mayor'] ?? 0, 2);
-$precioDocena = number_format($producto['precio_docena'] ?? 0, 2);
+$esc = fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 
-// Flags para mostrar precios opcionales
-$mostrarMayor = ($producto['precio_mayor'] ?? 0) > 0 && $producto['precio_mayor'] != $producto['precio_general'];
-$mostrarDocena = ($producto['precio_docena'] ?? 0) > 0 && $producto['precio_docena'] != $producto['precio_general'];
+$id           = (int)($producto['id'] ?? 0);
+$codigo       = trim((string)($producto['codigo'] ?? ''));
+$tipoProducto = trim((string)($producto['tipoProducto'] ?? ''));
+$tipoUnidad   = trim((string)($producto['tipoUnidad'] ?? ''));
+$imagen       = (string)($producto['imagen'] ?? '');
+$esNuevo      = !empty($producto['nuevo']);
 
-// URL de imagen por defecto
-$imagenDefault = ($config['paths']['baseURL'] ?? '') . 'images/default.jpg';
+// Descripción: hay registros vacíos o con el texto literal "false"
+$descripcion = trim((string)($producto['descripcion'] ?? ''));
+if (in_array(strtolower($descripcion), ['', 'false', 'null', 'sin descripción'], true)) {
+    $descripcion = '';
+}
 
-// Capitalizar el tipo de producto para el título
-$tituloProducto = ucwords(strtolower($tipoProducto));
+// Tipo en formato legible ("ARETE DE ACERO" -> "Arete de acero")
+$tipoLegible = $tipoProducto;
+if ($tipoLegible !== '' && mb_strtoupper($tipoLegible, 'UTF-8') === $tipoLegible) {
+    $tipoLegible = mb_strtoupper(mb_substr($tipoLegible, 0, 1, 'UTF-8'), 'UTF-8')
+                 . mb_strtolower(mb_substr($tipoLegible, 1, null, 'UTF-8'), 'UTF-8');
+}
+
+if ($descripcion !== '') {
+    $etiqueta = $tipoLegible;
+    $titulo   = $descripcion;
+} else {
+    // Sin descripción: el tipo pasa a ser el título y el código la etiqueta
+    $etiqueta = $codigo !== '' ? 'Cód. ' . $codigo : '';
+    $titulo   = $tipoLegible !== '' ? $tipoLegible : 'Producto';
+}
+
+// Precios: sin decimales cuando son enteros (RD$350), con miles (RD$1,250)
+$fmt = function ($n) {
+    $n = (float)$n;
+    return 'RD$' . number_format($n, floor($n) == $n ? 0 : 2);
+};
+$pGeneral = (float)($producto['precio_general'] ?? 0);
+$pMayor   = (float)($producto['precio_mayor'] ?? 0);
+$pDocena  = (float)($producto['precio_docena'] ?? 0);
+$mostrarMayor  = $pMayor > 0 && $pMayor != $pGeneral;
+$mostrarDocena = $pDocena > 0 && $pDocena != $pGeneral;
+
+// Precio destacado: el de docena si existe; si no, el de 6 o más; si no, el de unidad
+if ($mostrarDocena) {
+    $heroCant = 12; $heroPrecio = $pDocena;
+} elseif ($mostrarMayor) {
+    $heroCant = 6;  $heroPrecio = $pMayor;
+} else {
+    $heroCant = 1;  $heroPrecio = $pGeneral;
+}
+// Ahorro por unidad frente a comprar una sola
+$ahorro = ($pGeneral > 0 && $heroPrecio < $pGeneral)
+    ? (int)round(($pGeneral - $heroPrecio) / $pGeneral * 100)
+    : 0;
+
+// Unidad de venta: solo si aporta algo (no un número suelto)
+$mostrarUnidad = !$mostrarMayor && !$mostrarDocena && mb_strlen($tipoUnidad, 'UTF-8') > 2 && !is_numeric($tipoUnidad);
+
+$sinFoto = $imagen === '' || substr($imagen, -11) === 'default.jpg';
 ?>
-
-<!-- ============================================================
-     🎴 TARJETA DE PRODUCTO OPTIMIZADA
-     ============================================================ -->
-<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
-    <div class="block2">
-        
-        <!-- ========================================
-             📸 IMAGEN DEL PRODUCTO (Clickeable)
-             ======================================== -->
-        <div class="block2-pic hov-img0">
-            
-            <!-- 🏷️ Badge OCULTO por CSS - No borrar (mantiene compatibilidad) -->
-            <?php if ($tipoProducto): ?>
-                <span class="badge-categoria"><?= strtoupper($tipoProducto) ?></span>
-            <?php endif; ?>
-            
-            <!-- ✅ Imagen clickeable -->
-            <img src="<?= $imagen ?>" 
-                 alt="<?= $tituloProducto ?> - <?= $descripcion ?>"
-                 class="js-show-modal1"
-                 data-id="<?= $id ?>"
-                 loading="lazy"
-                 style="cursor: pointer;"
-                 title="Click para ver detalles de <?= $tituloProducto ?>"
-                 onerror="this.onerror=null;this.src='<?= $imagenDefault ?>'">
-            
-            <!-- Overlay sutil en hover -->
-            <div class="block2-overlay"></div>
-            
-        </div>
-        
-        <!-- ========================================
-             📋 INFORMACIÓN DEL PRODUCTO (REORDENADA)
-             ======================================== -->
-        <div class="block2-txt flex-w flex-t p-t-14">
-            <div class="block2-txt-child1 flex-col-l">
-                
-                <!-- ========================================
-                     🏷️ TÍTULO PRINCIPAL (Era el Badge)
-                     ======================================== -->
-                <?php if ($tipoProducto): ?>
-                    <span class="product-category-title">
-                        <?= $tituloProducto ?>
-                    </span>
-                <?php endif; ?>
-                
-                <!-- ========================================
-                     📖 DESCRIPCIÓN (Era el Título - Clickeable)
-                     ======================================== -->
-                <h3 class="product-title stext-104 cl4 hov-cl1 trans-04 js-name-b-detail p-b-6">
-                    <a href="#" 
-                       class="js-name-detail js-show-modal1 product-title-link" 
-                       data-id="<?= $id ?>"
-                       title="Ver detalles de <?= $descripcion ?>"
-                       onclick="return false;">
-                        <?= $descripcion ?>
-                    </a>
-                </h3>
-                
-                <!-- ========================================
-                     🔢 CÓDIGO DEL PRODUCTO
-                     CSS agrega "ID: " con ::before
-                     ======================================== -->
-                <?php if ($codigo): ?>
-                    <span class="product-code stext-105 cl3">
-                        <?= $codigo ?>
-                    </span>
-                <?php endif; ?>
-                
-                <!-- ========================================
-                     💰 PRECIOS ESTRUCTURADOS
-                     ======================================== -->
-                <div class="precios-container">
-                    
-                    <!-- Precio General (Por unidad) -->
-                    <div class="precio-general stext-105 cl3">
-                        RD$ <?= $precioGeneral ?>
-                    </div>
-                    
-                    <!-- Precio Mayor (Por mayor 6+) -->
-                    <?php if ($mostrarMayor): ?>
-                        <div class="precio-mayor stext-107 cl10">
-                            RD$ <?= $precioMayor ?>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <!-- Precio Docena (Por docena 12+) -->
-                    <?php if ($mostrarDocena): ?>
-                        <div class="precio-docena stext-107 cl11">
-                            RD$ <?= $precioDocena ?>
-                        </div>
-                    <?php endif; ?>
-                    
-                </div>
-                
-                <!-- ========================================
-                     🛒 ZONA DE ACCIONES
-                     ======================================== -->
-                <div class="product-actions">
-                    <span class="product-actions-hint stext-107 cl6">
-                        <i class="zmdi zmdi-eye"></i> Click en imagen o descripción para ver detalles
-                    </span>
-                </div>
-                
-            </div>
-        </div>
-        
+<a href="#" class="pcard js-show-modal1" data-id="<?= $id ?>" onclick="return false;"
+   aria-label="Ver detalles de <?= $esc($titulo) ?>">
+    <div class="pcard__pic<?= $sinFoto ? ' is-empty' : '' ?>">
+        <?php if (!$sinFoto): ?>
+            <img src="<?= $esc($imagen) ?>" alt="<?= $esc($titulo) ?>" loading="lazy" decoding="async"
+                 onerror="this.parentNode.classList.add('is-empty');this.remove();">
+        <?php endif; ?>
+        <span class="pcard__nopic" aria-hidden="true"><b>INKA</b>Foto pendiente</span>
+        <?php /* El tipo va sobre la foto (arriba a la izquierda); la novedad, a la derecha */ ?>
+        <?php if ($etiqueta !== ''): ?>
+            <span class="pcard__type"><?= $esc($etiqueta) ?></span>
+        <?php endif; ?>
+        <?php if ($esNuevo): ?>
+            <span class="pcard__badge">Nuevo</span>
+        <?php endif; ?>
     </div>
-</div>
+    <div class="pcard__body">
+        <span class="pcard__title"><?= $esc($titulo) ?></span>
+        <?php if ($descripcion !== '' && $codigo !== ''): ?>
+            <span class="pcard__code">Cód. <?= $esc($codigo) ?></span>
+        <?php endif; ?>
+    </div>
+        <?php if ($heroCant > 1): ?>
+            <?php /* Precio destacado: el mejor precio por cantidad. Siempre "c/u"
+                     y con el total ya calculado, para que no se lea "la docena cuesta 40". */ ?>
+            <?php /* Todos los precios van dentro de una misma caja para que se lean
+                     como parte de este producto: referencia arriba, oferta grande. */ ?>
+            <span class="pcard__box">
+                <span class="pcard__ref">
+                    <span><span>1 unidad</span><span><?= $fmt($pGeneral) ?></span></span>
+                    <?php if ($heroCant === 12 && $mostrarMayor): ?>
+                        <span><span>6 o más</span><span><?= $fmt($pMayor) ?></span></span>
+                    <?php endif; ?>
+                </span>
+                <span class="pcard__price pcard__price--deal">
+                    <strong><?= $fmt($heroPrecio) ?></strong> <small>c/u</small>
+                    <?php if ($ahorro >= 5): ?><em class="pcard__save">-<?= $ahorro ?>%</em><?php endif; ?>
+                </span>
+                <span class="pcard__deal">
+                    <?php if ($heroCant === 12): ?>
+                        docena: <b><?= $fmt($heroPrecio * 12) ?></b>
+                    <?php else: ?>
+                        llevando 6 o más
+                    <?php endif; ?>
+                </span>
+            </span>
+        <?php else: ?>
+            <span class="pcard__box pcard__box--plain">
+                <span class="pcard__price"><strong><?= $fmt($pGeneral) ?></strong> <small>c/u</small></span>
+                <?php if ($mostrarUnidad): ?>
+                    <span class="pcard__unit">Se vende por <?= $esc(mb_strtolower($tipoUnidad, 'UTF-8')) ?></span>
+                <?php endif; ?>
+            </span>
+        <?php endif; ?>
+</a>
